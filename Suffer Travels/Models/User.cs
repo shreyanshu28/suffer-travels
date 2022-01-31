@@ -15,7 +15,8 @@ namespace Suffer_Travels.Models
         public string Lname { get; set; }
 
         public char Gender { get; set; } = 'M';
-        public DateOnly DateOfBirth { get; set; } = DateOnly.MinValue;
+        [Required]
+        public DateTime DateOfBirth { get; set; }
         [Required]
         public Int64 ContactNo { get; set; }
         [Required]
