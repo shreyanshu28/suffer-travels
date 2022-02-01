@@ -23,9 +23,6 @@ namespace Suffer_Travels.Models
         [EmailAddress(ErrorMessage = "Enter a valid email address")]
         public string Email { get; set; }
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-        [Required]
         [StringLength(50, ErrorMessage = "Username should have 3 to 50 characters only", MinimumLength = 3)]
         public string Username { get; set; }
         [Required]

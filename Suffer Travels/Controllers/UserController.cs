@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
-using System.Linq;
 
 namespace Suffer_Travels.Controllers
 {
@@ -23,13 +22,15 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(User _user)
         {
             IEnumerable<User> user = db.tblUser;
 
-            if(user.Any(u => u.Username == _user.Username && u.Password == _user.Password))
+            if (user.Any(u => u.Username == _user.Username && u.Password == _user.Password))
             {
-                return View(user);
+                return RedirectToAction("HomePage");
             }
 
             return View();
