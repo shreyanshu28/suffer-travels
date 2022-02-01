@@ -6,7 +6,7 @@
     ViewData["title"] = "Register - Suffer Travels";
 }
 
-<form asp-action="" method="post">
+<form method="post">
     <table width=0>
         <tr>
             <td>
@@ -43,14 +43,14 @@
         </tr>
         <tr>
             <td>
-                <label asp-for="Gender">First Name</label>
+                <label asp-for="Gender"></label>
             </td>
             <td>
-                <input asp-for="Gender" type="radio" value="Male"/> Male &nbsp;
-                <input asp-for="Gender" type="radio" value="Female"/> Female
+                <input asp-for="Gender" type="radio" value='M'/> Male &nbsp;
+                <input asp-for="Gender" type="radio" value='F'/> Female
             </td>
             <td>
-                <span asp-validation-for="Fname" class="text-danger"></span>
+                <span asp-validation-for="Gender" class="text-danger"></span>
             </td>
         </tr>
         <tr>

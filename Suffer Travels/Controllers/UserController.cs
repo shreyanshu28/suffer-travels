@@ -24,11 +24,11 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(User _user)
+        public IActionResult Login(User user)
         {
-            IEnumerable<User> user = db.tblUser;
+            IEnumerable<User> _user = db.tblUser;
 
-            if (user.Any(u => u.Username == _user.Username && u.Password == _user.Password))
+            if (_user.Any(u => u.Username == user.Username && u.Password == user.Password))
             {
                 return RedirectToAction("HomePage");
             }
@@ -40,5 +40,32 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Register(User user)
+        {
+            //db.Add(user);
+            //db.SaveChanges();
+            TempData.Add("fname", user.Fname);
+
+            return RedirectToAction("VerifyUser");
+        }
+
+        public IActionResult VerifyUser()
+        {
+            ViewData["fname"] = TempData["fname"];
+            //Console.WriteLine(user.Fname);
+            //ViewData["user"] = user;
+
+            return View();
+        }
+
+
     }
 }

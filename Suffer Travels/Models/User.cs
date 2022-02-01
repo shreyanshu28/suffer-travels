@@ -24,14 +24,14 @@ namespace Suffer_Travels.Models
         public string Email { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Username should have 3 to 50 characters only", MinimumLength = 3)]
-        public string Username { get; set; }
+        public string Username { get; set; } = "123";
         [Required]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]
-        public string Password { get; set; }
-        public string ProfilePhoto { get; set; }
+        public string Password { get; set; } = "123";
+        public string ProfilePhoto { get; set; } = "";
         public Boolean IsActive { get; set; } = true;
         [ForeignKey("Role")]
-        public UInt32 RoleId { get; set; }  
+        public UInt32 RoleId { get; set; } = 1;
 
     }
 }
