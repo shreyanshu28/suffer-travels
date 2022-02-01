@@ -1,6 +1,101 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model User
 @{
     ViewData["title"] = "Register - Suffer Travels";
+}
+
+<form asp-action="" method="post">
+    <table width=0>
+        <tr>
+            <td>
+                <label asp-for="Fname">First Name</label>
+            </td>
+            <td>
+                <input asp-for="Fname" id="fname" type="text"  required/>
+            </td>
+            <td>
+                <span asp-validation-for="Fname" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Mname">Middle Name</label>
+            </td>
+            <td>
+                <input asp-for="Mname" id="mname" type="text"/>
+            </td>
+            <td>
+                <span asp-validation-for="Mname" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Lname">Last Name</label>
+            </td>
+            <td>
+                <input asp-for="Lname" id="lname" type="text"  required/>
+            </td>
+            <td>
+                <span asp-validation-for="Lname" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Gender">First Name</label>
+            </td>
+            <td>
+                <input asp-for="Gender" type="radio" value="Male"/> Male &nbsp;
+                <input asp-for="Gender" type="radio" value="Female"/> Female
+            </td>
+            <td>
+                <span asp-validation-for="Fname" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="DateOfBirth">Date of Birth</label>
+            </td>
+            <td>
+                <input asp-for="DateOfBirth" id="dateOfBirth" type="date" required/>
+            </td>
+            <td>
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="ContactNo">Contact Number</label>
+            </td>
+            <td>
+                <input asp-for="ContactNo" id="contactNo" type="tel"  required/>
+            </td>
+            <td>
+                <span asp-validation-for="ContactNo" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Email">Email</label>
+            </td>
+            <td>
+                <input asp-for="Email" id="email" type="email"  required/>
+            </td>
+            <td>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </td>
+        </tr>
+         <tr>
+            <td>
+                <input type="submit" id="submit" class="btn btn-info">
+            </td>
+        </tr>
+    </table>
+</form>
+
+@section scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Suffer_Travels.Data;
 
@@ -11,9 +12,10 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220201073917_AddEmailToUser")]
+    partial class AddEmailToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblRole", (string)null);
+                    b.ToTable("tblRole");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.User", b =>
@@ -95,7 +97,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("UId");
 
-                    b.ToTable("tblUser", (string)null);
+                    b.ToTable("tblUser");
                 });
 #pragma warning restore 612, 618
         }

@@ -39,6 +39,5 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
-        
     }
 }

@@ -10,14 +10,18 @@ namespace Suffer_Travels.Models
         public UInt32 UId { get; set; }
         [Required]
         public string Fname { get; set; }
-        public string Mname { get; set; }
+        public string Mname { get; set; } = "";
         [Required]
         public string Lname { get; set; }
         public char Gender { get; set; } = 'M';
         [Required]
         public DateTime DateOfBirth { get; set; }
         [Required]
-        public Int64 ContactNo { get; set; }
+        [Phone(ErrorMessage = "Enter a valid phone number")]
+        public long ContactNo { get; set; }
+        [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid email address")]
+        public string Email { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }
