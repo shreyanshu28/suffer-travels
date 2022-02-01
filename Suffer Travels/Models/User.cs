@@ -13,12 +13,14 @@ namespace Suffer_Travels.Models
         public string Mname { get; set; }
         [Required]
         public string Lname { get; set; }
-
         public char Gender { get; set; } = 'M';
         [Required]
         public DateTime DateOfBirth { get; set; }
         [Required]
         public Int64 ContactNo { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Username should have 3 to 50 characters only", MinimumLength = 3)]
         public string Username { get; set; }

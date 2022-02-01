@@ -6,11 +6,11 @@
     ViewData["title"] = "Log In";
 }
 
-<form asp-action="HomePage" method="post">
+<form method="post">
     <table width="0">
         <tr>
             <td>
-                <label asp-for="Username">Name</label>
+                <label asp-for="Username"></label>
             </td>
             <td>
                 <input asp-for="Username" id="name" type="text" required/>
@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <td>
-                <label asp-for="Password">Password</label>
+                <label asp-for="Password"></label>
             </td>
             <td>
                 <input asp-for="Password" type="password" id="password" required/>
@@ -34,7 +34,7 @@
             </td>
         <tr>
             <td>
-                <input type="submit" id="submit" class="btn btn-info">
+                <button type="submit" id="submit" class="btn btn-info"></button>
             </td>
             <td>
                 <a asp-action="Register" class="btn btn-warning" asp-controller="User">Register</a>
