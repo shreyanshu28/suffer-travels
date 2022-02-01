@@ -10,7 +10,7 @@ namespace Suffer_Travels.Models
         public UInt32 UId { get; set; }
         [Required]
         public string Fname { get; set; }
-        public string Mname { get; set; }
+        public string Mname { get; set; } = "";
         [Required]
         public string Lname { get; set; }
 
@@ -18,7 +18,11 @@ namespace Suffer_Travels.Models
         [Required]
         public DateTime DateOfBirth { get; set; }
         [Required]
-        public Int64 ContactNo { get; set; }
+        [Phone(ErrorMessage = "Enter a valid phone number")]
+        public long ContactNo { get; set; }
+        [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid email address")]
+        public string Email { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Username should have 3 to 50 characters only", MinimumLength = 3)]
         public string Username { get; set; }

@@ -18,5 +18,10 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }
