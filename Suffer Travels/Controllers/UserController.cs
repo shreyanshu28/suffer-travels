@@ -71,7 +71,8 @@ namespace Suffer_Travels.Controllers
 
         public static void CreateCopyMessage(string server)
         {
-            MailAddress from = new MailAddress("19bmiit052@gmail.com", "Kushal Gaiwala");
+            string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
+            MailAddress from = new MailAddress("kushal8217@gmail.com", "Kushal Gaiwala");
             MailAddress to = new MailAddress("19bmiit112@gmail.com", "Shreyanshu Vyas");
             MailMessage message = new MailMessage(from, to);
 
@@ -83,9 +84,12 @@ namespace Suffer_Travels.Controllers
             //message.CC.Add(copy);
 
             SmtpClient client = new SmtpClient(server);
-            
+
             // Include credentials if the server requires them.
-            client.Credentials = CredentialCache.DefaultNetworkCredentials;
+            client.Port = 587;
+            client.Credentials = new System.Net.NetworkCredential(from.Address, pass);
+            client.EnableSsl = true;
+
             Console.WriteLine("Sending an email message to {0} by using the SMTP host {1}.",
                  to.Address, client.Host);
 
