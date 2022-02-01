@@ -20,8 +20,10 @@ namespace Suffer_Travels.Models
         [Required]
         public Int64 ContactNo { get; set; }
         [Required]
+        [Range(3,50,ErrorMessage = "Username should have 3 to 50 characters only")]
         public string Username { get; set; }
         [Required]
+        [Range(8,20, ErrorMessage = "Password should have at least 8 characters")]
         public string Password { get; set; }
         public string ProfilePhoto { get; set; }
         public Boolean IsActive { get; set; } = true;
