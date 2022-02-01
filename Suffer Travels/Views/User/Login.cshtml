@@ -7,16 +7,42 @@
 }
 
 <form asp-action="HomePage" method="post">
-    <label asp-for="Username">Name</label>
-    <input asp-for="Username" id="name" type="text" required/>
-    <span asp-validation-for="Username" class="text-danger"></span>
-    <label asp-for="Password">Password</label>
-    <input asp-for="Password" type="password" id="password" required/>
-    <span asp-validation-for="Password" class="text-danger"></span>
-    <input type="submit" id="submit">
+    <table width="0">
+        <tr>
+            <td>
+                <label asp-for="Username">Name</label>
+            </td>
+            <td>
+                <input asp-for="Username" id="name" type="text" required/>
+            </td>
+        <tr>
+            <td>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label asp-for="Password">Password</label>
+            </td>
+            <td>
+                <input asp-for="Password" type="password" id="password" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </td>
+        <tr>
+            <td>
+                <input type="submit" id="submit" class="btn btn-info">
+            </td>
+            <td>
+                <a asp-action="Register" class="btn btn-warning" asp-controller="User">Register</a>
+            </td>
+        </tr>
+    </table>
 </form>
 
-<a asp-action="Register" asp-controller="User">Register</a>
 
 @section scripts {
     @{
