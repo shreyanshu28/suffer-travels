@@ -1,0 +1,58 @@
+﻿@model IEnumerable<User>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Charts Testing</h1>
+
+<div>
+    <canvas id="chart" class="my-4 h-25"></canvas>
+    @foreach(var obj in Model)
+    {
+        <input type="hidden" id="names" value="@obj.Fname" />
+        <input type="hidden" id="contacts" value="@obj.ContactNo" />
+    }
+</div>
+<script src="~/lib/chartjs/dist/chart.min.js"></script>
+<script type="text/javascript">
+    const chart = document.querySelector("#chart");
+    const names = document.querySelectorAll("#names");
+    const contacts = document.querySelectorAll("#contacts");
+    
+    let myNames = [];
+    let myContacts = [];
+
+    names.forEach(name => {
+        const div = document.createElement("div");
+        div.id = "name";
+        div.append(name.value);
+        console.log("1");
+        chart.appendChild(div);
+
+        myNames.push(name.value);
+    });
+
+    contacts.forEach(contact => {
+        myContacts.push(contact.value);
+    });
+
+    const barChart = new Chart(chart, {
+        type: "bar",
+        data: {
+            labels: myNames,
+            datasets: [
+                {
+                    label: "Contacts",
+                    data: myContacts,
+                    backgroundColor: [
+                        "rgba(54, 162, 235, 0.6)",
+                        "rgba(255, 99, 132, 0.6)",
+                        "rgba(153, 102, 255, 0.6)",
+                        "rgba(255, 159, 64, 0.6)",
+                        "rgba(255, 99, 132, 0.6)",
+                    ],
+                }
+            ],
+        },
+    });
+</script>
