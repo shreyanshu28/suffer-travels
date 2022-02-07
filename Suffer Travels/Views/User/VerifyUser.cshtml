@@ -2,11 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@model User
-
-@{
-    var user = ViewData["fname"];
-    
-}
-
-<h1>@user</h1>
+<div>
+    <label for="txtOtp">Enter OTP</label>
+    <input type="text" id="txtOtp" pattern="[0-9]{6}" required />
+</div>
