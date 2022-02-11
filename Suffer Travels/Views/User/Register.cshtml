@@ -3,96 +3,103 @@
 *@
 @model User
 @{
-    ViewData["title"] = "Register - Suffer Travels";
+    ViewData["title"] = "Register";
 }
 
-<form method="post">
-    <table width=0>
-        <tr>
-            <td>
-                <label asp-for="Fname">First Name</label>
-            </td>
-            <td>
-                <input asp-for="Fname" id="fname" type="text" required />
-            </td>
-            <td>
-                <span asp-validation-for="Fname" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="Mname">Middle Name</label>
-            </td>
-            <td>
-                <input asp-for="Mname" id="mname" type="text" />
-            </td>
-            <td>
-                <span asp-validation-for="Mname" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="Lname">Last Name</label>
-            </td>
-            <td>
-                <input asp-for="Lname" id="lname" type="text"  required />
-            </td>
-            <td>
-                <span asp-validation-for="Lname" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="Gender"></label>
-            </td>
-            <td>
-                <input asp-for="Gender" type="radio" value='M'/> Male &nbsp;
-                <input asp-for="Gender" type="radio" value='F'/> Female
-            </td>
-            <td>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="DateOfBirth">Date of Birth</label>
-            </td>
-            <td>
-                <input asp-for="DateOfBirth" id="dateOfBirth" type="date" required />
-            </td>
-            <td>
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="ContactNo">Contact Number</label>
-            </td>
-            <td>
-                <input asp-for="ContactNo" id="contactNo" type="tel"  required />
-            </td>
-            <td>
-                <span asp-validation-for="ContactNo" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="Email">Email</label>
-            </td>
-            <td>
-                <input asp-for="Email" id="email" type="email"  required />
-            </td>
-            <td>
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </td>
-        </tr>
-         <tr>
-            <td>
-                <button type="submit" id="submit" class="btn btn-info">Next</button>
-            </td>
-        </tr>
-    </table>
-</form>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active">Register</li>
+</ol>
+
+<div class="row justify-content-center">
+    <form method="post" class="col-auto">
+        <table width=0 class="table table-responsive">
+            <tr>
+                <td>
+                    <label asp-for="Fname" class="text-dark">First Name</label>
+                </td>
+                <td>
+                    <input asp-for="Fname" id="fname" type="text" class="form-control mb-2" required />
+                </td>
+                <td>
+                    <span asp-validation-for="Fname" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="Mname" class="text-dark">Middle Name</label>
+                </td>
+                <td>
+                    <input asp-for="Mname" id="mname" class="form-control" type="text"/>
+                </td>
+                <td>
+                    <span asp-validation-for="Mname" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="Lname" class="text-dark">Last Name</label>
+                </td>
+                <td>
+                    <input asp-for="Lname" id="lname" type="text" class="form-control" required />
+                </td>
+                <td>
+                    <span asp-validation-for="Lname" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="Gender" class="text-dark"></label>
+                </td>
+                <td>
+                    <input asp-for="Gender" type="radio" value='M'/> Male &nbsp;
+                    <input asp-for="Gender" type="radio" value='F'/> Female
+                </td>
+                <td>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="DateOfBirth" class="text-dark">Date of Birth</label>
+                </td>
+                <td>
+                    <input asp-for="DateOfBirth" id="dateOfBirth" type="date" required />
+                </td>
+                <td>
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="ContactNo" class="text-dark">Contact Number</label>
+                </td>
+                <td>
+                    <input asp-for="ContactNo" id="contactNo" type="tel"  required />
+                </td>
+                <td>
+                    <span asp-validation-for="ContactNo" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label asp-for="Email" class="text-dark">Email</label>
+                </td>
+                <td>
+                    <input asp-for="Email" id="email" type="email"  required />
+                </td>
+                <td>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </td>
+            </tr>
+             <tr>
+                <td>
+                    <button type="submit" id="submit" class="btn btn-info">Next</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 
 @section scripts {
     @{

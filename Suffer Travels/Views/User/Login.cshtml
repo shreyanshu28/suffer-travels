@@ -10,10 +10,10 @@
     <table width="0">
         <tr>
             <td>
-                <label asp-for="Username"></label>
+                <label asp-for="Username" class="text-dark"></label>
             </td>
             <td>
-                <input asp-for="Username" id="name" type="text" required/>
+                <input asp-for="Username" id="name" type="text" class="form-control" required/>
             </td>
         <tr>
             <td>
@@ -22,10 +22,10 @@
         </tr>
         <tr>
             <td>
-                <label asp-for="Password"></label>
+                <label asp-for="Password" class="text-dark"></label>
             </td>
             <td>
-                <input asp-for="Password" type="password" id="password" required/>
+                <input asp-for="Password" type="password" id="password" class="form-control" required/>
             </td>
         </tr>
         <tr>
@@ -34,7 +34,7 @@
             </td>
         <tr>
             <td>
-                <button type="submit" id="submit" class="btn btn-info">Login</button>
+                <button type="submit" id="submit" class="btn btn-info m-2">Login</button>
             </td>
             <td>
                 <a asp-action="Register" class="btn btn-warning" asp-controller="User">Register</a>
