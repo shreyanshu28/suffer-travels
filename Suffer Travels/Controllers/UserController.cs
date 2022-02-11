@@ -135,9 +135,15 @@ namespace Suffer_Travels.Controllers
 
             if (register.password != register.rePassword)
             {
-                ModelState.AddModelError("Password", "Passwords must match");
-                return View();
+                ModelState.AddModelError("Password", "Password do not match");
             }
+
+            //String fname = tempDataToString(TempData["tmpFname"]);
+            //String mname = tempDataToString(TempData["tmpMname"]);
+            //String lname = tempDataToString(TempData["tmpLname"]);
+            //String dob = tempDataToString(TempData["tmpDOB"]);
+            //String contactNo = tempDataToString(TempData["tmpContactNo"]);
+            //String email = tempDataToString(TempData["tmpEmail"]);
 
             String fname = tempDataToString(TempData["tmpFname"]);
             String mname = tempDataToString(TempData["tmpMname"]);
