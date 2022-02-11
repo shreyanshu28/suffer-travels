@@ -37,7 +37,7 @@ namespace Suffer_Travels.Models
         public string ProfilePhoto { get; set; } = "";
         public Boolean IsActive { get; set; } = true;
         [ForeignKey("Role")]
-        public UInt32 RoleId { get; set; }
+        public UInt32 RoleId { get; set; } = 1;
 
     }
 }

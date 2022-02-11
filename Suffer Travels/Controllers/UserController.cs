@@ -133,31 +133,34 @@ namespace Suffer_Travels.Controllers
                 ModelState.AddModelError("Username", "Username is already taken");
             }
 
-            //String fname = tempDataToString(TempData["tmpFname"]);
-            //String mname = tempDataToString(TempData["tmpMname"]);
-            //String lname = tempDataToString(TempData["tmpLname"]);
-            //String dob = tempDataToString(TempData["tmpDOB"]);
-            //String contactNo = tempDataToString(TempData["tmpContactNo"]);
-            //String email = tempDataToString(TempData["tmpEmail"]);
+            if (register.password != register.rePassword)
+            {
+                ModelState.AddModelError("Password", "Passwords must match");
+                return View();
+            }
 
-            //if(register.password != register.rePassword)
-            //{
-            //    User u = new User();
-            //    u.Username = register.username;
-            //    u.Password = register.password;
-            //    u.Fname = fname;
-            //    u.Lname = lname;
-            //    u.Mname = mname;
-            //    u.Gender = gender;
-            //    u.DateOfBirth = DateTime.Parse(dob);
-            //    u.Email = email;
+            String fname = tempDataToString(TempData["tmpFname"]);
+            String mname = tempDataToString(TempData["tmpMname"]);
+            String lname = tempDataToString(TempData["tmpLname"]);
+            String dob = tempDataToString(TempData["tmpDOB"]);
+            String gender = tempDataToString(TempData["tmpGender"]);
+            String contactNo = tempDataToString(TempData["tmpContactNo"]);
+            String email = tempDataToString(TempData["tmpEmail"]);
 
-            //    ModelState.AddModelError("Password", "Passwords must match");
-            //    db.tblUser.Add(u);
-            //    return View();
-            //}
-
-            return View();
+            User u = new User();
+            u.Fname = fname;
+            u.Lname = lname;
+            u.Mname = mname;
+            u.Gender = Char.Parse(gender);
+            u.DateOfBirth = DateTime.Parse(dob);
+            u.Email = email;
+            u.ContactNo = Convert.ToInt64(contactNo);
+            u.Username = register.username;
+            u.Password = register.password;
+            db.tblUser.Add(u);
+            db.SaveChanges();
+            
+            return RedirectToAction("HomePage");
         }
 
         public static int sendOtp(string toEmail, string username)
