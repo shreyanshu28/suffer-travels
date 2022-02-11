@@ -39,37 +39,55 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult HomePage()
+        public IActionResult HomePage(User user)
         {
+            
             return View();
         }
+
+        
 
         public IActionResult Register()
         {
             return View();
         }
 
+        public IActionResult Logout()
+        {
+            //PARAM: Action, Controller
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
         {
-            string email = user.Email;
-            string fname = user.Fname;
-            string lname = user.Lname;
-            TempData.Clear();
-            TempData.Add("tmpFname", user.Fname);
-            TempData.Add("tmpMname", user.Mname);
-            TempData.Add("tmpLname", user.Lname);
-            TempData.Add("tmpDOB", user.DateOfBirth);
-            TempData.Add("tmpGender", user.Gender.ToString());
-            TempData.Add("tmpContactNo", user.ContactNo.ToString());
-            TempData.Add("tmpEmail", email);
+            IEnumerable<User> _user = db.tblUser;
+            if (_user.Any(u => u.Email == user.Email))
+                ModelState.AddModelError("Email", "Email is already verified");
+            
+            if (_user.Any(u => u.ContactNo == user.ContactNo))
+                ModelState.AddModelError("ContactNo", "Contact Number is already taken");
+            
+            if (ModelState.IsValid)
+            {
+                string email = user.Email;
+                string fname = user.Fname;
+                string lname = user.Lname;
+                TempData.Clear();
+                TempData.Add("tmpFname", user.Fname);
+                TempData.Add("tmpMname", user.Mname);
+                TempData.Add("tmpLname", user.Lname);
+                TempData.Add("tmpDOB", user.DateOfBirth);
+                TempData.Add("tmpGender", user.Gender.ToString());
+                TempData.Add("tmpContactNo", user.ContactNo.ToString());
+                TempData.Add("tmpEmail", email);
 
-            otp = sendOtp(email, fname + " " + lname);
+                otp = sendOtp(email, fname + " " + lname);
 
-            if (otp != 0)
-                return RedirectToAction("VerifyUser");
-
+                if (otp != 0)
+                    return RedirectToAction("VerifyUser");
+            }
             return View();
         }
 
@@ -80,32 +98,7 @@ namespace Suffer_Travels.Controllers
             return "";
         }
 
-        public IActionResult VerifyUser()
-        {
-            //if (TempData.ContainsKey("tmpFname"))
-            //    fname = TempData["tmpFname"].ToString();
-
-            //if (TempData.ContainsKey("tmpMname"))
-            //    mname = TempData["tmpMname"].ToString();
-
-            //if (TempData.ContainsKey("tmpLname"))
-            //    lname = TempData["tmpLname"].ToString();
-
-            //if (TempData.ContainsKey("tmpGender"))
-            //    gender = TempData["tmpGender"].ToString();
-
-            //if (TempData.ContainsKey("tmpDOB"))
-            //    dob = TempData["tmpDOB"].ToString(); 
-
-            //if (TempData.ContainsKey("tmpContactNo"))
-            //    contactNo = TempData["tmpContactNo"].ToString(); 
-
-            //if (TempData.ContainsKey("tmpEmail"))
-            //    email = TempData["tmpEmail"].ToString();
-
-            //TempData.Clear();
-            return View();
-        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -137,29 +130,32 @@ namespace Suffer_Travels.Controllers
             {
                 ModelState.AddModelError("Password", "Password do not match");
             }
+            if (ModelState.IsValid)
+            {
+                String fname = tempDataToString(TempData["tmpFname"]);
+                String mname = tempDataToString(TempData["tmpMname"]);
+                String lname = tempDataToString(TempData["tmpLname"]);
+                String dob = tempDataToString(TempData["tmpDOB"]);
+                String gender = tempDataToString(TempData["tmpGender"]);
+                String contactNo = tempDataToString(TempData["tmpContactNo"]);
+                String email = tempDataToString(TempData["tmpEmail"]);
 
-            String fname = tempDataToString(TempData["tmpFname"]);
-            String mname = tempDataToString(TempData["tmpMname"]);
-            String lname = tempDataToString(TempData["tmpLname"]);
-            String dob = tempDataToString(TempData["tmpDOB"]);
-            String gender = tempDataToString(TempData["tmpGender"]);
-            String contactNo = tempDataToString(TempData["tmpContactNo"]);
-            String email = tempDataToString(TempData["tmpEmail"]);
+                User u = new User();
+                u.Fname = fname;
+                u.Lname = lname;
+                u.Mname = mname;
+                u.Gender = Char.Parse(gender);
+                u.DateOfBirth = DateTime.Parse(dob);
+                u.Email = email;
+                u.ContactNo = Convert.ToInt64(contactNo);
+                u.Username = register.username;
+                u.Password = register.password;
+                db.tblUser.Add(u);
+                db.SaveChanges();
 
-            User u = new User();
-            u.Fname = fname;
-            u.Lname = lname;
-            u.Mname = mname;
-            u.Gender = Char.Parse(gender);
-            u.DateOfBirth = DateTime.Parse(dob);
-            u.Email = email;
-            u.ContactNo = Convert.ToInt64(contactNo);
-            u.Username = register.username;
-            u.Password = register.password;
-            db.tblUser.Add(u);
-            db.SaveChanges();
-            
-            return RedirectToAction("HomePage");
+                return RedirectToAction("HomePage");
+            }
+            return View();
         }
 
         public static int sendOtp(string toEmail, string username)
@@ -210,6 +206,33 @@ namespace Suffer_Travels.Controllers
                 return 0;
             }
             return otp;
+        }
+
+        public IActionResult VerifyUser()
+        {
+            //if (TempData.ContainsKey("tmpFname"))
+            //    fname = TempData["tmpFname"].ToString();
+
+            //if (TempData.ContainsKey("tmpMname"))
+            //    mname = TempData["tmpMname"].ToString();
+
+            //if (TempData.ContainsKey("tmpLname"))
+            //    lname = TempData["tmpLname"].ToString();
+
+            //if (TempData.ContainsKey("tmpGender"))
+            //    gender = TempData["tmpGender"].ToString();
+
+            //if (TempData.ContainsKey("tmpDOB"))
+            //    dob = TempData["tmpDOB"].ToString(); 
+
+            //if (TempData.ContainsKey("tmpContactNo"))
+            //    contactNo = TempData["tmpContactNo"].ToString(); 
+
+            //if (TempData.ContainsKey("tmpEmail"))
+            //    email = TempData["tmpEmail"].ToString();
+
+            //TempData.Clear();
+            return View();
         }
     }
 }
