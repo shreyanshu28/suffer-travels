@@ -61,7 +61,7 @@ namespace Suffer_Travels.Controllers
             TempData.Add("tmpMname", user.Mname);
             TempData.Add("tmpLname", user.Lname);
             TempData.Add("tmpDOB", user.DateOfBirth);
-            TempData.Add("tmpGender", user.Gender);
+            TempData.Add("tmpGender", user.Gender.ToString());
             TempData.Add("tmpContactNo", user.ContactNo.ToString());
             TempData.Add("tmpEmail", email);
 
