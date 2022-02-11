@@ -1,19 +1,21 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model User
 @{
-    ViewData["title"] = "Register";
+    ViewData["title"] = "Edit Profile";
 }
 
+@model User
+
 <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-  <li class="breadcrumb-item active">Register</li>
+  <li class="breadcrumb-item"><a asp-controller="User" asp-action="HomePage">Home</a></li>
+  <li class="breadcrumb-item active">Edit Profile</li>
 </ol>
+
 
 <div class="row justify-content-center">
     <form method="post" class="col-auto">
-        <table width=0 class="table table-responsive">
+        <table  class="table table-responsive">
             <tr>
                 <td>
                     <label asp-for="Fname" class="text-dark">First Name</label>
@@ -30,7 +32,7 @@
                     <label asp-for="Mname" class="text-dark">Middle Name</label>
                 </td>
                 <td>
-                    <input asp-for="Mname" id="mname" class="form-control" type="text"/>
+                    <input asp-for="Mname" id="mname" type="text" class="form-control" />
                 </td>
                 <td>
                     <span asp-validation-for="Mname" class="text-danger"></span>
@@ -48,13 +50,14 @@
                 </td>
             </tr>
             <tr>
+                
                 <td>
                     <label asp-for="Gender" class="text-dark"></label>
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                    <label class="btn btn-primary"><input asp-for="Gender" value="M" type="radio" /> Male</label>                    
-                    <label class="btn btn-primary"><input asp-for="Gender" value="F" type="radio" /> Female</label>
+                        <input asp-for="Gender" value="M" type="radio" /><label class="btn btn-primary">Male</label>                    
+                        <input asp-for="Gender" value="F" type="radio" /><label class="btn btn-primary">Female</label>
                     </div>
                 </td>
                 <td>
@@ -96,7 +99,7 @@
             </tr>
              <tr>
                 <td colspan="3">
-                    <button type="submit" id="submit" class="btn btn-info">Next</button>
+                    <button asp-action="ChangePassword" asp-controller="User" id="submit" class="btn btn-info">Change Password</button>
                 </td>
             </tr>
         </table>

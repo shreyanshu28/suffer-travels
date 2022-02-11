@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="~/Suffer_Travels.styles.css" asp-append-version="true" />
     <link rel="icon" href="~/travel.png" />
 </head>
-<body class="">
+<body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-dark bg-primary border-bottom box-shadow mb-3 py-3 py-lg-3">
             <div class="container-fluid">
@@ -27,15 +27,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="User" asp-action="HomePage">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Customer</a>
-                        </li>
+                        
                     </ul>
                     <span class="nav-item ml-auto">
+                        <a class="nav-link text-white" asp-area="" asp-controller="User" asp-action="EditProfile">Hello, @ViewData["username"]</a>
+                    </span>
+                    <span class="nav-item ml-auto">
                             <a class="nav-link text-white bg-danger" asp-area="" asp-controller="User" asp-action="Logout">Log out</a>
-                        </span>
+                    </span>
                 </div>
 
             </div>

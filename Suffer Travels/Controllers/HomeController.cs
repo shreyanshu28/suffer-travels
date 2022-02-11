@@ -15,11 +15,14 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
         public IActionResult Privacy()
         {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Homepage", "User");
             return View();
         }
 

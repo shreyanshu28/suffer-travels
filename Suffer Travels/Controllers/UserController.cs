@@ -40,6 +40,7 @@ namespace Suffer_Travels.Controllers
                 if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 {
                     HttpContext.Session.SetString("username", user.Username.ToString().Trim());
+                    HttpContext.Session.SetInt32("userid", (int)user.UId);
                 }
                 return RedirectToAction("HomePage");
             }
@@ -50,14 +51,11 @@ namespace Suffer_Travels.Controllers
         public IActionResult HomePage(User user)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
-            {
                 return RedirectToAction("Login");
-            }
+
+            ViewData["username"] = HttpContext.Session.GetString("username");
             return View();
         }
-
-        
-
         public IActionResult Register()
         {
             return View();
@@ -68,6 +66,16 @@ namespace Suffer_Travels.Controllers
             HttpContext.Session.Clear();
             //PARAM: Action, Controller
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult EditProfile()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Login");
+
+            User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));            
+
+            return View(_user);
         }
 
         [HttpPost]
