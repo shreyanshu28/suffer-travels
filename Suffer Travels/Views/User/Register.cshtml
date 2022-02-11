@@ -7,7 +7,7 @@
 }
 
 <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
   <li class="breadcrumb-item active">Register</li>
 </ol>
 
@@ -75,7 +75,7 @@
                     <label asp-for="ContactNo" class="text-dark">Contact Number</label>
                 </td>
                 <td>
-                    <input asp-for="ContactNo" id="contactNo" class="form-control" type="tel"  required />
+                    <input asp-for="ContactNo" id="contactNo" class="form-control" type="text"  required />
                 </td>
                 <td>
                     <span asp-validation-for="ContactNo" class="text-danger"></span>
@@ -93,7 +93,7 @@
                 </td>
             </tr>
              <tr>
-                <td>
+                <td colspan="3">
                     <button type="submit" id="submit" class="btn btn-info">Next</button>
                 </td>
             </tr>

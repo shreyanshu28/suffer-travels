@@ -21,10 +21,7 @@ namespace Suffer_Travels.Models
         [Required]
         public DateTime DateOfBirth { get; set; }
         [Required(ErrorMessage = "Contact number is required!")]
-        [RegularExpression("^[7-9][0-9]{10}", ErrorMessage = "Please enter valid contact number")]
-        //[DataType(DataType.PhoneNumber, ErrorMessage = "Please enter valid contact number")]
-        [MaxLength(10, ErrorMessage = "Please enter valid contact number")]
-        [MinLength(10, ErrorMessage = "Please enter valid contact number")]
+        [RegularExpression("^[7-9][0-9]{9,9}", ErrorMessage = "Please enter valid contact number")]
         public long ContactNo { get; set; }
         [Required(ErrorMessage = "Email address is required!")]
         [EmailAddress(ErrorMessage = "Enter a valid email address")]
