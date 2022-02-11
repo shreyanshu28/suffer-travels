@@ -11,8 +11,9 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "First name is required!")]
         [RegularExpression("[a-zA-Z]+", ErrorMessage = "First name should only contain alphabets!")]
         public string Fname { get; set; }
+        [Required(ErrorMessage = "Middle name is required!")]
         [RegularExpression("[a-zA-Z]+", ErrorMessage = "Middle name should only contain alphabets!")]
-        public string? Mname { get; set; } = "";
+        public string? Mname { get; set; } = " ";
         [Required(ErrorMessage = "Last name is required!")]
         [RegularExpression("[a-zA-Z]+", ErrorMessage = "Last name should only contain alphabets!")]
         public string Lname { get; set; }
@@ -34,7 +35,7 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "Password is required!")]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]
         public string Password { get; set; }
-        public string ProfilePhoto { get; set; } = "";
+        public string? ProfilePhoto { get; set; } = "";
         public Boolean IsActive { get; set; } = true;
         [ForeignKey("Role")]
         public UInt32 RoleId { get; set; } = 1;

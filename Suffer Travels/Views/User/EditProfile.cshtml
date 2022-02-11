@@ -3,6 +3,7 @@
 *@
 @{
     ViewData["title"] = "Edit Profile";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
 }
 
 @model User
@@ -12,9 +13,9 @@
   <li class="breadcrumb-item active">Edit Profile</li>
 </ol>
 
-
 <div class="row justify-content-center">
     <form method="post" class="col-auto">
+        <input asp-for="UId" id="uid" type="hidden" class="form-control mb-2" required />
         <table  class="table table-responsive">
             <tr>
                 <td>
@@ -32,7 +33,7 @@
                     <label asp-for="Mname" class="text-dark">Middle Name</label>
                 </td>
                 <td>
-                    <input asp-for="Mname" id="mname" type="text" class="form-control" />
+                    <input asp-for="Mname" id="mname" type="text" class="form-control" required />
                 </td>
                 <td>
                     <span asp-validation-for="Mname" class="text-danger"></span>
@@ -75,31 +76,10 @@
                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <label asp-for="ContactNo" class="text-dark">Contact Number</label>
-                </td>
-                <td>
-                    <input asp-for="ContactNo" id="contactNo" class="form-control" type="text"  required />
-                </td>
-                <td>
-                    <span asp-validation-for="ContactNo" class="text-danger"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label asp-for="Email" class="text-dark">Email</label>
-                </td>
-                <td>
-                    <input asp-for="Email" id="email" class="form-control" type="email"  required />
-                </td>
-                <td>
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </td>
-            </tr>
              <tr>
                 <td colspan="3">
-                    <button asp-action="ChangePassword" asp-controller="User" id="submit" class="btn btn-info">Change Password</button>
+                    <button type="submit" id="btnUpdate" class="btn btn-info" >Update</button>
+                    <a asp-action="ChangePassword" asp-controller="User" id="submit" class="btn btn-info">Change Password</a>
                 </td>
             </tr>
         </table>

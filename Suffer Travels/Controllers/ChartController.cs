@@ -15,6 +15,7 @@ namespace Suffer_Travels.Controllers
         public IActionResult Index()
         {
             IEnumerable<User> user = db.tblUser;
+            
             ViewData["User"] = user;
             return View(user);
         }

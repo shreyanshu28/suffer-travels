@@ -68,14 +68,84 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ForgotPassword(Register register)
+        {
+            IEnumerable<User> user = db.tblUser;
+            if (user.Any(u => u.Username == register.username))
+            {
+                ModelState.AddModelError("Username", "Username is already taken");
+            }
+
+            if (register.password != register.rePassword)
+            {
+                ModelState.AddModelError("Password", "Password do not match");
+            }
+            string email = "";
+            if(!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
+                email = HttpContext.Session.GetString("forgotEmail");
+
+            var _user = db.tblUser.FirstOrDefault(u => u.Email == email);
+
+            _user.Password = register.password;
+            
+            db.SaveChanges();
+
+            return RedirectToAction("Login");
+        }
+        public IActionResult VerifyEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult VerifyEmail(User user)
+        {
+            if(user.Email != null)
+            {
+                HttpContext.Session.SetString("forgotEmail", user.Email);
+                otp = sendOtp(user.Email, "Forgot Password");
+                return RedirectToAction("VerifyUser");
+            }
+
+            return View();
+        }
+
         public IActionResult EditProfile()
         {
+            IEnumerable<User> _user = db.tblUser;
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Login");
 
-            User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));            
+            IEnumerable<User> u = _user.Where(u => u.Username == HttpContext.Session.GetString("username").ToString());
+            //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));            
+            User user = u.First();
+            return View(user);
+        }
 
-            return View(_user);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProfile(User user)
+        {
+            var _user = db.tblUser.FirstOrDefault(u=> u.UId == user.UId);
+
+            _user.Fname = user.Fname;
+            _user.Mname = user.Mname;
+            _user.Lname = user.Lname;
+            _user.Gender = user.Gender;
+            _user.ContactNo = user.ContactNo;
+            _user.DateOfBirth = user.DateOfBirth;
+
+            db.SaveChanges();
+
+            return View();
         }
 
         [HttpPost]
@@ -83,13 +153,9 @@ namespace Suffer_Travels.Controllers
         public IActionResult Register(User user)
         {
             IEnumerable<User> _user = db.tblUser;
-            if (_user.Any(u => u.Email == user.Email))
-                ModelState.AddModelError("Email", "Email is already verified");
-            
             if (_user.Any(u => u.ContactNo == user.ContactNo))
                 ModelState.AddModelError("ContactNo", "Contact Number is already taken");
-            
-            if (ModelState.IsValid)
+            else
             {
                 string email = user.Email;
                 string fname = user.Fname;
@@ -122,9 +188,12 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult VerifyUser(OTP oneTimePass, int? id)
+        public IActionResult VerifyUser(OTP oneTimePass)
         {
-            if(id == 1)
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
+                    if (otp == Convert.ToInt32(oneTimePass.otp))
+                        return RedirectToAction("ForgotPassword");
+    
                 if (otp == Convert.ToInt32(oneTimePass.otp))
                     return RedirectToAction("ChangePassword");
             
