@@ -133,6 +133,11 @@ namespace Suffer_Travels.Controllers
                 ModelState.AddModelError("Username", "Username is already taken");
             }
 
+            if (register.password != register.rePassword)
+            {
+                ModelState.AddModelError("Password", "Password do not match");
+            }
+
             //String fname = tempDataToString(TempData["tmpFname"]);
             //String mname = tempDataToString(TempData["tmpMname"]);
             //String lname = tempDataToString(TempData["tmpLname"]);
