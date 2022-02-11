@@ -31,8 +31,16 @@ namespace Suffer_Travels.Controllers
         {
             IEnumerable<User> _user = db.tblUser;
 
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Homepage");
+
             if (_user.Any(u => u.Username == user.Username && u.Password == user.Password))
             {
+                //BIG ERROR CHANCE
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                {
+                    HttpContext.Session.SetString("username", user.Username.ToString().Trim());
+                }
                 return RedirectToAction("HomePage");
             }
 
@@ -41,7 +49,10 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult HomePage(User user)
         {
-            
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            {
+                return RedirectToAction("Login");
+            }
             return View();
         }
 
@@ -54,6 +65,7 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Logout()
         {
+            HttpContext.Session.Clear();
             //PARAM: Action, Controller
             return RedirectToAction("Index", "Home");
         }
