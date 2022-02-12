@@ -108,11 +108,26 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult VerifyEmail(User user)
         {
-            if(user.Email != null)
+            IEnumerable<User> _user = db.tblUser;
+           /* if (!_user.Any(u => u.Email == user.Email))
             {
-                HttpContext.Session.SetString("forgotEmail", user.Email);
-                otp = sendOtp(user.Email, "Forgot Password");
-                return RedirectToAction("VerifyUser");
+                ModelState.AddModelError("Email", "Email does not exist. Please register");
+            }*/
+
+            if (user.Email != null)
+            {
+                if (!_user.Any(u => u.Email == user.Email))
+                {
+                    ModelState.AddModelError("Email", "Email does not exist. Please register");
+                    return View(user);
+                 //   return RedirectToAction("LogIn");
+                }
+                else
+                {
+                    HttpContext.Session.SetString("forgotEmail", user.Email);
+                    otp = sendOtp(user.Email, "Forgot Password");
+                    return RedirectToAction("VerifyUser");
+                }
             }
 
             return View();
