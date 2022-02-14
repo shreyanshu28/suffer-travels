@@ -73,7 +73,7 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddPassword(Register register)
         {
@@ -98,7 +98,7 @@ namespace Suffer_Travels.Controllers
             db.SaveChanges();
 
             return RedirectToAction("Login");
-        }
+        }*/
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -107,7 +107,8 @@ namespace Suffer_Travels.Controllers
             IEnumerable<User> _user = db.tblUser;
             if (id != 1)
             {
-                if (register.Email != null)
+                return RedirectToAction("HomePage");
+                /*if (register.Email != null)
                 {
                     if (!_user.Any(u => u.Email == register.Email))
                     {
@@ -119,7 +120,7 @@ namespace Suffer_Travels.Controllers
                         otp = sendOtp(register.Email, "Forgot Password");
                         return RedirectToAction("VerifyUser");
                     }
-                }
+                }*/
             }
 
 
