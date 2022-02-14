@@ -5,44 +5,62 @@
 @{
     ViewData["title"] = "Log In - Suffer Travels";
 }
-
-<form method="post">
-    <table width="0">
-        <tr>
-            <td>
-                <label asp-for="Username" class="text-dark"></label>
-            </td>
-            <td>
-                <input asp-for="Username" id="name" type="text" class="form-control" required/>
-            </td>
-        <tr>
-            <td>
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label asp-for="Password" class="text-dark"></label>
-            </td>
-            <td>
-                <input asp-for="Password" type="password" id="password" class="form-control" required/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </td>
-        <tr>
-            <td>
-                <button type="submit" id="submit" class="btn btn-info m-2">Login</button>
-            </td>
-            <td>
-                <a asp-controller="User" asp-action="Register" class="btn btn-warning" >Register</a>
-                <a asp-controller="User" asp-action="VerifyEmail" >Forgot password</a>
-            </td>
-        </tr>
-    </table>
-</form>
+<div style="background-image: url('../photos/pexels-julia-volk-5193169.jpg'); background-size: cover">
+    <main class="container p-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+          <li class="breadcrumb-item active">Login</li>
+        </ol>
+        <div class="row justify-content-center">
+            <form class="d-flex justify-content-center container main-body">
+                <div class="card card-style" style="width: 40rem; height: 75vh;">
+                  <div class="card-body d-flex flex-column justify-content-around">
+                    <h1
+                      class="card-title card-title-style align-self-start"
+                      style="text-align: center; font-size: 4rem"
+                    >
+                      Login
+                    </h1>
+                    <div>
+                      <div class="form-floating mb-3">
+                        <input
+                          type="email"
+                          class="form-control"
+                          asp-for="Email"
+                          id="email"
+                          placeholder="name@example.com"
+                        />
+                        <label asp-for="Email">Email address</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="password"
+                          placeholder="enter your password"
+                          asp-for="Password"
+                        />
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        style="font-size: 1.5rem"
+                      >
+                        Login
+                      </button>
+                      <span>Not registered? <a asp-controller="User" asp-action="Register" >Register</a></span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+        </div>
+    </main>
+</div>
 
 
 @section scripts {
