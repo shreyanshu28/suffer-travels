@@ -19,6 +19,14 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
+        public IActionResult HomePage(User user)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Login");
+
+            ViewData["username"] = HttpContext.Session.GetString("username");
+            return View();
+        }
 
         public IActionResult Login()
         {
@@ -48,14 +56,6 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult HomePage(User user)
-        {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
-                return RedirectToAction("Login");
-
-            ViewData["username"] = HttpContext.Session.GetString("username");
-            return View();
-        }
         public IActionResult Register()
         {
             return View();
@@ -68,70 +68,61 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult ForgotPassword()
+        public IActionResult AddPassword()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ForgotPassword(Register register)
+        public IActionResult AddPassword(Register register)
         {
             IEnumerable<User> user = db.tblUser;
-            if (user.Any(u => u.Email == register.email))
+            if (user.Any(u => u.Email == register.Email))
             {
-                ModelState.AddModelError("email", "Username is already taken");
+                ModelState.AddModelError("Email", "Username is already taken");
             }
 
-            if (register.password != register.rePassword)
+            if (register.Password != register.RePassword)
             {
-                ModelState.AddModelError("password", "Password do not match");
+                ModelState.AddModelError("Password", "Password do not match");
             }
             string email = "";
-            if(!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
                 email = HttpContext.Session.GetString("forgotEmail");
 
             var _user = db.tblUser.FirstOrDefault(u => u.Email == email);
 
-            _user.Password = register.password;
-            
+            _user.Password = register.Password;
+
             db.SaveChanges();
 
             return RedirectToAction("Login");
         }
-        public IActionResult VerifyEmail()
-        {
-            return View();
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult VerifyEmail(User user, int? id)
+        public IActionResult AddPassword(Register register, int? id)
         {
             IEnumerable<User> _user = db.tblUser;
-            /* if (!_user.Any(u => u.Email == user.Email))
-             {
-                 ModelState.AddModelError("Email", "Email does not exist. Please register");
-             }*/
-
             if (id != 1)
             {
-                if (user.Email != null)
+                if (register.Email != null)
                 {
-                    if (!_user.Any(u => u.Email == user.Email))
+                    if (!_user.Any(u => u.Email == register.Email))
                     {
                         ModelState.AddModelError("Email", "Email does not exist. Please register");
-                        return View(user);
-                        //   return RedirectToAction("LogIn");
+                        return View(register);
                     }
                     else
                     {
-                        HttpContext.Session.SetString("forgotEmail", user.Email);
-                        otp = sendOtp(user.Email, "Forgot Password");
+                        otp = sendOtp(register.Email, "Forgot Password");
                         return RedirectToAction("VerifyUser");
                     }
                 }
             }
+
+
 
             return View();
         }
@@ -198,69 +189,6 @@ namespace Suffer_Travels.Controllers
             return "";
         }
 
-        
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult VerifyUser(OTP oneTimePass)
-        {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
-                    if (otp == Convert.ToInt32(oneTimePass.otp))
-                        return RedirectToAction("ForgotPassword");
-    
-                if (otp == Convert.ToInt32(oneTimePass.otp))
-                    return RedirectToAction("ChangePassword");
-            
-            return View();
-        }
-
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ChangePassword(Register register)
-        {
-            IEnumerable<User> user = db.tblUser;
-            if (user.Any(u => u.Email == register.email))
-            {
-                ModelState.AddModelError("Username", "Username is already taken");
-            }
-
-            if (register.password != register.rePassword)
-            {
-                ModelState.AddModelError("Password", "Password do not match");
-            }
-            if (ModelState.IsValid)
-            {
-                String fname = tempDataToString(TempData["tmpFname"]);
-                String mname = tempDataToString(TempData["tmpMname"]);
-                String lname = tempDataToString(TempData["tmpLname"]);
-                String dob = tempDataToString(TempData["tmpDOB"]);
-                String gender = tempDataToString(TempData["tmpGender"]);
-                String contactNo = tempDataToString(TempData["tmpContactNo"]);
-                String email = tempDataToString(TempData["tmpEmail"]);
-
-                User u = new User();
-                u.Fname = fname;
-                u.Lname = lname;
-                u.Mname = mname;
-                u.Gender = Char.Parse(gender);
-                u.DateOfBirth = DateTime.Parse(dob);
-                u.Email = email;
-                u.ContactNo = Convert.ToInt64(contactNo);
-                u.Email = register.email;
-                u.Password = register.password;
-                db.tblUser.Add(u);
-                db.SaveChanges();
-
-                return RedirectToAction("HomePage");
-            }
-            return View();
-        }
-
         public static int sendOtp(string toEmail, string username)
         {
             
@@ -309,33 +237,6 @@ namespace Suffer_Travels.Controllers
                 return 0;
             }
             return otp;
-        }
-
-        public IActionResult VerifyUser()
-        {
-            //if (TempData.ContainsKey("tmpFname"))
-            //    fname = TempData["tmpFname"].ToString();
-
-            //if (TempData.ContainsKey("tmpMname"))
-            //    mname = TempData["tmpMname"].ToString();
-
-            //if (TempData.ContainsKey("tmpLname"))
-            //    lname = TempData["tmpLname"].ToString();
-
-            //if (TempData.ContainsKey("tmpGender"))
-            //    gender = TempData["tmpGender"].ToString();
-
-            //if (TempData.ContainsKey("tmpDOB"))
-            //    dob = TempData["tmpDOB"].ToString(); 
-
-            //if (TempData.ContainsKey("tmpContactNo"))
-            //    contactNo = TempData["tmpContactNo"].ToString(); 
-
-            //if (TempData.ContainsKey("tmpEmail"))
-            //    email = TempData["tmpEmail"].ToString();
-
-            //TempData.Clear();
-            return View();
         }
     }
 }

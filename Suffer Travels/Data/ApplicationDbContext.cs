@@ -12,7 +12,6 @@ namespace Suffer_Travels.Data
 
         public DbSet<User> tblUser { get; set; }
         public DbSet<Role> tblRole { get; set; }
-        public OTP OTP { get; set; }
         public Register Register { get; set; }
 
     }
