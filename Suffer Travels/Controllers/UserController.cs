@@ -78,14 +78,14 @@ namespace Suffer_Travels.Controllers
         public IActionResult ForgotPassword(Register register)
         {
             IEnumerable<User> user = db.tblUser;
-            if (user.Any(u => u.Username == register.username))
+            if (user.Any(u => u.Email == register.email))
             {
-                ModelState.AddModelError("Username", "Username is already taken");
+                ModelState.AddModelError("email", "Username is already taken");
             }
 
             if (register.password != register.rePassword)
             {
-                ModelState.AddModelError("Password", "Password do not match");
+                ModelState.AddModelError("password", "Password do not match");
             }
             string email = "";
             if(!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
@@ -106,27 +106,30 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult VerifyEmail(User user)
+        public IActionResult VerifyEmail(User user, int? id)
         {
             IEnumerable<User> _user = db.tblUser;
-           /* if (!_user.Any(u => u.Email == user.Email))
-            {
-                ModelState.AddModelError("Email", "Email does not exist. Please register");
-            }*/
+            /* if (!_user.Any(u => u.Email == user.Email))
+             {
+                 ModelState.AddModelError("Email", "Email does not exist. Please register");
+             }*/
 
-            if (user.Email != null)
+            if (id != 1)
             {
-                if (!_user.Any(u => u.Email == user.Email))
+                if (user.Email != null)
                 {
-                    ModelState.AddModelError("Email", "Email does not exist. Please register");
-                    return View(user);
-                 //   return RedirectToAction("LogIn");
-                }
-                else
-                {
-                    HttpContext.Session.SetString("forgotEmail", user.Email);
-                    otp = sendOtp(user.Email, "Forgot Password");
-                    return RedirectToAction("VerifyUser");
+                    if (!_user.Any(u => u.Email == user.Email))
+                    {
+                        ModelState.AddModelError("Email", "Email does not exist. Please register");
+                        return View(user);
+                        //   return RedirectToAction("LogIn");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("forgotEmail", user.Email);
+                        otp = sendOtp(user.Email, "Forgot Password");
+                        return RedirectToAction("VerifyUser");
+                    }
                 }
             }
 
@@ -182,12 +185,8 @@ namespace Suffer_Travels.Controllers
                 TempData.Add("tmpDOB", user.DateOfBirth);
                 TempData.Add("tmpGender", user.Gender.ToString());
                 TempData.Add("tmpContactNo", user.ContactNo.ToString());
-                TempData.Add("tmpEmail", email);
 
-                otp = sendOtp(email, fname + " " + lname);
-
-                if (otp != 0)
-                    return RedirectToAction("VerifyUser");
+                return RedirectToAction("");
             }
             return View();
         }
@@ -225,7 +224,7 @@ namespace Suffer_Travels.Controllers
         public IActionResult ChangePassword(Register register)
         {
             IEnumerable<User> user = db.tblUser;
-            if (user.Any(u => u.Username == register.username))
+            if (user.Any(u => u.Email == register.email))
             {
                 ModelState.AddModelError("Username", "Username is already taken");
             }
@@ -252,7 +251,7 @@ namespace Suffer_Travels.Controllers
                 u.DateOfBirth = DateTime.Parse(dob);
                 u.Email = email;
                 u.ContactNo = Convert.ToInt64(contactNo);
-                u.Username = register.username;
+                u.Email = register.email;
                 u.Password = register.password;
                 db.tblUser.Add(u);
                 db.SaveChanges();

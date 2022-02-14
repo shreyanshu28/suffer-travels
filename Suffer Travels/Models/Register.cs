@@ -6,8 +6,8 @@ namespace Suffer_Travels.Models
     [NotMapped]
     public class Register
     {
-        [Required(ErrorMessage = "Username cannot be empty")]
-        public string username { get; set; }
+        [Required(ErrorMessage = "Email address cannot be empty")]
+        public string email { get; set; }
         
         [Required]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]
