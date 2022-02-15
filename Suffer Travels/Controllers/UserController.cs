@@ -68,6 +68,28 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Register(User user)
+        {
+            IEnumerable<User> _user = db.tblUser;
+            if (_user.Any(u => u.ContactNo == user.ContactNo))
+                ModelState.AddModelError("ContactNo", "Contact Number is already taken");
+            else
+            {
+                TempData.Clear();
+                TempData.Add("Fname", user.Fname.Trim());
+                TempData.Add("Mname", user.Mname.Trim());
+                TempData.Add("Lname", user.Lname.Trim());
+                TempData.Add("DOB", user.DateOfBirth);
+                TempData.Add("Gender", user.Gender.ToString());
+                TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
+
+                return RedirectToAction("AddPassword");
+            }
+            return View();
+        }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -104,6 +126,8 @@ namespace Suffer_Travels.Controllers
                     user.Password = register.Password;
 
                     db.tblUser.Add(user);
+                    db.SaveChanges();
+                    return RedirectToAction("Login");
                 }
             }
 
@@ -121,10 +145,10 @@ namespace Suffer_Travels.Controllers
         public IActionResult EditProfile()
         {
             IEnumerable<User> _user = db.tblUser;
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
 
-            IEnumerable<User> u = _user.Where(u => u.Username == HttpContext.Session.GetString("username").ToString());
+            IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));            
             User user = u.First();
             return View(user);
@@ -153,27 +177,6 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Register(User user)
-        {
-            IEnumerable<User> _user = db.tblUser;
-            if (_user.Any(u => u.ContactNo == user.ContactNo))
-                ModelState.AddModelError("ContactNo", "Contact Number is already taken");
-            else
-            {
-                TempData.Clear();
-                TempData.Add("Fname", user.Fname.Trim());
-                TempData.Add("Mname", user.Mname.Trim());
-                TempData.Add("Lname", user.Lname.Trim());
-                TempData.Add("DOB", user.DateOfBirth);
-                TempData.Add("Gender", user.Gender.ToString());
-                TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
-
-                return RedirectToAction("AddPassword");
-            }
-            return View();
-        }
 
         public IActionResult ViewUsers()
         {
