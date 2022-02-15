@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Suffer_Travels.Data;
 
@@ -11,9 +12,10 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220215151443_AddStatusToUser")]
+    partial class AddStatusToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace Suffer_Travels.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("Date");
 
-                    b.Property<DateTime?>("DeclinedAt")
+                    b.Property<DateTime>("DeclinedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")

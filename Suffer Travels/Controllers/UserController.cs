@@ -177,9 +177,9 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult ViewUsers()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Login");
-            IEnumerable<User> _user = db.tblUser;
+            */IEnumerable<User> _user = db.tblUser;
             IEnumerable<Role> _role = db.tblRole;
             dynamic UserData = new ExpandoObject();
             UserData.User = _user;
