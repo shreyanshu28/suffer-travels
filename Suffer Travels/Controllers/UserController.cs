@@ -81,8 +81,32 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPassword(User user, int? id)
+        public IActionResult AddPassword(Register register)
         {
+            User user;
+            if(Convert.ToInt32(register.Otp) == otp)
+            {
+                if(register.Password != register.RePassword)
+                {
+                    ModelState.AddModelError("Password", "The passwords do not match");
+                }
+                else
+                {
+                    user = new User();
+
+                    user.Fname = TempData["Fname"].ToString();
+                    user.Mname = TempData["Mname"].ToString();
+                    user.Lname = TempData["Lname"].ToString();
+                    user.Gender = Char.Parse(TempData["Gender"].ToString());
+                    user.DateOfBirth = DateTime.Parse(TempData["Dob"].ToString());
+                    user.ContactNo = Convert.ToInt64(TempData["ContactNo"].ToString());
+                    user.Email = register.Email;
+                    user.Password = register.Password;
+
+                    db.tblUser.Add(user);
+                }
+            }
+
             return View();
         }
 
@@ -138,18 +162,15 @@ namespace Suffer_Travels.Controllers
                 ModelState.AddModelError("ContactNo", "Contact Number is already taken");
             else
             {
-                string email = user.Email;
-                string fname = user.Fname;
-                string lname = user.Lname;
                 TempData.Clear();
-                TempData.Add("tmpFname", user.Fname);
-                TempData.Add("tmpMname", user.Mname);
-                TempData.Add("tmpLname", user.Lname);
-                TempData.Add("tmpDOB", user.DateOfBirth);
-                TempData.Add("tmpGender", user.Gender.ToString());
-                TempData.Add("tmpContactNo", user.ContactNo.ToString());
+                TempData.Add("Fname", user.Fname.Trim());
+                TempData.Add("Mname", user.Mname.Trim());
+                TempData.Add("Lname", user.Lname.Trim());
+                TempData.Add("DOB", user.DateOfBirth);
+                TempData.Add("Gender", user.Gender.ToString());
+                TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
 
-                return RedirectToAction("");
+                return RedirectToAction("AddPassword");
             }
             return View();
         }
