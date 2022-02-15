@@ -27,11 +27,6 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "Email address is required!")]
         [EmailAddress(ErrorMessage = "Enter a valid email address")]
         public string Email { get; set; }
-        [Required(ErrorMessage = "Username is required!")]
-        [StringLength(50, ErrorMessage = "Username should have 3 to 50 characters only", MinimumLength = 3)]
-        [MinLength(3, ErrorMessage = "Username must be 3-50")]
-        [RegularExpression("^[a-zA-Z][0-9a-zA-Z]+", ErrorMessage = "Username is not valid!")]
-        public string Username { get; set; }
         [Required(ErrorMessage = "Password is required!")]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]
         public string Password { get; set; }
