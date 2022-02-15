@@ -20,6 +20,7 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "Gender is required!")]
         public char Gender { get; set; } = 'M';
         [Required]
+        [Column(TypeName = "Date")]
         public DateTime DateOfBirth { get; set; }
         [Required(ErrorMessage = "Contact number is required!")]
         [RegularExpression("^[6-9][0-9]{9,9}", ErrorMessage = "Please enter valid contact number")]
@@ -40,5 +41,9 @@ namespace Suffer_Travels.Models
         [ForeignKey("Role")]
         public UInt32 RoleId { get; set; } = 1;
 
+        public string Status { get; set; } = "Approved";
+
+        public DateTime DeclinedAt { get; set; }
+        
     }
 }
