@@ -15,7 +15,9 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Index()
         {
-            
+            string hashh = "kusah;l";
+            int hashCode = hashh.GetHashCode();
+            ViewData["Hash"] = hashCode;
             return View();
         }
 
