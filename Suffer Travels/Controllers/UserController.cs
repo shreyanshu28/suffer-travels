@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
+using System.Dynamic;
 using System.Net;
 using System.Net.Mail;
 
@@ -105,6 +106,11 @@ namespace Suffer_Travels.Controllers
             return View(user);
         }
 
+        public IActionResult EditRole (int? id)
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditProfile(User user)
@@ -146,6 +152,18 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("");
             }
             return View();
+        }
+
+        public IActionResult ViewUsers()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                return RedirectToAction("Login");
+            IEnumerable<User> _user = db.tblUser;
+            IEnumerable<Role> _role = db.tblRole;
+            dynamic UserData = new ExpandoObject();
+            UserData.User = _user;
+            UserData.Role = _role;
+            return View(UserData);
         }
 
         public string tempDataToString(Object tempData)
