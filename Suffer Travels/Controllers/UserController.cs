@@ -10,7 +10,7 @@ namespace Suffer_Travels.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext db;
-        private static int otp;
+        private int otp;
         public UserController(ApplicationDbContext _db)
         {
             db = _db;
@@ -102,14 +102,21 @@ namespace Suffer_Travels.Controllers
         }*/
 
         [HttpPost]
+        public ActionResult SendOtp(Register register)
+        {
+            sendOtp(register.Email, "kushal");
+
+            return Json( new { sendOtp = otp } );
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddPassword(Register register, int? id)
         {
             IEnumerable<User> _user = db.tblUser;
             if (id != 1)
             {
-                return RedirectToAction("HomePage");
-                /*if (register.Email != null)
+                if (register.Email != null)
                 {
                     if (!_user.Any(u => u.Email == register.Email))
                     {
@@ -121,7 +128,7 @@ namespace Suffer_Travels.Controllers
                         otp = sendOtp(register.Email, "Forgot Password");
                         return RedirectToAction("VerifyUser");
                     }
-                }*/
+                }
             }
 
 
@@ -208,14 +215,14 @@ namespace Suffer_Travels.Controllers
             return "";
         }
 
-        public static int sendOtp(string toEmail, string username)
+        public int sendOtp(string toEmail, string username)
         {
             
             string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
             string server = "smtp.gmail.com";
 
             MailAddress from = new MailAddress("kushal8217@gmail.com", "Kushal Gaiwala");
-            MailAddress to = new MailAddress(toEmail, username);
+            MailAddress to = new MailAddress(toEmail, "shreyanshu vyas");
             MailMessage message = new MailMessage(from, to);
 
             Random rand = new Random();
