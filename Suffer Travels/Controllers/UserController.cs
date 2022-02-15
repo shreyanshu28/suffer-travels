@@ -20,36 +20,41 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
+
         public IActionResult HomePage(User user)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
 
-            ViewData["username"] = HttpContext.Session.GetString("username");
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             return View();
         }
 
         public IActionResult Login()
         {
+            HttpContext.Session.Clear();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(User user)
+        public IActionResult Login(Register register)
         {
+
             IEnumerable<User> _user = db.tblUser;
 
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Homepage");
 
-            if (_user.Any(u => u.Username == user.Username && u.Password == user.Password))
+            if (_user.Any(u => u.Email == register.Email && u.Password == register.Password))
             {
-                //BIG ERROR CHANCE
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+                User user = _user.FirstOrDefault(u => u.Email == register.Email);
+
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 {
-                    HttpContext.Session.SetString("username", user.Username.ToString().Trim());
-                    HttpContext.Session.SetInt32("userid", (int)user.UId);
+                    HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
+                    HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
+                    //HttpContext.Session.SetInt32("UserId", (int)register.UId);
                 }
                 return RedirectToAction("HomePage");
             }
@@ -59,13 +64,13 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Register()
         {
+            HttpContext.Session.Clear();
             return View();
         }
 
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            //PARAM: Action, Controller
             return RedirectToAction("Index", "Home");
         }
 
@@ -74,66 +79,19 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPassword(Register register)
+        public IActionResult AddPassword(User user, int? id)
         {
-            IEnumerable<User> user = db.tblUser;
-            if (user.Any(u => u.Email == register.Email))
-            {
-                ModelState.AddModelError("Email", "Username is already taken");
-            }
-
-            if (register.Password != register.RePassword)
-            {
-                ModelState.AddModelError("Password", "Password do not match");
-            }
-            string email = "";
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("forgotEmail")))
-                email = HttpContext.Session.GetString("forgotEmail");
-
-            var _user = db.tblUser.FirstOrDefault(u => u.Email == email);
-
-            _user.Password = register.Password;
-
-            db.SaveChanges();
-
-            return RedirectToAction("Login");
-        }*/
+            return View();
+        }
 
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
             sendOtp(register.Email, "kushal");
 
-            return Json( new { sendOtp = otp } );
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddPassword(Register register, int? id)
-        {
-            IEnumerable<User> _user = db.tblUser;
-            if (id != 1)
-            {
-                if (register.Email != null)
-                {
-                    if (!_user.Any(u => u.Email == register.Email))
-                    {
-                        ModelState.AddModelError("Email", "Email does not exist. Please register");
-                        return View(register);
-                    }
-                    else
-                    {
-                        otp = sendOtp(register.Email, "Forgot Password");
-                        return RedirectToAction("VerifyUser");
-                    }
-                }
-            }
-
-
-
-            return View();
+            return Json(new { sendOtp = otp });
         }
 
         public IActionResult EditProfile()

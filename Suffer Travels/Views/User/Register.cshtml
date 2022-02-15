@@ -1,5 +1,5 @@
-﻿@* For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860 *@ 
-@model User 
+﻿@model User 
+
 @{
     ViewData["title"] = "Register"; 
 }
@@ -18,7 +18,7 @@
     </ol>
 
     <div class="row justify-content-center">
-      <form method="post" asp-action="VerifyEmail" asp-route-id="1" class="d-flex justify-content-center container main-body">
+      <form method="post" asp-action="AddPassword" asp-route-id="1" class="d-flex justify-content-center container main-body">
         <div class="card card-style" style="width: 40rem">
           <div class="card-body d-flex flex-column justify-content-between">
             <h1
