@@ -180,11 +180,48 @@ namespace Suffer_Travels.Controllers
             /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Login");
             */IEnumerable<User> _user = db.tblUser;
-            IEnumerable<Role> _role = db.tblRole;
-            dynamic UserData = new ExpandoObject();
-            UserData.User = _user;
-            UserData.Role = _role;
-            return View(UserData);
+            return View(_user);
+        }
+        
+        public IActionResult ApproveRole(uint? id)
+        {
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ViewUsers");
+            }
+            var _user = db.tblUser.Find(id);
+            _user.Status = ApproveStatus();
+            db.tblUser.Update(_user);
+            db.SaveChanges();
+            TempData["Success"] = "Request Approved";
+            return RedirectToAction("ViewUsers");
+        }
+
+        public IActionResult DeclineRole(uint? id)
+        {
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ViewUsers");
+            }
+
+            var _user = db.tblUser.Find(id);
+            _user.Status = DeclineStatus();
+            db.tblUser.Update(_user);
+            db.SaveChanges();
+            TempData["Success"] = "Request Declined";
+            return RedirectToAction("ViewUsers");
+        }
+
+        public String ApproveStatus()
+        {
+            return "Approved";
+        }
+
+        public String DeclineStatus()
+        {
+            return "Declined";
         }
 
         public string tempDataToString(Object tempData)
