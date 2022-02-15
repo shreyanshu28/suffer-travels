@@ -1,0 +1,89 @@
+﻿@model dynamic
+@{
+    ViewData["title"] = "View User Details";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Middle Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Gender
+            </th>
+            <th>
+                Date Of Birth
+            </th>
+            <th>
+                Contact Number
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+       @foreach(var item in Model.User)
+        {
+            <tr>
+                <td>
+                    @item.UId
+                </td>
+                <td>
+                    @item.Fname
+                </td>
+                <td>
+                    @item.Mname
+                </td>
+                <td>
+                    @item.Lname
+                </td>
+                <td>
+                    @item.Gender
+                </td>
+                <td>
+                    @item.DateOfBirth
+                </td>
+                <td>
+                    @item.ContactNo
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.Username
+                </td>
+                <td>
+                   @item.RoleId
+                </td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        @*ADD APPROVE IF DECLINED AND VICE VERSA*@
+                        <a class="btn btn-primary mx-2" asp-controller="User" asp-action=@( item.UId % 2 == 0 ? "ApproveRole" : "DeclineRole" ) asp-route-id="@item.UId">Change Role</a>
+
+                    </div>                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
