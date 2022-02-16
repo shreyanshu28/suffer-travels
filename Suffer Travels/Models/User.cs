@@ -37,7 +37,7 @@ namespace Suffer_Travels.Models
 
         public string? Status { get; set; } = "Approved";
 
-        public DateTime? DeclinedAt { get; set; }      
+        public DateTime? ChangedAt { get; set; }      
         
 
     }

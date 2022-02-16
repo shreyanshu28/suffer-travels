@@ -237,7 +237,7 @@ namespace Suffer_Travels.Controllers
             }
             var _user = db.tblUser.Find(id);
             _user.Status = ApproveStatus();
-            _user.DeclinedAt = DateTime.Today;
+            _user.ChangedAt = DateTime.Today;
             db.tblUser.Update(_user);
             db.SaveChanges();
             TempData["Success"] = "Request Approved";
@@ -255,7 +255,7 @@ namespace Suffer_Travels.Controllers
 
             var _user = db.tblUser.Find(id);
             _user.Status = DeclineStatus();
-            _user.DeclinedAt = DateTime.Today;
+            _user.ChangedAt = DateTime.Today;
             db.tblUser.Update(_user);
             db.SaveChanges();
             TempData["Success"] = "Request Declined";
