@@ -137,9 +137,10 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
-            sendOtp(register.Email, "kushal");
-
-            return Json(new { sendOtp = otp });
+            sendOtp(register.Email, HttpContext.Session.GetString("Fname").ToString());
+            if(otp != 0)
+                return Json(new { sendOtp = otp, status = 1 });
+            return Json(new { sendOtp = otp, status = 0 });
         }
 
         public IActionResult EditProfile()

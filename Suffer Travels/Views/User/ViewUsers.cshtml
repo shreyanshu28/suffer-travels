@@ -32,9 +32,6 @@
                 Email
             </th>
             <th>
-                Username
-            </th>
-            <th>
                 Role
             </th>
             <th>
@@ -65,16 +62,13 @@
                     @item.Gender
                 </td>
                 <td>
-                    @item.DateOfBirth
+                    @item.DateOfBirth.ToString("dd/MM/yyyy")
                 </td>
                 <td>
                     @item.ContactNo
                 </td>
                 <td>
                     @item.Email
-                </td>
-                <td>
-                    @item.Username
                 </td>
                     @if(item.RoleId == 1)
                     {
