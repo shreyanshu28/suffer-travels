@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<User>
 @{
     ViewData["title"] = "View User Details";
-    Layout = "~/Views/Shared/User/Customer.cshtml";
+    Layout = "~/Views/Shared/User/_Admin.cshtml";
 }
 
-<table class="table table-bordered table-striped" >
+<table class="table table-bordered table-dark table-striped" id="myTable" >
     <thead>
         <tr>
             <th>
