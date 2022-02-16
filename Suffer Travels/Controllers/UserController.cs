@@ -258,7 +258,7 @@ namespace Suffer_Travels.Controllers
             db.tblUser.Update(_user);
             db.SaveChanges();
             TempData["Success"] = "Request Declined";
-            sendRoleNotification(HttpContext.Session.GetString("Email"), HttpContext.Session.GetString("Fname"), DeclineStatus());
+            sendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), DeclineStatus());
             return RedirectToAction("ViewUsers");
         }
 
