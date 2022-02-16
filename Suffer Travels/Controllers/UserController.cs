@@ -273,9 +273,8 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult ViewUsers()
         {
-            /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
-            */
             IEnumerable<User> _user = db.tblUser;
             return View(_user);
         }
@@ -289,9 +288,11 @@ namespace Suffer_Travels.Controllers
             }
             var _user = db.tblUser.Find(id);
             _user.Status = ApproveStatus();
+            _user.ChangedAt = DateTime.Today;
             db.tblUser.Update(_user);
             db.SaveChanges();
             TempData["Success"] = "Request Approved";
+            sendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), ApproveStatus());
             return RedirectToAction("ViewUsers");
         }
 
@@ -305,9 +306,11 @@ namespace Suffer_Travels.Controllers
 
             var _user = db.tblUser.Find(id);
             _user.Status = DeclineStatus();
+            _user.ChangedAt = DateTime.Today;
             db.tblUser.Update(_user);
             db.SaveChanges();
             TempData["Success"] = "Request Declined";
+            sendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), DeclineStatus());
             return RedirectToAction("ViewUsers");
         }
 
@@ -328,13 +331,63 @@ namespace Suffer_Travels.Controllers
             return "";
         }
 
+        public int sendRoleNotification(string toEmail, string username, string status)
+        {
+            string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
+            //string email = "suffertravelco@gmail.com", pass = "tavabiryani";
+            string server = "smtp.gmail.com";
+            string approval_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been approved </span>";
+            string decline_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been declined. You can try again. </span>";
+
+            MailAddress from = new MailAddress(email, "Suffer Travels");
+            MailAddress to = new MailAddress(toEmail, "shreyanshu vyas");
+            MailMessage message = new MailMessage(from, to);
+
+            if(status.Equals(ApproveStatus()))
+            {
+                message.Subject = "Congratulations! Your request has been approved!";
+                message.Body = approval_message;
+
+            }
+            else if(status.Equals(DeclineStatus()))
+            {
+                message.Subject = "Oh no! Your request is declined";
+                message.Body = decline_message;
+            }
+
+            message.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient(server);
+
+            // Include credentials if the server requires them.
+            client.Port = 587;
+            client.Credentials = new NetworkCredential(from.Address, pass);
+            client.EnableSsl = true;
+
+            Console.WriteLine("Sending an email message to {0} by using the SMTP host {1}.",
+                to.Address, client.Host);
+
+            try
+            {
+                client.Send(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception caught in CreateCopyMessage(): {0}",
+                    ex.ToString());
+                return 0;
+            }
+            return 1;
+        }
+
         public int sendOtp(string toEmail, string username)
         {
 
             string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
+            //string email = "suffertravelco@gmail.com", pass = "tavabiryani";
             string server = "smtp.gmail.com";
 
-            MailAddress from = new MailAddress("kushal8217@gmail.com", "Kushal Gaiwala");
+            MailAddress from = new MailAddress(email, "Suffer Travels");
             MailAddress to = new MailAddress(toEmail, "shreyanshu vyas");
             MailMessage message = new MailMessage(from, to);
 

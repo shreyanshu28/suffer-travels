@@ -14,6 +14,21 @@ namespace Suffer_Travels.Data
         public DbSet<Role> tblRole { get; set; }
         public Register Register { get; set; }
 
+        public DbSet<City> tblCity { get; set; }
+        public DbSet<Country> tblCountry { get; set; }
+        public DbSet<State> tblState { get; set; }
+        public DbSet<Area> tblArea { get; set; }
+
+        public DbSet<Photo> tblPhotos { get; set; }
+
+        public DbSet<Tour> tblTour { get; set; }
+        public DbSet<TourCities> tblTourCities { get; set; }
+        public DbSet<TourDates> tblTourDates { get; set; }
+        public DbSet<TourItinerary> tblTourItinerary { get; set; }
+        public DbSet<TourPhotos> tblTourPhotos { get; set; }
+        public DbSet<TourType> tblTourType { get; set; }
+ 
+
     }
 
 }
