@@ -149,7 +149,7 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("Login");
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
-            //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));            
+            //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
             User user = u.First();
             return View(user);
         }
