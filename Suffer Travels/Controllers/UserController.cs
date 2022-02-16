@@ -30,6 +30,23 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        public IActionResult AdminHomePage(User user)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Login");
+
+            if (HttpContext.Session.GetInt32("Role") == 1)
+            {
+                ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+                return View();
+            }
+
+            else
+            {
+                return RedirectToAction("HomePage");
+            }
+        }
+
         public IActionResult Login()
         {
             HttpContext.Session.Clear();
@@ -55,6 +72,30 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
                     HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
                     //HttpContext.Session.SetInt32("UserId", (int)register.UId);
+                    HttpContext.Session.SetInt32("Role", Convert.ToInt32(user.RoleId));
+                }
+
+                int? RoleId = HttpContext.Session.GetInt32("Role");
+
+                if(RoleId == 1)
+                {
+                    return RedirectToAction("AdminHomePage");
+                }
+                else if(RoleId == 2)
+                {
+                    return RedirectToAction("HomePage");
+                }                
+                else if(RoleId == 3)
+                {
+                    return RedirectToAction("HomePage");
+                }
+                else if(RoleId == 4)
+                {
+                    return RedirectToAction("HomePage");
+                }
+                else
+                {
+                    return NotFound();
                 }
                 return RedirectToAction("HomePage");
             }
