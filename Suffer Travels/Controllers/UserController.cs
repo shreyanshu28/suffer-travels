@@ -10,10 +10,13 @@ namespace Suffer_Travels.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext db;
+        private readonly IWebHostEnvironment env;
+        private readonly string wwwroot;
         private int otp;
-        public UserController(ApplicationDbContext _db)
+        public UserController(ApplicationDbContext _db, IWebHostEnvironment _env)
         {
             db = _db;
+            env = _env;
         }
 
         public IActionResult Index()
@@ -77,19 +80,19 @@ namespace Suffer_Travels.Controllers
 
                 int? RoleId = HttpContext.Session.GetInt32("Role");
 
-                if(RoleId == 1)
+                if (RoleId == 1)
                 {
                     return RedirectToAction("AdminHomePage");
                 }
-                else if(RoleId == 2)
-                {
-                    return RedirectToAction("HomePage");
-                }                
-                else if(RoleId == 3)
+                else if (RoleId == 2)
                 {
                     return RedirectToAction("HomePage");
                 }
-                else if(RoleId == 4)
+                else if (RoleId == 3)
+                {
+                    return RedirectToAction("HomePage");
+                }
+                else if (RoleId == 4)
                 {
                     return RedirectToAction("HomePage");
                 }
@@ -147,9 +150,9 @@ namespace Suffer_Travels.Controllers
         public IActionResult AddPassword(Register register)
         {
             User user;
-            if(Convert.ToInt32(register.Otp) == otp)
+            if (Convert.ToInt32(register.Otp) == otp)
             {
-                if(register.Password != register.RePassword)
+                if (register.Password != register.RePassword)
                 {
                     ModelState.AddModelError("Password", "The passwords do not match");
                 }
@@ -179,7 +182,7 @@ namespace Suffer_Travels.Controllers
         public ActionResult SendOtp(Register register)
         {
             sendOtp(register.Email, HttpContext.Session.GetString("Fname").ToString());
-            if(otp != 0)
+            if (otp != 0)
                 return Json(new { sendOtp = otp, status = 1 });
             return Json(new { sendOtp = otp, status = 0 });
         }
@@ -196,16 +199,65 @@ namespace Suffer_Travels.Controllers
             return View(user);
         }
 
-        public IActionResult EditRole (int? id)
+        public IActionResult EditRole(int? id)
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditProfile(User user)
+        public async Task<IActionResult> EditProfileAsync(User user)
         {
-            var _user = db.tblUser.FirstOrDefault(u=> u.UId == user.UId);
+            var _user = db.tblUser.FirstOrDefault(u => u.UId == user.UId);
+            Console.WriteLine(user.ProfilePhoto);
+            //if (files != null)
+            //{
+            //    if (files.Length > 0)
+            //    {
+            //        //Getting FileName
+            //        var fileName = Path.GetFileName(files.FileName);
+            //        //Getting file Extension
+            //        var fileExtension = Path.GetExtension(fileName);
+            //        // concatenating  FileName + FileExtension
+            //        var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()), fileExtension);
+
+            //        string objFiless = newFileName;
+
+            //        //var objfiles = new Files()
+            //        //{
+            //        //    DocumentId = 0,
+            //        //    Name = newFileName,
+            //        //    FileType = fileExtension,
+            //        //    CreatedOn = DateTime.Now
+            //        //};
+
+            //        using (var target = new MemoryStream())
+            //        {
+            //            files.CopyTo(target);
+            //        }
+
+
+            var files = HttpContext.Request.Form.Files;
+
+            foreach (var Image in files)
+            {
+                if (Image != null && Image.Length > 0)
+                {
+                    var file = Image;
+
+                    var uploads = Path.Combine(env.WebRootPath, "photos\\user");
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            _user.ProfilePhoto = fileName;
+                        }
+
+                    }
+                }
+            }
 
             _user.Fname = user.Fname;
             _user.Mname = user.Mname;
@@ -216,18 +268,18 @@ namespace Suffer_Travels.Controllers
 
             db.SaveChanges();
 
-            return View();
+            return View(_user);
         }
-
 
         public IActionResult ViewUsers()
         {
             /*if (string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
                 return RedirectToAction("Login");
-            */IEnumerable<User> _user = db.tblUser;
+            */
+            IEnumerable<User> _user = db.tblUser;
             return View(_user);
         }
-        
+
         public IActionResult ApproveRole(uint? id)
         {
             if (id == null || id == 0)
@@ -278,7 +330,7 @@ namespace Suffer_Travels.Controllers
 
         public int sendOtp(string toEmail, string username)
         {
-            
+
             string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
             string server = "smtp.gmail.com";
 
@@ -296,8 +348,8 @@ namespace Suffer_Travels.Controllers
             message.Subject = "Suffer Travels";
             message.IsBodyHtml = true;
             message.Body = @"<h3>Please do not share this otp to anyone</h3>
-                            <p>The OTP for verification is</p>
-                            <b>" + strOtp + "</b>";
+                    <p>The OTP for verification is</p>
+                    <b>" + strOtp + "</b>";
 
             // Add a carbon copy recipient.
             //MailAddress copy = new MailAddress("Notification_List@contoso.com");

@@ -30,7 +30,7 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "Password is required!")]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]
         public string Password { get; set; }
-        public string? ProfilePhoto { get; set; } = "";
+        public string? ProfilePhoto { get; set; } = "/photos/user/stockphoto.jpg";
         public Boolean IsActive { get; set; } = true;
         [ForeignKey("Role")]
         public UInt32 RoleId { get; set; } = 2;

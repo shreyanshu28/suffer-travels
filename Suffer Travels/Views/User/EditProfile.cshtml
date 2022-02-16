@@ -1,13 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model User
+
 @{
     ViewData["title"] = "Edit Profile";
     ViewData["Fname"] = Model.Fname;
     Layout = "~/Views/Shared/User/Customer.cshtml";
 }
-
-@model User
 
 <div style="
     background-image: url('../photos/maps-dark.jpg');
@@ -22,7 +19,7 @@
         </ol>
 
         <div class="row justify-content-center">
-            <form method="post" class="d-flex justify-content-center container main-body">
+            <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center container main-body">
                 <div class="card card-style" style="width: 40rem">
                     <div class="card-body d-flex flex-column justify-content-between">
                         <h1 class="card-title card-title-style align-self-start"
@@ -30,12 +27,14 @@
                             Edit Profile
                         </h1>
                         <div class="d-flex justify-content-center flex-column">
-                            <div class="form-floating card mb-3 align-self-center" style="">
-                                <input type="file" class="form-control" id=""
-                                    placeholder="First name" />
-                                <img src="@Model.ProfilePhoto" class="card-img-top" style="width: 180px; height: 180px; border-radius: 50%" alt="">
+                            <div class="card mb-3 align-self-center" style="">
+                                <img src="../photos/user/@Model.ProfilePhoto" id="ProfilePhoto" class="card-img-top" style="width: 180px; height: 180px; border-radius: 50%" alt="">
+                            </div>
+                            <div class="card mb-3 align-self-center" style="">
+                                <input type="file" asp-for="ProfilePhoto" class="form-control" name="ProfilePhoto" id="UploadProfilePhoto" placeholder="Upload profile photo" />
                             </div>
                             <div class="form-floating mb-3">
+                                <input type="hidden" asp-for="UId" id="hidUserId" />
                                 <input type="text" class="form-control" asp-for="Fname" id=""
                                     placeholder="First name" />
                                 <label asp-for="Fname">First name</label>
