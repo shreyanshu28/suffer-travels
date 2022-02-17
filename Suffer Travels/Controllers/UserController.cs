@@ -35,7 +35,7 @@ namespace Suffer_Travels.Controllers
             return HttpContext.Session.GetInt32("RoleId") == roleId;
         }
 
-        public IActionResult HomePage(User user)
+        public IActionResult HomePage()
         {
             if (userLoggedOut())
                 return RedirectToAction("Login");
@@ -54,7 +54,7 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult AdminHomePage(User user)
+        public IActionResult AdminHomePage()
         {
             if (userLoggedOut())
                 return RedirectToAction("Login");
@@ -126,7 +126,7 @@ namespace Suffer_Travels.Controllers
             }
             else if (RoleId == 4)
             {
-                return RedirectToAction("UserHomePage");
+                return RedirectToAction("VehicleHomePage");
             }
             else
             {
@@ -139,14 +139,7 @@ namespace Suffer_Travels.Controllers
             HttpContext.Session.Clear();
             return View();
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RegisterHotel(User user)
-        {
-            return View();
-        }
-
+                
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
