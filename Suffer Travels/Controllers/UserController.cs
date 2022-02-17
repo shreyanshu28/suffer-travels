@@ -32,7 +32,7 @@ namespace Suffer_Travels.Controllers
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
 
-            return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
+            return View();
         }
 
         public IActionResult HotelHomePage()
@@ -50,7 +50,7 @@ namespace Suffer_Travels.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
 
-            if (HttpContext.Session.GetInt32("Role") == 1)
+            if (HttpContext.Session.GetInt32("RoleId") == 1)
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
                 ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
@@ -95,7 +95,7 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
                 }
 
-                return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
+                return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
             }
                
 
@@ -160,11 +160,28 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AddPassword()
+        public IActionResult AddPassword(int? id)
         {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            // From forgot password
+            if (id == 1)
             {
-                ViewData["Email"] = HttpContext.Session.GetString("Email");
+                TempData["AddPasswordFlag"] = id;
+            }
+            // From change password
+            else if (id == 2)
+            {
+                TempData["AddPasswordFlag"] = 2;
+            }
+            // From registration form
+            else if (id == 3)
+            {
+                TempData["AddPasswordFlag"] = 3;
+            }
+            // From nowhere
+            else
+            {
+                TempData["AddPasswordFlag"] = 0;
+                return RedirectToAction("Register");
             }
 
             return View();
@@ -175,14 +192,25 @@ namespace Suffer_Travels.Controllers
         public IActionResult AddPassword(Register register)
         {
             User user;
-
-            //if (string.IsNullOrEmpty(HttpContext.Session.Get("Email").ToString())) {
-            //    if(!db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
-            //    {
-            //        ModelState.AddModelError("Email", "The user associated with this email address doesn't exists");
-            //        return View(register);
-            //    }
-            //}
+            int passFlag = Convert.ToInt32(TempData["AddPasswordFlag"].ToString());
+            // From forgot password
+            if(passFlag == 1)
+            {
+                if (!db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
+                {
+                    ModelState.AddModelError("Email", "The user associated with this email address doesn't exists");
+                }
+            }
+            // From change password
+            else if (passFlag == 2)
+            {
+                ModelState.Remove("Email");
+            }
+            // From nowhere
+            else if (passFlag == 0)
+            {
+                return RedirectToAction("Register");
+            }
 
             if (Convert.ToInt32(register.Otp) == otp)
             {
@@ -215,6 +243,7 @@ namespace Suffer_Travels.Controllers
                     return RedirectToAction("Login");
                 }
             }
+
 
             return View();
         }
@@ -442,7 +471,7 @@ namespace Suffer_Travels.Controllers
             string server = "smtp.gmail.com";
 
             MailAddress from = new MailAddress(email, "Suffer Travels");
-            MailAddress to = new MailAddress(toEmail, "shreyanshu vyas");
+            MailAddress to = new MailAddress(toEmail, username);
             MailMessage message = new MailMessage(from, to);
 
             Random rand = new Random();
