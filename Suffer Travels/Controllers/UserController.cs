@@ -60,7 +60,6 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(Register register)
         {
-
             IEnumerable<User> _user = db.tblUser;
 
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
@@ -74,7 +73,7 @@ namespace Suffer_Travels.Controllers
                 {
                     HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
                     HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
-                    //HttpContext.Session.SetInt32("UserId", (int)register.UId);
+                    HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
                     HttpContext.Session.SetInt32("Role", Convert.ToInt32(user.RoleId));
                 }
 
