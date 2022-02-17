@@ -30,7 +30,8 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            return View();
+            //return View();
+            return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
         }
 
         public IActionResult HotelHomePage()
@@ -92,32 +93,35 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetInt32("Role", Convert.ToInt32(user.RoleId));
                 }
 
-                int? RoleId = HttpContext.Session.GetInt32("Role");
-
-                if (RoleId == 1)
-                {
-                    return RedirectToAction("AdminHomePage");
-                }
-                else if (RoleId == 2)
-                {
-                    return RedirectToAction("HomePage");
-                }
-                else if (RoleId == 3)
-                {
-                    return RedirectToAction("HotelHomePage");
-                }
-                else if (RoleId == 4)
-                {
-                    return RedirectToAction("UserHomePage");
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
             }
                
 
             return View();
+        }
+
+        public IActionResult ShowCustomHomePage(int? RoleId)
+        {
+            if (RoleId == 1)
+            {
+                return RedirectToAction("AdminHomePage");
+            }
+            else if (RoleId == 2)
+            {
+                return RedirectToAction("HomePage");
+            }
+            else if (RoleId == 3)
+            {
+                return RedirectToAction("HotelHomePage");
+            }
+            else if (RoleId == 4)
+            {
+                return RedirectToAction("UserHomePage");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         public IActionResult Register()
@@ -217,6 +221,7 @@ namespace Suffer_Travels.Controllers
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
+            int? roleId = HttpContext.Session.GetInt32("Role");
             User user = u.First();
             return View(user);
         }
