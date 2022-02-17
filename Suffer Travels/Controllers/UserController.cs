@@ -355,8 +355,8 @@ namespace Suffer_Travels.Controllers
 
         public int sendRoleNotification(string toEmail, string username, string status)
         {
-            string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
-            //string email = "suffertravelco@gmail.com", pass = "tavabiryani";
+            //string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
+            string email = "suffertravelco@gmail.com", pass = "tavabiryani";
             string server = "smtp.gmail.com";
             string approval_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been approved </span>";
             string decline_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been declined. You can try again. </span>";
@@ -405,8 +405,8 @@ namespace Suffer_Travels.Controllers
         public int sendOtp(string toEmail, string username)
         {
 
-            string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
-            //string email = "suffertravelco@gmail.com", pass = "tavabiryani";
+            //string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
+            string email = "suffertravelco@gmail.com", pass = "tavabiryani";
             string server = "smtp.gmail.com";
 
             MailAddress from = new MailAddress(email, "Suffer Travels");
