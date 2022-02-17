@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
+using System.Collections;
 using System.Dynamic;
 using System.Net;
 using System.Net.Mail;
@@ -209,7 +210,7 @@ namespace Suffer_Travels.Controllers
         public async Task<IActionResult> EditProfileAsync(User user)
         {
             var _user = db.tblUser.FirstOrDefault(u => u.UId == user.UId);
-            Console.WriteLine(user.ProfilePhoto);
+
             //if (files != null)
             //{
             //    if (files.Length > 0)
@@ -241,6 +242,13 @@ namespace Suffer_Travels.Controllers
 
             foreach (var Image in files)
             {
+                string[] Images = Image.FileName.Split(".");
+                string extension = Images[Images.Length - 1].ToLower();
+                if (extension != "jpg" && extension != "png")
+                {
+                    ModelState.AddModelError("ProfilePhoto", "Only jpg and png image formates are supported!");
+                    return View(_user);
+                }
                 if (Image != null && Image.Length > 0)
                 {
                     var file = Image;
@@ -248,13 +256,13 @@ namespace Suffer_Travels.Controllers
                     var uploads = Path.Combine(env.WebRootPath, "photos\\user");
                     if (file.Length > 0)
                     {
+                        //[AllowedExtensions(new string[] { ".jpg", ".png" })]
                         var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
                         using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
                             _user.ProfilePhoto = fileName;
                         }
-
                     }
                 }
             }
