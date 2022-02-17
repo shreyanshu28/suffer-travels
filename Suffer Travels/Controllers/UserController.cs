@@ -24,9 +24,20 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult HomePage(User user)
+        public bool userLoggedOut()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+
+            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
+        }
+
+        public bool validRole(int roleId)
+        {
+            return HttpContext.Session.GetInt32("RoleId") == roleId;
+        }
+
+        public IActionResult HomePage()
+        {
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
@@ -37,7 +48,7 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult HotelHomePage()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
@@ -45,12 +56,12 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult AdminHomePage(User user)
+        public IActionResult AdminHomePage()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
-            if (HttpContext.Session.GetInt32("RoleId") == 1)
+            if (validRole(1))
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
                 ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
@@ -118,7 +129,7 @@ namespace Suffer_Travels.Controllers
             }
             else if (RoleId == 4)
             {
-                return RedirectToAction("UserHomePage");
+                return RedirectToAction("VehicleHomePage");
             }
             else
             {
@@ -131,7 +142,7 @@ namespace Suffer_Travels.Controllers
             HttpContext.Session.Clear();
             return View();
         }
-
+                
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
@@ -264,7 +275,10 @@ namespace Suffer_Travels.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
 
-            User user = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString()).First();
+            IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
+            //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
+            int? roleId = HttpContext.Session.GetInt32("Role");
+            User user = u.First();
             return View(user);
         }
 
