@@ -41,8 +41,9 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
 
-            return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
+            return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
         }
 
         public IActionResult HotelHomePage()
@@ -51,6 +52,7 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
             return View();
         }
 
@@ -62,6 +64,7 @@ namespace Suffer_Travels.Controllers
             if (validRole(1))
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+                ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
                 return View();
             }
 
@@ -93,14 +96,14 @@ namespace Suffer_Travels.Controllers
 
             if (_user.Any(u => u.Email == register.Email && u.Password == register.Password))
             {
-                User user = _user.FirstOrDefault(u => u.Email == register.Email);
+                User? user = _user.FirstOrDefault(u => u.Email == register.Email);
 
                 if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 {
                     HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
                     HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
                     HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
-                    HttpContext.Session.SetInt32("Role", Convert.ToInt32(user.RoleId));
+                    HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
                 }
 
                 return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
@@ -170,6 +173,11 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult AddPassword()
         {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            {
+                ViewData["Email"] = HttpContext.Session.GetString("Email");
+            }
+
             return View();
         }
 
@@ -178,6 +186,14 @@ namespace Suffer_Travels.Controllers
         public IActionResult AddPassword(Register register)
         {
             User user;
+
+            //if (string.IsNullOrEmpty(HttpContext.Session.Get("Email").ToString())) {
+            //    if(!db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
+            //    {
+            //        ModelState.AddModelError("Email", "The user associated with this email address doesn't exists");
+            //        return View(register);
+            //    }
+            //}
 
             if (Convert.ToInt32(register.Otp) == otp)
             {
@@ -226,12 +242,13 @@ namespace Suffer_Travels.Controllers
         public IActionResult EditProfile()
         {
             IEnumerable<User> _user = db.tblUser;
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
-            int? roleId = HttpContext.Session.GetInt32("RoleId");
+            int? roleId = HttpContext.Session.GetInt32("Role");
             User user = u.First();
             return View(user);
         }
@@ -245,6 +262,9 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfileAsync(User user)
         {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+
             var _user = db.tblUser.FirstOrDefault(u => u.UId == user.UId);
 
             var files = HttpContext.Request.Form.Files;
@@ -289,6 +309,9 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult ViewUsers()
         {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
             IEnumerable<User> _user = db.tblUser;
@@ -375,14 +398,7 @@ namespace Suffer_Travels.Controllers
 
             return View();
         }
-
-        public string tempDataToString(Object tempData)
-        {
-            if (tempData != null)
-                return tempData.ToString();
-            return "";
-        }
-
+        
         public int sendRoleNotification(string toEmail, string username, string status)
         {
             //string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
