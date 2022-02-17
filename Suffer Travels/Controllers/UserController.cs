@@ -33,6 +33,15 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        public IActionResult HotelHomePage()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Login");
+
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            return View();
+        }
+
         public IActionResult AdminHomePage(User user)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
@@ -48,6 +57,11 @@ namespace Suffer_Travels.Controllers
             {
                 return RedirectToAction("HomePage");
             }
+        }
+
+        public IActionResult VehicleHomePage()
+        {
+            return View();
         }
 
         public IActionResult Login()
@@ -90,18 +104,18 @@ namespace Suffer_Travels.Controllers
                 }
                 else if (RoleId == 3)
                 {
-                    return RedirectToAction("HomePage");
+                    return RedirectToAction("HotelHomePage");
                 }
                 else if (RoleId == 4)
                 {
-                    return RedirectToAction("HomePage");
+                    return RedirectToAction("UserHomePage");
                 }
                 else
                 {
                     return NotFound();
                 }
-                return RedirectToAction("HomePage");
             }
+               
 
             return View();
         }
@@ -263,6 +277,7 @@ namespace Suffer_Travels.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
             IEnumerable<User> _user = db.tblUser;
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             return View(_user);
         }
 
