@@ -31,7 +31,8 @@ namespace Suffer_Travels.Controllers
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-            return View();
+
+            return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
         }
 
         public IActionResult HotelHomePage()
@@ -94,32 +95,35 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
                 }
 
-                int? RoleId = HttpContext.Session.GetInt32("RoleId");
-
-                if (RoleId == 1)
-                {
-                    return RedirectToAction("AdminHomePage");
-                }
-                else if (RoleId == 2)
-                {
-                    return RedirectToAction("HomePage");
-                }
-                else if (RoleId == 3)
-                {
-                    return RedirectToAction("HotelHomePage");
-                }
-                else if (RoleId == 4)
-                {
-                    return RedirectToAction("UserHomePage");
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
             }
                
 
             return View();
+        }
+
+        public IActionResult ShowCustomHomePage(int? RoleId)
+        {
+            if (RoleId == 1)
+            {
+                return RedirectToAction("AdminHomePage");
+            }
+            else if (RoleId == 2)
+            {
+                return RedirectToAction("HomePage");
+            }
+            else if (RoleId == 3)
+            {
+                return RedirectToAction("HotelHomePage");
+            }
+            else if (RoleId == 4)
+            {
+                return RedirectToAction("UserHomePage");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         public IActionResult Register()
