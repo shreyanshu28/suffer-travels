@@ -9,7 +9,6 @@ namespace Suffer_Travels.Models
         [Required(ErrorMessage = "Email address cannot be empty")]
         public string Email { get; set; }
         [StringLength(6, ErrorMessage = "Otp not valid", MinimumLength = 6)]
-        [Required(ErrorMessage = "Otp cannot be empty")]
         public string Otp { get; set; }
         [Required(ErrorMessage = "Password cannot be empty")]
         [StringLength(20, ErrorMessage = "Password minimum 8 character", MinimumLength = 8)]

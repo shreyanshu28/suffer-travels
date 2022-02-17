@@ -12,8 +12,7 @@ namespace Suffer_Travels.Controllers
     {
         private readonly ApplicationDbContext db;
         private readonly IWebHostEnvironment env;
-        private readonly string wwwroot;
-        private int otp;
+        private static int otp;
         public UserController(ApplicationDbContext _db, IWebHostEnvironment _env)
         {
             db = _db;
@@ -151,14 +150,17 @@ namespace Suffer_Travels.Controllers
         public IActionResult AddPassword(Register register)
         {
             User user;
+
             if (Convert.ToInt32(register.Otp) == otp)
             {
                 if (register.Password != register.RePassword)
                 {
                     ModelState.AddModelError("Password", "The passwords do not match");
                 }
-                else
+
+                if(ModelState.IsValid)
                 {
+                    UInt32 RoleId;
                     user = new User();
 
                     user.Fname = TempData["Fname"].ToString();
@@ -170,8 +172,10 @@ namespace Suffer_Travels.Controllers
                     user.Email = register.Email;
                     user.Password = register.Password;
 
-                    UInt32 RoleId = TempData.ContainsKey("RoleId") ? Convert.ToUInt32(TempData["RoleId"].ToString()) : 2;
+                    RoleId = TempData.ContainsKey("RoleId") ? Convert.ToUInt32(TempData["RoleId"].ToString()) : 2;
                     user.RoleId = RoleId;
+
+                    user.Status = RoleId != 2 ? "" : "Approved";
 
                     db.tblUser.Add(user);
                     db.SaveChanges();
@@ -213,33 +217,6 @@ namespace Suffer_Travels.Controllers
         public async Task<IActionResult> EditProfileAsync(User user)
         {
             var _user = db.tblUser.FirstOrDefault(u => u.UId == user.UId);
-
-            //if (files != null)
-            //{
-            //    if (files.Length > 0)
-            //    {
-            //        //Getting FileName
-            //        var fileName = Path.GetFileName(files.FileName);
-            //        //Getting file Extension
-            //        var fileExtension = Path.GetExtension(fileName);
-            //        // concatenating  FileName + FileExtension
-            //        var newFileName = String.Concat(Convert.ToString(Guid.NewGuid()), fileExtension);
-
-            //        string objFiless = newFileName;
-
-            //        //var objfiles = new Files()
-            //        //{
-            //        //    DocumentId = 0,
-            //        //    Name = newFileName,
-            //        //    FileType = fileExtension,
-            //        //    CreatedOn = DateTime.Now
-            //        //};
-
-            //        using (var target = new MemoryStream())
-            //        {
-            //            files.CopyTo(target);
-            //        }
-
 
             var files = HttpContext.Request.Form.Files;
 
