@@ -170,6 +170,9 @@ namespace Suffer_Travels.Controllers
                     user.Email = register.Email;
                     user.Password = register.Password;
 
+                    UInt32 RoleId = TempData.ContainsKey("RoleId") ? Convert.ToUInt32(TempData["RoleId"].ToString()) : 2;
+                    user.RoleId = RoleId;
+
                     db.tblUser.Add(user);
                     db.SaveChanges();
                     return RedirectToAction("Login");
@@ -180,10 +183,9 @@ namespace Suffer_Travels.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult SendOtp(Register register)
         {
-            sendOtp(register.Email, HttpContext.Session.GetString("Fname").ToString());
+            sendOtp(register.Email, register.Email);
             if (otp != 0)
                 return Json(new { sendOtp = otp, status = 1 });
             return Json(new { sendOtp = otp, status = 0 });
