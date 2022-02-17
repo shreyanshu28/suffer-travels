@@ -24,19 +24,30 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        public bool userLoggedOut()
+        {
+
+            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
+        }
+
+        public bool validRole(int roleId)
+        {
+            return HttpContext.Session.GetInt32("RoleId") == roleId;
+        }
+
         public IActionResult HomePage(User user)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            //return View();
-            return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
+
+            return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
         }
 
         public IActionResult HotelHomePage()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
@@ -45,10 +56,10 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult AdminHomePage(User user)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+            if (userLoggedOut())
                 return RedirectToAction("Login");
 
-            if (HttpContext.Session.GetInt32("Role") == 1)
+            if (validRole(1))
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
                 return View();
@@ -92,7 +103,7 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetInt32("Role", Convert.ToInt32(user.RoleId));
                 }
 
-                return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
+                return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
             }
                
 
@@ -126,6 +137,13 @@ namespace Suffer_Travels.Controllers
         public IActionResult Register()
         {
             HttpContext.Session.Clear();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RegisterHotel(User user)
+        {
             return View();
         }
 
@@ -220,7 +238,7 @@ namespace Suffer_Travels.Controllers
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
-            int? roleId = HttpContext.Session.GetInt32("Role");
+            int? roleId = HttpContext.Session.GetInt32("RoleId");
             User user = u.First();
             return View(user);
         }
