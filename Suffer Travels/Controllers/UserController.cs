@@ -126,8 +126,8 @@ namespace Suffer_Travels.Controllers
                 TempData.Add("Fname", user.Fname.Trim());
                 TempData.Add("Mname", user.Mname.Trim());
                 TempData.Add("Lname", user.Lname.Trim());
-                TempData.Add("DOB", user.DateOfBirth);
-                TempData.Add("Gender", user.Gender.ToString());
+                TempData.Add("DOB", user.DateOfBirth.ToString().Trim());
+                TempData.Add("Gender", user.Gender.ToString().Trim());
                 TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
 
                 return RedirectToAction("AddPassword");
@@ -180,6 +180,7 @@ namespace Suffer_Travels.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SendOtp(Register register)
         {
             sendOtp(register.Email, HttpContext.Session.GetString("Fname").ToString());
@@ -256,7 +257,6 @@ namespace Suffer_Travels.Controllers
                     var uploads = Path.Combine(env.WebRootPath, "photos\\user");
                     if (file.Length > 0)
                     {
-                        //[AllowedExtensions(new string[] { ".jpg", ".png" })]
                         var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
                         using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                         {
@@ -330,6 +330,41 @@ namespace Suffer_Travels.Controllers
         public String DeclineStatus()
         {
             return "Declined";
+        }
+
+        public IActionResult RegisterPartner()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RegisterPartner(User user)
+        {
+            IEnumerable<User> _user = db.tblUser;
+            if (_user.Any(u => u.ContactNo == user.ContactNo))
+            {
+                ModelState.AddModelError("ContactNo", "Contact Number is already taken");
+            }
+
+            ModelState.Remove("Email");
+            ModelState.Remove("Password");
+
+            if (ModelState.IsValid)
+            {
+                TempData.Clear();
+                TempData.Add("Fname", user.Fname.Trim());
+                TempData.Add("Mname", user.Mname.Trim());
+                TempData.Add("Lname", user.Lname.Trim());
+                TempData.Add("DOB", user.DateOfBirth.ToString().Trim());
+                TempData.Add("Gender", user.Gender.ToString().Trim());
+                TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
+                TempData.Add("RoleId", user.RoleId.ToString().Trim());
+
+                return RedirectToAction("AddPassword");
+            }
+
+            return View();
         }
 
         public string tempDataToString(Object tempData)
@@ -434,6 +469,7 @@ namespace Suffer_Travels.Controllers
             {
                 Console.WriteLine("Exception caught in CreateCopyMessage(): {0}",
                     ex.ToString());
+                otp = 0;
                 return 0;
             }
             return otp;

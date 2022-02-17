@@ -1,0 +1,108 @@
+﻿@model User 
+
+@{
+    ViewData["title"] = "Register Partner";
+    int maxYear = Convert.ToInt32(DateTime.Today.Year) - 18;
+    DateTime maxDob = new DateTime(maxYear, DateTime.Today.Month, DateTime.Today.Day);
+    string dob = maxYear + "/" + DateTime.Today.Month +"/" + DateTime.Today.Day;
+}
+<div style="
+    background-image: url('../photos/maps-dark.jpg');
+    background-size: cover;
+">
+    <main class="container p-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Register as Partner</li>
+        </ol>
+        <div class="row justify-content-center">
+            <form method="post" class="d-flex justify-content-center container main-body">
+                <div class="card card-style" style="width: 40rem">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h1 class="card-title card-title-style align-self-start"
+                            style="text-align: center; font-size: 4rem">
+                            Register as Partner
+                        </h1>
+                        <div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" asp-for="Fname" id=""
+                                    placeholder="First name" />
+                                <label asp-for="Fname">First name</label>
+                                <span asp-validation-for="Fname" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="" placeholder="Middle name"
+                                    asp-for="Mname" />
+                                <label asp-for="Mname">Middle name</label>
+                                <span asp-validation-for="Mname" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="" placeholder="Last name" asp-for="Lname" />
+                                <label asp-for="Lname">Last name</label>
+                                <span asp-validation-for="Lname" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
+                                        autocomplete="on" asp-for="Gender" value="M" checked />
+                                    <label class="btn btn-outline-primary" for="btnradio1">Male</label>
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2"
+                                        autocomplete="on" asp-for="Gender" value="F" />
+                                    <label class="btn btn-outline-primary" for="btnradio2">Female</label>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control" id="" placeholder="Contact no"
+                                    asp-for="ContactNo" />
+                                <label asp-for="ContactNo">Contact number</label>
+                                <span asp-validation-for="ContactNo" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="dob" placeholder="" max="@dob"
+                                    asp-for="DateOfBirth" />
+                                <label asp-for="DateOfBirth">Date of birth</label>
+                                <span id="dobError" asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select asp-for="RoleId" class="form-select" aria-label="Default select example">
+                                  <option value="-1" selected>Select from the list</option>
+                                  <option value="3">Hotel</option>
+                                  <option value="4">Vehicle</option>
+                                </select>
+                                <label asp-for="RoleId">Select what you want to partner for </label>
+                                <span asp-validation-for="RoleId" class="text-danger" ></span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="submit" class="btn btn-primary" style="font-size: 1.5rem">
+                                Next
+                            </button>
+                            <span>Already a user?
+                                <a asp-controller="User" asp-action="Login">Login</a></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+    const dob = document.getElementById("dob");
+    dob.addEventListener("selectionchange", (event) => {
+        if (event.returnValue > dob.max) {
+            console.log("kualhd");
+            document.getElementById("dobError").innerText =
+                "Age must be above 18 years";
+        }
+    });
+</script>
+
+@section scripts { 
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    } 
+}

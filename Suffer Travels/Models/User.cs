@@ -32,7 +32,10 @@ namespace Suffer_Travels.Models
         public string Password { get; set; }
         public string? ProfilePhoto { get; set; } = "stockphoto.jpg";
         public Boolean IsActive { get; set; } = true;
+
         [ForeignKey("Role")]
+        [Required(ErrorMessage = "The partner role is not selected!")]
+        [Range(1, 4, ErrorMessage = "The partner role is not selected!")]
         public UInt32 RoleId { get; set; } = 2;
 
         public string? Status { get; set; } = "Approved";
