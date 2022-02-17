@@ -11,31 +11,38 @@ namespace Suffer_Travels.Controllers
             _db = db;
         }
 
+        public IActionResult Home()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public bool userLoggedOut()
-        {
-
-            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
-        }
-
-        public bool isHotelUser()
+        [NonAction]
+        public bool IsHotelUser()
         {
             return HttpContext.Session.GetInt32("RoleId") == 3;
-        }
+        }        
 
         public IActionResult RegisterHotel()
         {
-            if (userLoggedOut())
+            if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
 
-            if (isHotelUser())
+            if (IsHotelUser())
                 return View();
                         
             return RedirectToAction("HomePage", "User");
+        }
+
+        [NonAction]
+        public bool UserLoggedOut()
+        {
+
+            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
         }
     }
 }

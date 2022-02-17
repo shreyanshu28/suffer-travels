@@ -24,20 +24,20 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public bool userLoggedOut()
+        public bool UserLoggedOut()
         {
 
             return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
         }
 
-        public bool validRole(int roleId)
+        public bool ValidRole(int roleId)
         {
             return HttpContext.Session.GetInt32("RoleId") == roleId;
         }
 
-        public IActionResult HomePage()
+        public IActionResult Home()
         {
-            if (userLoggedOut())
+            if (UserLoggedOut())
                 return RedirectToAction("Login");
 
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
@@ -45,40 +45,7 @@ namespace Suffer_Travels.Controllers
 
             return ShowCustomHomePage(HttpContext.Session.GetInt32("Role"));
         }
-
-        public IActionResult HotelHomePage()
-        {
-            if (userLoggedOut())
-                return RedirectToAction("Login");
-
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-            return View();
-        }
-
-        public IActionResult AdminHomePage()
-        {
-            if (userLoggedOut())
-                return RedirectToAction("Login");
-
-            if (validRole(1))
-            {
-                ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-                ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-                return View();
-            }
-
-            else
-            {
-                return RedirectToAction("HomePage");
-            }
-        }
-
-        public IActionResult VehicleHomePage()
-        {
-            return View();
-        }
-
+        
         public IActionResult Login()
         {
             HttpContext.Session.Clear();
@@ -115,25 +82,23 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult ShowCustomHomePage(int? RoleId)
         {
-            if (RoleId == 1)
+            switch (RoleId)
             {
-                return RedirectToAction("AdminHomePage");
-            }
-            else if (RoleId == 2)
-            {
-                return RedirectToAction("HomePage");
-            }
-            else if (RoleId == 3)
-            {
-                return RedirectToAction("HotelHomePage");
-            }
-            else if (RoleId == 4)
-            {
-                return RedirectToAction("VehicleHomePage");
-            }
-            else
-            {
-                return NotFound();
+                case 1:
+                    return RedirectToAction("Home", "Admin");
+
+                case 2:
+                    return RedirectToAction("Home");
+
+                case 3:
+                    return RedirectToAction("Home", "Hotel");
+
+                case 4:
+                    return RedirectToAction("Home", "Vehicle");
+
+                default:
+                    return NotFound();
+
             }
         }
 
@@ -307,7 +272,7 @@ namespace Suffer_Travels.Controllers
             return View(_user);
         }
 
-        public IActionResult ViewUsers()
+/*        public IActionResult ViewUsers()
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
@@ -362,7 +327,7 @@ namespace Suffer_Travels.Controllers
         public String DeclineStatus()
         {
             return "Declined";
-        }
+        }*/
 
         public IActionResult RegisterPartner()
         {
