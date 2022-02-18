@@ -13,6 +13,22 @@ namespace Suffer_Travels.Controllers
         {
             db = _db;
         }
+
+        public IActionResult AddTours()
+        {
+            if(UserLoggedOut())
+            {
+                return RedirectToAction("Login", "User");
+            }
+            
+            if(IsAdminUser())
+            {
+                return View();
+            }
+
+            return RedirectToAction("Home", "User");
+        }
+
         public IActionResult ApproveRole(uint? id)
         {
             if (id == null || id == 0)

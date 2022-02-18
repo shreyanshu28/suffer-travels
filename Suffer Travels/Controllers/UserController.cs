@@ -314,63 +314,6 @@ namespace Suffer_Travels.Controllers
             return View(_user);
         }
 
-        /*public IActionResult ViewUsers()
-        {
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
-                return RedirectToAction("Login");
-            IEnumerable<User> _user = db.tblUser;
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            return View(_user);
-        }
-
-        public IActionResult ApproveRole(uint? id)
-        {
-            if (id == null || id == 0)
-            {
-                TempData["Error"] = "No matching results found";
-                return RedirectToAction("ViewUsers");
-            }
-            var _user = db.tblUser.Find(id);
-            _user.Status = ApproveStatus();
-            _user.ChangedAt = DateTime.Today;
-            db.tblUser.Update(_user);
-            db.SaveChanges();
-            TempData["Success"] = "Request Approved";
-            sendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), ApproveStatus());
-            return RedirectToAction("ViewUsers");
-        }
-
-        public IActionResult DeclineRole(uint? id)
-        {
-            if (id == null || id == 0)
-            {
-                TempData["Error"] = "No matching results found";
-                return RedirectToAction("ViewUsers");
-            }
-
-            var _user = db.tblUser.Find(id);
-            _user.Status = DeclineStatus();
-            _user.ChangedAt = DateTime.Today;
-            db.tblUser.Update(_user);
-            db.SaveChanges();
-            TempData["Success"] = "Request Declined";
-            sendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), DeclineStatus());
-            return RedirectToAction("ViewUsers");
-        }*/
-
-        public String ApproveStatus()
-        {
-            return "Approved";
-        }
-
-        public String DeclineStatus()
-        {
-            return "Declined";
-        }
-
         public IActionResult RegisterPartner()
         {
             return View();
