@@ -26,7 +26,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Hotel" asp-action="Home">Home</a>
                         </li>
-                        
+                        @if (ViewData.ContainsKey("ApprovalFlag"))
+                        {
+                            if (Boolean.Parse(ViewData["ApprovalFlag"].ToString()))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="" asp-controller="Hotel" asp-action="ViewHotel">View Hotel</a>
+                                </li>   
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="" asp-controller="Hotel" asp-action="RequestApproval">Request for approval</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <span class="nav-item ml-auto">
                         <a class="nav-link text-white" asp-area="" asp-controller="User" asp-action="EditProfile">Hello, @ViewData["Fname"] <span class="small"><img src="../photos/user/@ViewData["ProfilePhoto"]" style="width: 1.3rem; height: 1.3rem; border-radius: 50%" /></span></a>

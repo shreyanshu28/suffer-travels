@@ -36,6 +36,14 @@ namespace Suffer_Travels.Data
         public DbSet<Hotel> tblHotelMaster { get; set; }
         public DbSet<HotelRooms> tblHotelRooms { get; set; }
         public DbSet<HotelPhotos> tblHotelPhotos { get; set; }
+
+        //ORDER
+        public DbSet<Order> tblOrderMaster { get; set; }
+        public DbSet<OrderPeople> tblOrderPeople { get; set; }
+        public DbSet<OrderTour> tblOrderTour { get; set; }
+        public DbSet<OrderHotel> tblOrderHotel { get; set; }
+        public DbSet<OrderVehicle> tblOrderVehicle { get; set; }
+        public DbSet<Payment> tblPaymentMaster { get; set; }
     }
 
 }

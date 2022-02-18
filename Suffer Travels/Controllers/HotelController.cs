@@ -16,11 +16,6 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [NonAction]
         public bool IsHotelUser()
         {
@@ -35,7 +30,7 @@ namespace Suffer_Travels.Controllers
             if (IsHotelUser())
                 return View();
                         
-            return RedirectToAction("HomePage", "User");
+            return RedirectToAction("Home", "User");
         }
 
         [NonAction]
