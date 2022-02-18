@@ -58,16 +58,6 @@ namespace Suffer_Travels.Controllers
             return "Declined";
         }
 
-        public bool UserLoggedOut()
-        {
-            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
-        }
-
-        public bool IsAdminUser()
-        {
-            return HttpContext.Session.GetInt32("RoleId") == 1;
-        }
-
         public IActionResult Home()
         {
             if (UserLoggedOut())
