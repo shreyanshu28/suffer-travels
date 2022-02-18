@@ -45,6 +45,8 @@ namespace Suffer_Travels.Controllers
             if (UserLoggedOut())
                 return RedirectToAction("Login");
 
+
+
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
 
@@ -73,10 +75,10 @@ namespace Suffer_Travels.Controllers
 
                 if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 {
+                    HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
                     HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
                     HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
                     HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
-                    HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
                 }
 
                 return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
@@ -103,7 +105,7 @@ namespace Suffer_Travels.Controllers
                     return RedirectToAction("Home", "Vehicle");
 
                 default:
-                    return NotFound();
+                    return RedirectToAction("Login");
 
             }
         }
@@ -121,7 +123,11 @@ namespace Suffer_Travels.Controllers
             IEnumerable<User> _user = db.tblUser;
             if (_user.Any(u => u.ContactNo == user.ContactNo))
                 ModelState.AddModelError("ContactNo", "Contact Number is already taken");
-            else
+
+            ModelState.Remove("Email");
+            ModelState.Remove("Password");
+
+            if(ModelState.IsValid)
             {
                 TempData.Clear();
                 TempData.Add("Fname", user.Fname.Trim());
@@ -133,6 +139,7 @@ namespace Suffer_Travels.Controllers
 
                 return RedirectToAction("AddPassword");
             }
+
             return View();
         }
 
@@ -346,8 +353,6 @@ namespace Suffer_Travels.Controllers
 
         public int sendOtp(string toEmail, string username)
         {
-
-            //string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
             string email = "suffertravelco@gmail.com", pass = "tavabiryani";
             string server = "smtp.gmail.com";
 

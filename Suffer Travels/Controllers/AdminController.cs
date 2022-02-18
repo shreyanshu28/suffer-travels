@@ -82,13 +82,12 @@ namespace Suffer_Travels.Controllers
             if (IsAdminUser())
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-                ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+                ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
                 return View();
             }
-
             else
             {
-                return RedirectToAction("HomePage", "User");
+                return RedirectToAction("Home", "User");
             }
         }
 
@@ -99,7 +98,6 @@ namespace Suffer_Travels.Controllers
 
         public int SendRoleNotification(string toEmail, string username, string status)
         {
-            //string email = "kushal8217@gmail.com", pass = "kushalkushal8217";
             string email = "suffertravelco@gmail.com", pass = "tavabiryani";
             string server = "smtp.gmail.com";
             string approval_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been approved </span>";
@@ -162,6 +160,5 @@ namespace Suffer_Travels.Controllers
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             return View(_user);
         }
-
     }
 }
