@@ -20,8 +20,8 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Privacy()
         {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("username")))
-                return RedirectToAction("Homepage", "User");
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Home", "User");
             return View();
         }
 

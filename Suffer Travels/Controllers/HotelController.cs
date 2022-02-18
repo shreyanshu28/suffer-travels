@@ -5,10 +5,10 @@ namespace Suffer_Travels.Controllers
 {
     public class HotelController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public HotelController(ApplicationDbContext db)
+        private readonly ApplicationDbContext db;
+        public HotelController(ApplicationDbContext _db)
         {
-            _db = db;
+            db = _db;
         }
 
         public IActionResult Home()

@@ -5,10 +5,10 @@ namespace Suffer_Travels.Controllers
 {
     public class VehicleController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public VehicleController(ApplicationDbContext db)
+        private readonly ApplicationDbContext db;
+        public VehicleController(ApplicationDbContext _db)
         {
-            _db = db;
+            db = _db;
         }
 
         public bool UserLoggedOut()
