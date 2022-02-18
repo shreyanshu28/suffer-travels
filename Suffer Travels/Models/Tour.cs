@@ -8,9 +8,15 @@ namespace Suffer_Travels.Models
         [Key]
         public UInt32 TId { get; set; }
 
+        [Required(ErrorMessage = "Tour name is required!")]
+        [RegularExpression("[a-zA-Z]+", ErrorMessage = "Tour name should only contain alphabets!")]
         public string TourName { get; set; }
+
+        [Required(ErrorMessage = "Tour Description is required!")]
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Seats are required!")]
+        [RegularExpression("^[0-9]+", ErrorMessage = "Invalid number of seats")]
         public Int32 TotalSeats { get; set; } = 0;
 
         [Column(TypeName = "decimal(10, 2)")]
