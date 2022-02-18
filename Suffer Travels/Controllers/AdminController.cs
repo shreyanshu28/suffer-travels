@@ -11,6 +11,16 @@ namespace Suffer_Travels.Controllers
             _db = db;
         }
 
+        public bool UserLoggedOut()
+        {
+            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
+        }
+
+        public bool IsAdminUser()
+        {
+            return HttpContext.Session.GetInt32("RoleId") == 1;
+        }
+
         public IActionResult Home()
         {
             if (UserLoggedOut())
@@ -19,25 +29,13 @@ namespace Suffer_Travels.Controllers
             if (IsAdminUser())
             {
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-                ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+                ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
                 return View();
             }
-
             else
             {
-                return RedirectToAction("HomePage", "User");
+                return RedirectToAction("Home", "User");
             }
-        }
-
-        public bool IsAdminUser()
-        {
-            return HttpContext.Session.GetInt32("RoleId") == 1;
-        }
-
-        public bool UserLoggedOut()
-        {
-
-            return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
         }
 
         public IActionResult RegisterHotel()
@@ -50,8 +48,5 @@ namespace Suffer_Travels.Controllers
 
             return RedirectToAction("HomePage", "User");
         }
-        
-
-
     }
 }
