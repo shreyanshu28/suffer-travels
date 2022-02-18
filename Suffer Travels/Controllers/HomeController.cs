@@ -21,7 +21,7 @@ namespace Suffer_Travels.Controllers
         public IActionResult Privacy()
         {
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
-                return RedirectToAction("Homepage", "User");
+                return RedirectToAction("Home", "User");
             return View();
         }
 

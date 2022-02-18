@@ -93,16 +93,16 @@
                         {
                             @if (item.Status.Equals("Approved"))
                             {
-                                <a class="btn btn-danger mx-2" asp-controller="User" asp-action="DeclineRole" asp-route-id="@item.UId" >Decline Role</a>                                
+                                <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeclineRole" asp-route-id="@item.UId" >Decline Role</a>                                
                             }
                             else if(item.Status.Equals("Declined"))
                             {
-                                <a class="btn btn-success mx-2" asp-controller="User" asp-action="ApproveRole" asp-route-id=@item.UId >Approve Role</a>
+                                <a class="btn btn-success mx-2" asp-controller="Admin" asp-action="ApproveRole" asp-route-id=@item.UId >Approve Role</a>
                             }
                             else
                             {
-                                <a class="btn btn-success mx-2" asp-controller="User" asp-action="ApproveRole" asp-route-id=@item.UId >Approve Role</a>
-                                <a class="btn btn-danger mx-2" asp-controller="User" asp-action="DeclineRole" asp-route-id="@item.UId" >Decline Role</a>                  
+                                <a class="btn btn-success mx-2" asp-controller="Admin" asp-action="ApproveRole" asp-route-id=@item.UId >Approve Role</a>
+                                <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeclineRole" asp-route-id="@item.UId" >Decline Role</a>                  
                             }
                         }                        
                     </div>                    
