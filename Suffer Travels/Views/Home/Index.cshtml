@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Tour>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -7,3 +9,14 @@
     <a asp-controller="User" asp-action="Login">Log in</a>
 </div>
 
+<h2>Our Tours</h2>
+
+<div>
+    @foreach(var item in Model){
+        <div>
+            <h4>item.TourName</h4>
+            <h6>item.Description</h6>
+            <h6>item.Price</h6>
+        </div>
+    }
+</div>
