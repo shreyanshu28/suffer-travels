@@ -50,6 +50,9 @@ namespace Suffer_Travels.Controllers
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
 
+            if (GetRole() == 2)
+                return View();
+
             //return View();
             return ShowCustomHomePage(GetRole());
         }
