@@ -21,7 +21,7 @@ namespace Suffer_Travels.Models
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; } = 0;
-
+        [ForeignKey("TourType")]
         public UInt32 TourTypeId { get; set; } = 1;
 
         public UInt32 NoOfDays { get; set; } = 1;        
@@ -33,8 +33,9 @@ namespace Suffer_Travels.Models
         [Key]
         public UInt32 TcId { get; set; }
 
+        [ForeignKey("Tour")]
         public UInt32 TourId { get; set; }
-
+        [ForeignKey("City")]
         public UInt32 CityId { get; set; }
 
         //public UInt32 IsActive { get; set; } = 1;
@@ -54,7 +55,7 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 TdId { get; set; }
-
+        [ForeignKey("Tour")]
         public UInt32 TourId { get; set; }
 
         public DateTime Date { get; set; }
@@ -66,9 +67,9 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 TpId { get; set; }
-
+        [ForeignKey("Tour")]
         public UInt32 TourId { get; set; }
-
+        [ForeignKey("Photo")]
         public UInt32 PhotoId { get; set; }
     }
 
@@ -84,13 +85,13 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 TiId { get; set; }
-
+        [ForeignKey("Tour")]
         public UInt32 TourId { get; set; }
 
         public UInt32 Day { get; set; } = 1;
-
+        [ForeignKey("Landmark")]
         public UInt32 LandmarkId { get; set; }
-
+        [ForeignKey("MealCombo")]
         public UInt32 MealComboId { get; set; }
     }
 }

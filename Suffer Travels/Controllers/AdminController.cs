@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
+using Suffer_Travels.ViewModel;
 using System.Net;
 using System.Net.Mail;
 
@@ -14,20 +15,28 @@ namespace Suffer_Travels.Controllers
             db = _db;
         }
 
+/*        [HttpPost]
+        [ValidateAntiForgeryToken]*/
+        public IActionResult AddTourDetails(Tour tour)
+        {
+            TempData["Success"] = "Added Successfully";
+            return RedirectToAction("AddTours");
+        }
+
         public IActionResult AddTours()
         {
             if(UserLoggedOut())
-            {
                 return RedirectToAction("Login", "User");
-            }
             
-            if(IsAdminUser())
-            {
-                return View();
-            }
+            
+            if(!IsAdminUser())
+                return RedirectToAction("Home", "User");
 
-            return RedirectToAction("Home", "User");
-        }
+            var tour = new TourViewModel();
+            tour.tourTypes = db.tblTourType;
+            
+            return View(tour);
+         }
 
         public IActionResult ApproveRole(uint? id)
         {
@@ -143,6 +152,7 @@ namespace Suffer_Travels.Controllers
             }
             return 1;
         }
+
         public bool UserLoggedOut()
         {
 

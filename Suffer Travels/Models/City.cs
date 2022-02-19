@@ -48,4 +48,14 @@ namespace Suffer_Travels.Models
         
         public UInt32 CityId { get; set; }
     }
+
+    public class Landmark
+    {
+        [Key]
+        public UInt32 LId { get; set; }
+
+        public string Lname { get; set; }
+
+        public UInt32 CityId { get; set; }
+    }
 }
