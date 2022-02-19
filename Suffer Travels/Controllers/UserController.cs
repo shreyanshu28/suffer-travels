@@ -45,11 +45,12 @@ namespace Suffer_Travels.Controllers
             if (UserLoggedOut())
                 return RedirectToAction("Login");
 
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-
             if (GetRole() == 2)
+            {
+                ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+                ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
                 return View();
+            }
 
             return ShowCustomHomePage(GetRole());
         }

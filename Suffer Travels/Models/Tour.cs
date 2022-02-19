@@ -9,7 +9,7 @@ namespace Suffer_Travels.Models
         public UInt32 TId { get; set; }
 
         [Required(ErrorMessage = "Tour name is required!")]
-        [RegularExpression("[a-zA-Z]+", ErrorMessage = "Tour name should only contain alphabets!")]
+        [RegularExpression("[a-zA-Z ]+", ErrorMessage = "Tour name should only contain alphabets!")]
         public string TourName { get; set; }
 
         [Required(ErrorMessage = "Tour Description is required!")]
@@ -19,11 +19,13 @@ namespace Suffer_Travels.Models
         [RegularExpression("^[0-9]+", ErrorMessage = "Invalid number of seats")]
         public Int32 TotalSeats { get; set; } = 0;
 
+        [RegularExpression("^[0-9]+", ErrorMessage = "Invalid price")]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; } = 0;
         [ForeignKey("TourType")]
         public UInt32 TourTypeId { get; set; } = 1;
 
+        [RegularExpression("^[0-9]+", ErrorMessage = "Invalid number of days")]
         public UInt32 NoOfDays { get; set; } = 1;        
 
     }
