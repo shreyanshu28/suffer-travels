@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
+using Suffer_Travels.ViewModel;
 using System.Diagnostics;
 
 namespace Suffer_Travels.Controllers
@@ -18,9 +19,14 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Tour> tour = db.tblTour;
+            TourViewModel tourViewModel = new TourViewModel();
 
-            return View(tour);
+            tourViewModel.tourDetails = db.tblTour;
+            tourViewModel.tourTypes = db.tblTourType;
+            tourViewModel.tourPhotos = db.tblTourPhotos;
+            tourViewModel.photos = db.tblPhotos;
+
+            return View(tourViewModel);
         }
 
         public IActionResult Privacy()
