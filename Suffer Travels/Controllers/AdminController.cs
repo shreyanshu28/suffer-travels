@@ -23,7 +23,7 @@ namespace Suffer_Travels.Controllers
         {
             try
             {
-                db.tblTour.Add(tour.tours);
+                db.tblTour.Add(tour.tourDetail);
                 db.SaveChanges();
                 TempData["Success"] = "Added Successfully";
 

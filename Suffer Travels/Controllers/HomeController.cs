@@ -23,6 +23,7 @@ namespace Suffer_Travels.Controllers
 
             tourViewModel.tourDetails = db.tblTour;
             tourViewModel.tourTypes = db.tblTourType;
+            tourViewModel.tourDates = db.tblTourDates;
             tourViewModel.tourPhotos = db.tblTourPhotos;
             tourViewModel.photos = db.tblPhotos;
 

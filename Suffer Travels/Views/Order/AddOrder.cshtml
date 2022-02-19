@@ -1,4 +1,25 @@
-﻿@{
+﻿@using Suffer_Travels.ViewModel
+@model TourViewModel
+@{
     Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
 }
 
+<h1>Tour Details</h1>
+<div class="d-flex justify-content-center">
+    <div class="card me-3" style="width: 18rem;">
+        @{
+            //uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == Model.TId).PhotoId;
+        }
+        <img src="/photos/tour/@Model.photo.ImagePath" class="card-img-top" alt="@Model.photo.Description">
+        <div class="card-body">
+            <h5 class="card-title">@Model.tourDetail.TourName</h5>
+            <p class="card-text">@Model.tourDetail.Description</p>
+            <p class="card-text">@Model.tourTypeDetails.TtName</p>
+            <p class="card-text">From Date: @Model.tourDate.Date.ToLongDateString() Time: @Model.tourDate.Time.ToLongTimeString() <br /> for @Model.tourDetail.NoOfDays days Till date: @Model.tourDate.Date.AddDays(Model.tourDetail.NoOfDays).ToLongDateString() </p>
+            <div class="d-flex justify-content-between ">
+                <h6>@Model.tourDetail.Price</h6>
+                <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.tourDetail.TId">Order this tour</a>
+            </div>
+        </div>
+    </div>
+</div>

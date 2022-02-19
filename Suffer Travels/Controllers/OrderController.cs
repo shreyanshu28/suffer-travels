@@ -36,11 +36,14 @@ namespace Suffer_Travels.Controllers
             }
 
             TourViewModel tourViewModel = new TourViewModel();
+            
             tourViewModel.tourDetail = db.tblTour.FirstOrDefault(tour => tour.TId == id);
-            tourViewModel.tourType = db.tblTourType.FirstOrDefault(tour => tour.);
-            tourViewModel.tourDate = db.tblTourDates.FirstOrDefault(tour => tour.);
-            tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tour => tour.);
-            tourViewModel.photo = db.tblPhotos.FirstOrDefault(tour => tour.);
+            tourViewModel.tourTypeDetails = db.tblTourType.FirstOrDefault(tourType => tourType.TtId == tourViewModel.tourDetail.TourTypeId);
+
+            tourViewModel.tourDate = db.tblTourDates.FirstOrDefault(tourDate => tourDate.TourId == id);
+
+            tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
+            tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
 
             return View(tourViewModel);
         }

@@ -5,7 +5,7 @@ namespace Suffer_Travels.ViewModel
 {
     public class TourViewModel
     {
-        public Tour tour { get; set; }
+        public Tour tourDetail { get; set; }
         public TourType tourTypeDetails { get; set; }
         public TourDates tourDate { get; set; }
         public TourPhotos tourPhoto { get; set; }
