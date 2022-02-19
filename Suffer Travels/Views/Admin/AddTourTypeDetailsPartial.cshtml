@@ -1,0 +1,35 @@
+﻿@using Suffer_Travels.ViewModel
+@model TourViewModel;
+
+<div class="modal fade" id="AddTourTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="AddTourTypeModal">Add Tour Type</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-labl="close"></button>
+        </div>
+            <form method="post" asp-action="AddTourTypeDetails" class="d-flex justify-content-center container main-body">
+                <div class="card card-style modal-body">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            @*<div class="mb-3">
+                                <label class="form-label" asp-for="tourTypeDetails.Photo">Category Photo</label>
+                                <input type="file" asp-for="tourTypeDetails.Photo" class="form-control" name="Photo" id="UploadTourTypePhoto" placeholder="Upload Category Photo" />
+                                <span asp-validation-for="tourTypeDetails.Photo" class="text-danger"></span>
+                            </div>*@
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="tourTypeDetails.TtName">Tour Type</label>
+                                <input type="text" asp-for="tourTypeDetails.TtName" class="form-control" name="TtName" placeholder="Add tour type" />
+                                <span asp-validation-for="tourTypeDetails.TtName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                    <button type="submit" class="btn btn-primary">Add Tour Type</button>
+                </div>
+            </form> 
+        </div>
+    </div>
+</div>

@@ -11,6 +11,8 @@ namespace Suffer_Travels.ViewModel
 
         public IEnumerable<TourType> tourTypes { get; set; }
 
+        public TourType tourTypeDetails { get; set; }
+
     }
 
 }

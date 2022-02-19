@@ -16,21 +16,12 @@
             </li>
             <li class="breadcrumb-item active mr-auto">Manage Tours</li>
         </ol>
+        <button type="button" class="btn btn-info" style="position:absolute;right:10rem;top:50%;transform:translateY(-50%);" data-bs-toggle="modal" data-bs-target="#AddTourTypeModal">Add Tour Type</button>
         <button type="button" class="btn btn-primary" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);" data-bs-toggle="modal" data-bs-target="#AddDetailsModal">Add new tour</button>
         
-        <div class="modal fade" id="AddDetailsModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="AddDetailsModal">Add Tour Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                        <partial name="AddTourDetails.cshtml" />
-                    </div>
-            </div>
-        </div>
+            <partial name="AddTourTypeDetailsPartial.cshtml" />
+            <partial name="AddTourDetailsPartial.cshtml" />
     </div>
-    
     <div class="table-responsive">
         <table class="table table-dark table-hover">
             <thead>

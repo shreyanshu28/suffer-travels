@@ -10,15 +10,75 @@ namespace Suffer_Travels.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext db;
-        public AdminController(ApplicationDbContext _db)
+        private readonly IWebHostEnvironment env;
+        public AdminController(ApplicationDbContext _db, IWebHostEnvironment _env)
         {
             db = _db;
+            env = _env;
         }
 
-        public IActionResult AddTourDetails(Tour tour)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddTourDetails(TourViewModel tour)
         {
-            TempData["Success"] = "Added Successfully";
+            try
+            {
+                db.tblTour.Add(tour.tours);
+                db.SaveChanges();
+                TempData["Success"] = "Added Successfully";
+
+            }
+            catch (Exception e) {
+                TempData["Error"] = e;
+            }
             return RedirectToAction("ManageTours");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddTourTypeDetails(TourViewModel tourType)
+        {
+            db.tblTourType.Add(tourType.tourTypeDetails);
+            db.SaveChanges();
+
+            /*var files = HttpContext.Request.Form.Files;
+            //var tt = db.tblTourType;
+            foreach (var Image in files)
+            {
+                string[] Images = Image.FileName.Split(".");
+                string extension = Images[Images.Length - 1].ToLower();
+                if (extension != "jpg" && extension != "png")
+                {
+                    TempData["Error"] = "Only jpg and png image formates are supported!";
+                    return RedirectToAction("ManageTours");
+                }
+                if (Image != null && Image.Length > 0)
+                {
+                    var file = Image;
+
+                    var uploads = Path.Combine(env.WebRootPath, "photos\\user");
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+
+                            TourType tt = new TourType();
+                            tt.Photo = fileName;
+                            tt.TtName = tourType.tourTypeDetails.TtName;
+                            db.tblTourType.Add(tt);
+
+                            //db.tblTourType.Add(tourType.tourTypeDetails;
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                TempData["Success"] = "Tour Type Added Successfuly";
+                return RedirectToAction("ManageTours");
+            }
+            TempData["Error"] = "Error in adding files";
+*/            return RedirectToAction("ManageTours");
         }
 
         public IActionResult ApproveRole(uint? id)

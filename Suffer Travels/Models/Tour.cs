@@ -50,7 +50,7 @@ namespace Suffer_Travels.Models
 
         public string TtName { get; set; }
 
-        public string Photo { get; set; } = "";
+        public string Photo { get; set; } = "pexels-arianna-tavaglione-5984075.jpg";
     }
 
     public class TourDates
