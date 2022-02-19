@@ -23,7 +23,7 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("AddTours");
         }
 
-        public IActionResult AddTours()
+       /* public IActionResult AddTours()
         {
             if(UserLoggedOut())
                 return RedirectToAction("Login", "User");
@@ -34,9 +34,36 @@ namespace Suffer_Travels.Controllers
 
             var tour = new TourViewModel();
             tour.tourTypes = db.tblTourType;
-            
-            return View(tour);
-         }
+            tour.tourDetails = db.tblTour;
+
+            *//* var temp = from s in db.TBL_TEST
+                      select new TestDTO
+                      {
+                          ID = s.ID,
+                          Description = s.DESCRIPTION,
+                          StatusID = s.ID // WHOOPS
+                      };
+           return temp.ToList();
+             */
+
+           /* var tourDetails = (from t in db.tblTour
+                          join tt in db.tblTourType on t.TourTypeId equals tt.TtId
+                          select new
+                          {
+                              TourName = t.TourName,
+                              Description = t.Description,
+                              TotalSeats = t.TotalSeats,
+                              Price = t.Price,
+                              NoOfDays = t.NoOfDays,
+                              TourType = tt.TtName
+                          });*//*
+            //tour.listTour.Add(ttList);
+            //tourDetails.ToList();
+
+           // List<tourDetails> td = new List<tourDetails>()
+
+            return View(tourDetails.ToList());
+         }*/
 
         public IActionResult ApproveRole(uint? id)
         {
