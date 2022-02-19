@@ -13,5 +13,13 @@ namespace Suffer_Travels.Controllers
         {
             return View();
         }
+
+        public IActionResult AddOrder()
+        {
+
+            ViewData["IsLoggedin"] = string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Email"));
+
+            return View();
+        }
     }
 }

@@ -13,6 +13,9 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Home()
         {
+            String email = HttpContext.Session.GetString("Email").ToString();
+            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;
+
             return View();
         }
 

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Tour>
+﻿@using Suffer_Travels.ViewModel
+@model TourViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,17 +7,26 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to suffer travels</h1>
-    <a asp-controller="User" asp-action="Login">Log in</a>
+    <h2>Get the relief from the suffer of your <br /> life with our tours</h2>
 </div>
 
-<h2>Our Tours</h2>
-
-<div>
-    @foreach(var item in Model){
-        <div>
-            <h4>@item.TourName</h4>
-            <h6>@item.Description</h6>
-            <h6>@item.Price</h6>
+<div class="d-flex justify-content-center">
+    @foreach(var item in Model.tourDetails)
+    {
+        <div class="card me-3" style="width: 18rem;">
+            @{
+                uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
+            }
+            <img src="/photos/tour/@Model.photos.FirstOrDefault(photo => photo.PId == photoId).ImagePath" class="card-img-top" alt="@Model.photos.FirstOrDefault(photo => photo.PId == photoId).Description">
+            <div class="card-body">
+                <h5 class="card-title">@item.TourName</h5>
+                <p class="card-text">@item.Description</p>
+                <p class="card-text">@Model.tourTypes.FirstOrDefault(type => type.TtId == item.TourTypeId).TtName</p>
+                <div class="d-flex justify-content-between ">
+                    <h6>@item.Price</h6>
+                    <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@item.TId">Order this tour</a>
+                </div>
+            </div>
         </div>
     }
 </div>
