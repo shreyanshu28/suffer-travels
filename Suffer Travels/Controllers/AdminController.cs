@@ -19,27 +19,12 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-/*        public IActionResult AddTourDetails(TourViewModel tour)
-        {
-            //CalculateDates(tour.repeatsEvery, tour.recurrence);
-
-            try
-            {
-                db.tblTour.Add(tour.tourDetail);
-                db.SaveChanges();
-                TempData["Success"] = "Added Successfully";
-
-            }
-            catch (Exception e) {
-                TempData["Error"] = e;
-            }
-            return RedirectToAction("ManageTours");
-        }*/
-
         public async Task<IActionResult> AddTourDetailsAsync(TourViewModel tourViewModel)
         {
             var files = HttpContext.Request.Form.Files;
+            
             Photo _photos = new Photo();
+            
             foreach (var Image in files)
             {
                 string[] Images = Image.FileName.Split(".");
@@ -64,6 +49,7 @@ namespace Suffer_Travels.Controllers
                     }
                 }
             }
+
             string description = tourViewModel.tourDetail.TourName;
             db.tblTour.Add(tourViewModel.tourDetail);
             
@@ -76,13 +62,68 @@ namespace Suffer_Travels.Controllers
             _tourPhotos.TourId = db.tblTour.FirstOrDefault(t => t.TourName == tourViewModel.tourDetail.TourName).TId;
             _tourPhotos.PhotoId = db.tblPhotos.FirstOrDefault(p => p.ImagePath == _photos.ImagePath).PId;
             db.tblTourPhotos.Add(_tourPhotos);
-            //_ = db.SaveChangesAsync();
-            db.SaveChanges();
-            TempData["Success"] = "Data added successfully";
-            return RedirectToAction("ManageTours");
 
-            /*TempData["Error"] = "Something is wrong";
-            return RedirectToAction("ManageTours");*/
+            TourDates tourDates = new TourDates();
+            DateTime sixMonths = tourViewModel.tourDate.Date.AddMonths(6);
+
+            switch (tourViewModel.recurrence)
+            {
+                case ("Day"):
+                    while (tourViewModel.tourDate.Date < sixMonths)
+                    {
+                        tourDates.TourId = _tourPhotos.TourId;
+                        tourDates.Time = DateTime.Now;
+                        tourDates.Date = tourViewModel.tourDate.Date;
+                        db.tblTourDates.Add(tourDates);
+                        db.SaveChanges();
+                        tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddDays(tourViewModel.repeatsEvery);
+                    }
+                    break;
+
+                case ("Week"):
+                    while (tourViewModel.tourDate.Date < sixMonths)
+                    {
+                        tourDates.TourId = _tourPhotos.TourId;
+                        tourDates.Time = DateTime.Now;
+                        tourDates.Date = tourViewModel.tourDate.Date;
+                        db.tblTourDates.Add(tourDates);
+                        db.SaveChanges();
+                        tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddDays(tourViewModel.repeatsEvery * 7);
+                    }
+                    break;
+
+                case ("Month"):
+                    while (tourViewModel.tourDate.Date < sixMonths)
+                    {
+                        tourDates.TourId = _tourPhotos.TourId;
+                        tourDates.Time = DateTime.Now;
+                        tourDates.Date = tourViewModel.tourDate.Date;
+                        db.tblTourDates.Add(tourDates);
+                        db.SaveChanges();
+                        tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddMonths((int)tourViewModel.repeatsEvery);
+                    }
+                    break;
+
+                case ("Year"):
+                    while (tourViewModel.tourDate.Date < sixMonths.AddYears(6))
+                    {
+                        tourDates.TourId = _tourPhotos.TourId;
+                        tourDates.Time = DateTime.Now;
+                        tourDates.Date = tourViewModel.tourDate.Date;
+                        db.tblTourDates.Add(tourDates);
+                        db.SaveChanges();
+
+                        tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddYears((int)tourViewModel.repeatsEvery);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            TempData["Success"] = "Data added successfully";
+
+            return RedirectToAction("ManageTours");
         }
 
         [HttpPost]

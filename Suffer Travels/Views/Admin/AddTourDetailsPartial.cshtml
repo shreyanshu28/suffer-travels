@@ -49,11 +49,11 @@
               </div>
               <div class="mb-3">
                     <label class="form-label" asp-for="tourDate.Date">Start Date</label>
-                    <input type="datetime" class="form-control" asp-for="tourDate.Date" id="" placeholder="Start Date" />
+                    <input type="date" class="form-control" asp-for="tourDate.Date" id="" placeholder="Start Date" />
                     <span asp-validation-for="tourDate.Date" class="text-danger"></span>
               </div>
               <div class="mb-3">
-                    <label class="form-label" asp-for="tourDate.Date">Repeats Every</label>
+                    <label class="form-label" asp-for="repeatsEvery">Repeats Every</label>
                     <input type="number" class="form-control" asp-for="repeatsEvery" id="" placeholder="Number" />
                     <select asp-for="recurrence" class="form-select" aria-label="Default select example">
                         <option value="Day">Day</option>
