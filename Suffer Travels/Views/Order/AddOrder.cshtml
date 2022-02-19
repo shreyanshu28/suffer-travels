@@ -1,4 +1,4 @@
 ﻿@{
-    ViewData["Layout"] = Convert.ToBoolean(ViewData["IsLoggedIn"]) ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/User/";
+    Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
 }
 
