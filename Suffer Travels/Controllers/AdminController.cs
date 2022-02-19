@@ -19,8 +19,10 @@ namespace Suffer_Travels.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddTourDetails(TourViewModel tour)
+/*        public IActionResult AddTourDetails(TourViewModel tour)
         {
+            //CalculateDates(tour.repeatsEvery, tour.recurrence);
+
             try
             {
                 db.tblTour.Add(tour.tourDetail);
@@ -32,6 +34,55 @@ namespace Suffer_Travels.Controllers
                 TempData["Error"] = e;
             }
             return RedirectToAction("ManageTours");
+        }*/
+
+        public async Task<IActionResult> AddTourDetailsAsync(TourViewModel tourViewModel)
+        {
+            var files = HttpContext.Request.Form.Files;
+            Photo _photos = new Photo();
+            foreach (var Image in files)
+            {
+                string[] Images = Image.FileName.Split(".");
+                string extension = Images[Images.Length - 1].ToLower();
+                if (extension != "jpg" && extension != "png")
+                {
+                    TempData["Error"] = "Only jpg and png files are allowed";
+                    return RedirectToAction("ManageTours");
+                }
+                if (Image != null && Image.Length > 0)
+                {
+                    var file = Image;
+                    var uploads = Path.Combine(env.WebRootPath, "photos\\tour");
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            _photos.ImagePath = fileName;
+                        }
+                    }
+                }
+            }
+            string description = tourViewModel.tourDetail.TourName;
+            db.tblTour.Add(tourViewModel.tourDetail);
+            
+            _photos.Description = description;
+            
+            db.tblPhotos.Add(_photos);
+            db.SaveChanges();
+
+            TourPhotos _tourPhotos = new TourPhotos();
+            _tourPhotos.TourId = db.tblTour.FirstOrDefault(t => t.TourName == tourViewModel.tourDetail.TourName).TId;
+            _tourPhotos.PhotoId = db.tblPhotos.FirstOrDefault(p => p.ImagePath == _photos.ImagePath).PId;
+            db.tblTourPhotos.Add(_tourPhotos);
+            //_ = db.SaveChangesAsync();
+            db.SaveChanges();
+            TempData["Success"] = "Data added successfully";
+            return RedirectToAction("ManageTours");
+
+            /*TempData["Error"] = "Something is wrong";
+            return RedirectToAction("ManageTours");*/
         }
 
         [HttpPost]

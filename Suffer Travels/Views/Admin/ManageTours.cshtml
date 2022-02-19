@@ -44,6 +44,9 @@
                     <th>
                         Tour Type
                     </th>
+                    <th>
+                        Action
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +70,10 @@
                         </td>
                         <td>
                             @Model.tourTypes.First(tourType => tourType.TtId == item.TourTypeId).TtName
+                        </td>
+                        <td>
+                            <a class="btn btn-success mx-2" asp-controller="Admin" asp-action="ApproveRole" asp-route-id=@item.TId >Edit</a>
+                            <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeclineRole" asp-route-id="@item.TId" >Deactivate</a>                  
                         </td>
                     </tr>
                 }

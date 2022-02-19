@@ -8,7 +8,7 @@
         <h5 class="modal-title" id="AddDetailsModal">Add Tour Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close" ></button>
       </div>
-      <form method="post" asp-action="AddTourDetails" class="d-flex justify-content-center container main-body" >
+      <form method="post" asp-action="AddTourDetails" enctype="multipart/form-data" class="d-flex justify-content-center container main-body" >
         <div class="card card-style modal-body">
           <div class="card-body d-flex flex-column justify-content-between">
             <div>
@@ -38,7 +38,7 @@
               </div>
               <div class="mb-3">
                 <label class="form-label" asp-for="tourDetail.TourTypeId">Tour Type</label>
-                <select asp-for="tourDetail.TourTypeId" class="form-select" aria-label="Defaul select example">
+                <select asp-for="tourDetail.TourTypeId" class="form-select" aria-label="Default select example">
                   <option value="-1">Select from the list</option>
                     @foreach (var item in Model.tourTypes) 
                     {
@@ -47,6 +47,27 @@
                 </select>
                 <span asp-validation-for="tourDetail.Price" class="text-danger"></span>
               </div>
+              <div class="mb-3">
+                    <label class="form-label" asp-for="tourDate.Date">Start Date</label>
+                    <input type="datetime" class="form-control" asp-for="tourDate.Date" id="" placeholder="Start Date" />
+                    <span asp-validation-for="tourDate.Date" class="text-danger"></span>
+              </div>
+              <div class="mb-3">
+                    <label class="form-label" asp-for="tourDate.Date">Repeats Every</label>
+                    <input type="number" class="form-control" asp-for="repeatsEvery" id="" placeholder="Number" />
+                    <select asp-for="recurrence" class="form-select" aria-label="Default select example">
+                        <option value="Day">Day</option>
+                        <option value="Week">Week</option>
+                        <option value="Month">Month</option>
+                        <option value="Year">Year</option>
+                     </select>
+                     <span asp-validation-for="tourDate.Date" class="text-danger"></span>
+             </div>
+             <div class="mb-3">
+                 <label class="form-label" asp-for="photo.ImagePath">Upload Photo</label>
+                 <input asp-for="photo.ImagePath"  type="file" id="upload image" placeholder="upload photo" />
+                 <span asp-validation-for="photo.ImagePath" class="text-danger"></span>
+             </div>
             </div>
           </div>
           <div class="modal-footer">
