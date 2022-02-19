@@ -15,65 +15,11 @@ namespace Suffer_Travels.Controllers
             db = _db;
         }
 
-/*        [HttpPost]
-        [ValidateAntiForgeryToken]*/
         public IActionResult AddTourDetails(Tour tour)
         {
             TempData["Success"] = "Added Successfully";
-            return RedirectToAction("AddTours");
+            return RedirectToAction("ManageTours");
         }
-
-        public IActionResult AddTours()
-        {
-            TourViewModel tourViewModel = new TourViewModel();
-
-            tourViewModel.tourDetails = db.tblTour;
-            tourViewModel.tourTypes = db.tblTourType;
-
-            return View(tourViewModel);
-        }
-
-       /* public IActionResult AddTours()
-        {
-            if(UserLoggedOut())
-                return RedirectToAction("Login", "User");
-            
-            
-            if(!IsAdminUser())
-                return RedirectToAction("Home", "User");
-
-            var tour = new TourViewModel();
-            tour.tourTypes = db.tblTourType;
-            tour.tourDetails = db.tblTour;
-
-            *//* var temp = from s in db.TBL_TEST
-                      select new TestDTO
-                      {
-                          ID = s.ID,
-                          Description = s.DESCRIPTION,
-                          StatusID = s.ID // WHOOPS
-                      };
-           return temp.ToList();
-             */
-
-           /* var tourDetails = (from t in db.tblTour
-                          join tt in db.tblTourType on t.TourTypeId equals tt.TtId
-                          select new
-                          {
-                              TourName = t.TourName,
-                              Description = t.Description,
-                              TotalSeats = t.TotalSeats,
-                              Price = t.Price,
-                              NoOfDays = t.NoOfDays,
-                              TourType = tt.TtName
-                          });*//*
-            //tour.listTour.Add(ttList);
-            //tourDetails.ToList();
-
-           // List<tourDetails> td = new List<tourDetails>()
-
-            return View(tourDetails.ToList());
-         }*/
 
         public IActionResult ApproveRole(uint? id)
         {
@@ -125,21 +71,36 @@ namespace Suffer_Travels.Controllers
             if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
 
-            if (IsAdminUser())
-            {
-                ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-                ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-                return View();
-            }
-            else
-            {
+            if (!IsAdminUser())
                 return RedirectToAction("Home", "User");
-            }
+
+            SetViewData();
+            return View();
         }
 
         public bool IsAdminUser()
         {
             return HttpContext.Session.GetInt32("RoleId") == 1;
+        }
+        public IActionResult ManageTours()
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.tourDetails = db.tblTour;
+            tourViewModel.tourTypes = db.tblTourType;
+            SetViewData();
+            return View(tourViewModel);
+        }
+        public void SetViewData()
+        {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
         }
 
         public int SendRoleNotification(string toEmail, string username, string status)
