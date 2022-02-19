@@ -1,9 +1,9 @@
 ﻿@using Suffer_Travels.ViewModel
+@model TourViewModel;
 @{
     ViewData["title"] = "Add tour packages";
     Layout = "~/Views/Shared/User/_Admin.cshtml";
 }
-@model TourViewModel;
 
 <main class="container p-3">
     <ol class="breadcrumb">
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.tours)
+                @foreach (var item in Model.tourDetails)
                 {
                     <tr>
                         <td>
@@ -59,7 +59,7 @@
                             @item.NoOfDays
                         </td>
                         <td>
-                            @item.TourType;
+                            @Model.tourTypes.First(tourType => tourType.TtId == item.TourTypeId).TtName
                         </td>
                     </tr>
                 }

@@ -23,6 +23,16 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("AddTours");
         }
 
+        public IActionResult AddTours()
+        {
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.tourDetails = db.tblTour;
+            tourViewModel.tourTypes = db.tblTourType;
+
+            return View(tourViewModel);
+        }
+
        /* public IActionResult AddTours()
         {
             if(UserLoggedOut())
