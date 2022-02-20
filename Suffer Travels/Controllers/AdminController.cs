@@ -17,6 +17,11 @@ namespace Suffer_Travels.Controllers
             env = _env;
         }
 
+        private void addDataToTourDates()
+        {
+            int a = 10;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddTourDetailsAsync(TourViewModel tourViewModel)
@@ -65,17 +70,14 @@ namespace Suffer_Travels.Controllers
 
             TourDates tourDates = new TourDates();
             DateTime sixMonths = tourViewModel.tourDate.Date.AddMonths(6);
-
+            List<TourDates> td = new List<TourDates>();
             switch (tourViewModel.recurrence)
             {
                 case ("Day"):
                     while (tourViewModel.tourDate.Date < sixMonths)
                     {
-                        tourDates.TourId = _tourPhotos.TourId;
-                        tourDates.Time = DateTime.Now;
-                        tourDates.Date = tourViewModel.tourDate.Date;
-                        db.tblTourDates.Add(tourDates);
-                        db.SaveChanges();
+                        td.Add(new TourDates { Date = tourViewModel.tourDate.Date, Time = DateTime.Now, TourId = _tourPhotos.TourId });
+
                         tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddDays(tourViewModel.repeatsEvery);
                     }
                     break;
@@ -83,11 +85,8 @@ namespace Suffer_Travels.Controllers
                 case ("Week"):
                     while (tourViewModel.tourDate.Date < sixMonths)
                     {
-                        tourDates.TourId = _tourPhotos.TourId;
-                        tourDates.Time = DateTime.Now;
-                        tourDates.Date = tourViewModel.tourDate.Date;
-                        db.tblTourDates.Add(tourDates);
-                        db.SaveChanges();
+                        td.Add(new TourDates { Date = tourViewModel.tourDate.Date, Time = DateTime.Now, TourId = _tourPhotos.TourId });
+
                         tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddDays(tourViewModel.repeatsEvery * 7);
                     }
                     break;
@@ -95,11 +94,8 @@ namespace Suffer_Travels.Controllers
                 case ("Month"):
                     while (tourViewModel.tourDate.Date < sixMonths)
                     {
-                        tourDates.TourId = _tourPhotos.TourId;
-                        tourDates.Time = DateTime.Now;
-                        tourDates.Date = tourViewModel.tourDate.Date;
-                        db.tblTourDates.Add(tourDates);
-                        db.SaveChanges();
+                        td.Add(new TourDates { Date = tourViewModel.tourDate.Date, Time = DateTime.Now, TourId = _tourPhotos.TourId });
+
                         tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddMonths((int)tourViewModel.repeatsEvery);
                     }
                     break;
@@ -107,11 +103,7 @@ namespace Suffer_Travels.Controllers
                 case ("Year"):
                     while (tourViewModel.tourDate.Date < sixMonths.AddYears(6))
                     {
-                        tourDates.TourId = _tourPhotos.TourId;
-                        tourDates.Time = DateTime.Now;
-                        tourDates.Date = tourViewModel.tourDate.Date;
-                        db.tblTourDates.Add(tourDates);
-                        db.SaveChanges();
+                        td.Add(new TourDates { Date = tourViewModel.tourDate.Date, Time = DateTime.Now, TourId = _tourPhotos.TourId });
 
                         tourViewModel.tourDate.Date = tourViewModel.tourDate.Date.AddYears((int)tourViewModel.repeatsEvery);
                     }
@@ -120,6 +112,9 @@ namespace Suffer_Travels.Controllers
                 default:
                     break;
             }
+
+            db.tblTourDates.AddRange(td);
+            db.SaveChanges();
 
             TempData["Success"] = "Data added successfully";
 
