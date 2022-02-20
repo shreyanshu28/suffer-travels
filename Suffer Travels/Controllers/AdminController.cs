@@ -55,7 +55,16 @@ namespace Suffer_Travels.Controllers
                 }
             }
 
+            //db.tblTourType.Add(tourViewModel.tourTypeDetails);
+
             string description = tourViewModel.tourDetail.TourName;
+
+            if(tourViewModel.tourDetail.TourTypeId == 0)
+            {
+                db.tblTourType.Add(tourViewModel.tourTypeDetails);
+                db.SaveChanges();
+                tourViewModel.tourDetail.TourTypeId = db.tblTourType.FirstOrDefault(t => t.TtName == tourViewModel.tourTypeDetails.TtName).TtId;
+            }
             db.tblTour.Add(tourViewModel.tourDetail);
             
             _photos.Description = description;

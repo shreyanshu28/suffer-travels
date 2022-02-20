@@ -38,14 +38,16 @@
               </div>
               <div class="mb-3">
                 <label class="form-label" asp-for="tourDetail.TourTypeId">Tour Type</label>
-                <select asp-for="tourDetail.TourTypeId" class="form-select" aria-label="Default select example">
+                <select asp-for="tourDetail.TourTypeId" class="form-select" aria-label="Default select example" id="type">
                   <option value="-1">Select from the list</option>
+                  <option value="0">Add New</option>
                     @foreach (var item in Model.tourTypes) 
                     {
                         <option value="@item.TtId">@item.TtName</option>
                     }
                 </select>
-                <span asp-validation-for="tourDetail.Price" class="text-danger"></span>
+                <input type="hidden" id="tourType" asp-for="tourTypeDetails.TtName" />
+                <span asp-validation-for="tourTypeDetails.TtName" class="text-danger"></span>
               </div>
               <div class="mb-3">
                     <label class="form-label" asp-for="tourDate.Date">Start Date</label>
