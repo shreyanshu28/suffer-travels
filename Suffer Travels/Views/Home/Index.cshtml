@@ -13,11 +13,13 @@
 <div class="d-flex flex-wrap justify-content-center">
     @foreach(var item in Model.tourDetails)
     {
-        <div class="card me-3" style="width: 18rem;">
-            @{
-                uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
-            }
-            <img src="/photos/tour/@Model.photos.FirstOrDefault(photo => photo.PId == photoId).ImagePath" class="card-img-top" alt="@Model.photos.FirstOrDefault(photo => photo.PId == photoId).Description">
+        if (item.IsActive)
+        {
+            <div class="card me-3" style="width: 18rem;">
+                @{
+                    uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
+                }
+                <img src="/photos/tour/@Model.photos.FirstOrDefault(photo => photo.PId == photoId).ImagePath" class="card-img-top" alt="@Model.photos.FirstOrDefault(photo => photo.PId == photoId).Description">
             <div class="card-body">
                 <h5 class="card-title">@item.TourName</h5>
                 <p class="card-text">@item.Description</p>
@@ -28,5 +30,6 @@
                 </div>
             </div>
         </div>
+        }
     }
 </div>

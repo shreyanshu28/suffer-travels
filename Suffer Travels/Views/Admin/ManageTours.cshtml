@@ -71,37 +71,22 @@
                         <td>
                             @Model.tourTypes.First(tourType => tourType.TtId == item.TourTypeId).TtName
                         </td>
-                        <td>
-                            <a class="btn btn-success mx-2" asp-controller="Admin" asp-action="ApproveRole" asp-route-id=@item.TId >Edit</a>
-                            <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeclineRole" asp-route-id="@item.TId" >Deactivate</a>                  
+                        <td colspan="2">
+                            <a class="btn btn-success mx-2 mb-2" asp-controller="Admin" asp-action="ApproveRole" asp-route-id=@item.TId >Edit</a>
+                            @if(@item.IsActive){
+                                <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeactivateTour" asp-route-id="@item.TId" >Deactivate</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary mx-2" asp-controller="Admin" asp-action="ActivateTour" asp-route-id="@item.TId" >Activate</a>
+                            }
                         </td>
                     </tr>
                 }
-                
             </tbody>
         </table>
     </div>
 </main>
-
-<script>
-    var exampleModal = document.getElementById('AddDetailsModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  // Extract info from data-bs-* attributes
-  //var recipient = button.getAttribute('data-bs-whatever')
-  // If necessary, you could initiate an AJAX request here
-  // and then do the updating in a callback.
-  //
-  // Update the modal's content.
-  var modalTitle = exampleModal.querySelector('.modal-title')
-  var modalBodyInput = exampleModal.querySelector('.modal-body input')
-
-  modalTitle.textContent = 'New message to ' + recipient
-  modalBodyInput.value = recipient
-})
-
-</script>
 
 @section scripts { 
     @{

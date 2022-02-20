@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Suffer_Travels.Data;
 
@@ -11,9 +12,10 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220220053943_IsActiveTour")]
+    partial class IsActiveTour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("AId");
 
-                    b.ToTable("tblArea", (string)null);
+                    b.ToTable("tblArea");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.City", b =>
@@ -66,7 +68,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("CId");
 
-                    b.ToTable("tblCity", (string)null);
+                    b.ToTable("tblCity");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Country", b =>
@@ -86,7 +88,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("CId");
 
-                    b.ToTable("tblCountry", (string)null);
+                    b.ToTable("tblCountry");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Hotel", b =>
@@ -112,7 +114,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("HId");
 
-                    b.ToTable("tblHotelMaster", (string)null);
+                    b.ToTable("tblHotelMaster");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.HotelPhotos", b =>
@@ -139,7 +141,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("HaId");
 
-                    b.ToTable("tblHotelPhotos", (string)null);
+                    b.ToTable("tblHotelPhotos");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.HotelRooms", b =>
@@ -170,7 +172,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("HrId");
 
-                    b.ToTable("tblHotelRooms", (string)null);
+                    b.ToTable("tblHotelRooms");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Order", b =>
@@ -193,7 +195,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("OId");
 
-                    b.ToTable("tblOrderMaster", (string)null);
+                    b.ToTable("tblOrderMaster");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.OrderHotel", b =>
@@ -218,7 +220,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("OhId");
 
-                    b.ToTable("tblOrderHotel", (string)null);
+                    b.ToTable("tblOrderHotel");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.OrderPeople", b =>
@@ -250,7 +252,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("OpId");
 
-                    b.ToTable("tblOrderPeople", (string)null);
+                    b.ToTable("tblOrderPeople");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.OrderTour", b =>
@@ -272,7 +274,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("OtId");
 
-                    b.ToTable("tblOrderTour", (string)null);
+                    b.ToTable("tblOrderTour");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.OrderVehicle", b =>
@@ -294,7 +296,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("OvId");
 
-                    b.ToTable("tblOrderVehicle", (string)null);
+                    b.ToTable("tblOrderVehicle");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Payment", b =>
@@ -322,7 +324,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("PId");
 
-                    b.ToTable("tblPaymentMaster", (string)null);
+                    b.ToTable("tblPaymentMaster");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Photo", b =>
@@ -343,7 +345,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("PId");
 
-                    b.ToTable("tblPhotos", (string)null);
+                    b.ToTable("tblPhotos");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Role", b =>
@@ -360,7 +362,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblRole", (string)null);
+                    b.ToTable("tblRole");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.State", b =>
@@ -380,7 +382,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("SId");
 
-                    b.ToTable("tblState", (string)null);
+                    b.ToTable("tblState");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Tour", b =>
@@ -416,7 +418,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TId");
 
-                    b.ToTable("tblTour", (string)null);
+                    b.ToTable("tblTour");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.TourCities", b =>
@@ -435,7 +437,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TcId");
 
-                    b.ToTable("tblTourCities", (string)null);
+                    b.ToTable("tblTourCities");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.TourDates", b =>
@@ -457,7 +459,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TdId");
 
-                    b.ToTable("tblTourDates", (string)null);
+                    b.ToTable("tblTourDates");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.TourItinerary", b =>
@@ -482,7 +484,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TiId");
 
-                    b.ToTable("tblTourItinerary", (string)null);
+                    b.ToTable("tblTourItinerary");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.TourPhotos", b =>
@@ -501,7 +503,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TpId");
 
-                    b.ToTable("tblTourPhotos", (string)null);
+                    b.ToTable("tblTourPhotos");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.TourType", b =>
@@ -522,7 +524,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("TtId");
 
-                    b.ToTable("tblTourType", (string)null);
+                    b.ToTable("tblTourType");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.User", b =>
@@ -581,7 +583,7 @@ namespace Suffer_Travels.Migrations
 
                     b.HasKey("UId");
 
-                    b.ToTable("tblUser", (string)null);
+                    b.ToTable("tblUser");
                 });
 #pragma warning restore 612, 618
         }

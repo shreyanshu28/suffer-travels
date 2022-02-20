@@ -26,8 +26,9 @@ namespace Suffer_Travels.Models
         public UInt32 TourTypeId { get; set; } = 1;
 
         [RegularExpression("^[0-9]+", ErrorMessage = "Invalid number of days")]
-        public UInt32 NoOfDays { get; set; } = 1;        
+        public UInt32 NoOfDays { get; set; } = 1;
 
+        public bool IsActive { get; set; } = true;
     }
 
     public class TourCities

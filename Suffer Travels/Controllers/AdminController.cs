@@ -190,6 +190,40 @@ namespace Suffer_Travels.Controllers
             return "Approved";
         }        
 
+        public IActionResult ActivateTour(uint? id)
+        {
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ManageTours");
+            }
+
+            var _tour = db.tblTour.Find(id);
+            _tour.IsActive = true;
+            db.tblTour.Update(_tour);
+            db.SaveChanges();
+            TempData["Success"] = "Tour is now active";
+
+            return RedirectToAction("ManageTours");
+        }
+
+        public IActionResult DeactivateTour(uint? id)
+        {
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ManageTours");
+            }
+
+            var _tour = db.tblTour.Find(id);
+            _tour.IsActive = false;
+            db.tblTour.Update(_tour);
+            db.SaveChanges();
+            TempData["Success"] = "Tour is deactivated";
+
+            return RedirectToAction("ManageTours");
+        }
+
         public IActionResult DeclineRole(uint? id)
         {
             if (id == null || id == 0)
