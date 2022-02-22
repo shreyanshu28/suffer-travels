@@ -32,6 +32,16 @@
                 <span asp-validation-for="tourDetail.Price" class="text-danger" ></span>
               </div>
               <div class="mb-3">
+                <label class="form-label" asp-for="tourDetail.PriceInfant">Price Per Infant</label>
+                <input type="number" class="form-control" asp-for="tourDetail.PriceInfant" id="" placeholder="Price"/>
+                <span asp-validation-for="tourDetail.PriceInfant" class="text-danger" ></span>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" asp-for="tourDetail.PriceChildren">Price Per Child</label>
+                <input type="number" class="form-control" asp-for="tourDetail.PriceChildren" id="" placeholder="Price"/>
+                <span asp-validation-for="tourDetail.PriceChildren" class="text-danger" ></span>
+              </div>
+              <div class="mb-3">
                 <label class="form-label" asp-for="tourDetail.NoOfDays">Number of Days</label>
                 <input type="number" class="form-control" asp-for="tourDetail.NoOfDays" id="" placeholder="Days"/>
                 <span asp-validation-for="tourDetail.NoOfDays" class="text-danger"></span>

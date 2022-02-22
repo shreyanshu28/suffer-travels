@@ -27,9 +27,9 @@ namespace Suffer_Travels.Controllers
         public async Task<IActionResult> AddTourDetailsAsync(TourViewModel tourViewModel)
         {
             var files = HttpContext.Request.Form.Files;
-            
+
             Photo _photos = new Photo();
-            
+
             foreach (var Image in files)
             {
                 string[] Images = Image.FileName.Split(".");
@@ -59,16 +59,16 @@ namespace Suffer_Travels.Controllers
 
             string description = tourViewModel.tourDetail.TourName;
 
-            if(tourViewModel.tourDetail.TourTypeId == 0)
+            if (tourViewModel.tourDetail.TourTypeId == 0)
             {
                 db.tblTourType.Add(tourViewModel.tourTypeDetails);
                 db.SaveChanges();
                 tourViewModel.tourDetail.TourTypeId = db.tblTourType.FirstOrDefault(t => t.TtName == tourViewModel.tourTypeDetails.TtName).TtId;
             }
             db.tblTour.Add(tourViewModel.tourDetail);
-            
+
             _photos.Description = description;
-            
+
             db.tblPhotos.Add(_photos);
             db.SaveChanges();
 
@@ -128,53 +128,6 @@ namespace Suffer_Travels.Controllers
             TempData["Success"] = "Data added successfully";
 
             return RedirectToAction("ManageTours");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddTourTypeDetails(TourViewModel tourType)
-        {
-            db.tblTourType.Add(tourType.tourTypeDetails);
-            db.SaveChanges();
-
-            /*var files = HttpContext.Request.Form.Files;
-            //var tt = db.tblTourType;
-            foreach (var Image in files)
-            {
-                string[] Images = Image.FileName.Split(".");
-                string extension = Images[Images.Length - 1].ToLower();
-                if (extension != "jpg" && extension != "png")
-                {
-                    TempData["Error"] = "Only jpg and png image formates are supported!";
-                    return RedirectToAction("ManageTours");
-                }
-                if (Image != null && Image.Length > 0)
-                {
-                    var file = Image;
-
-                    var uploads = Path.Combine(env.WebRootPath, "photos\\user");
-                    if (file.Length > 0)
-                    {
-                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
-                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-
-                            TourType tt = new TourType();
-                            tt.Photo = fileName;
-                            tt.TtName = tourType.tourTypeDetails.TtName;
-                            db.tblTourType.Add(tt);
-
-                            //db.tblTourType.Add(tourType.tourTypeDetails;
-                            db.SaveChanges();
-                        }
-                    }
-                }
-                TempData["Success"] = "Tour Type Added Successfuly";
-                return RedirectToAction("ManageTours");
-            }
-            TempData["Error"] = "Error in adding files";
-*/            return RedirectToAction("ManageTours");
         }
 
         public IActionResult ApproveRole(uint? id)
@@ -254,6 +207,28 @@ namespace Suffer_Travels.Controllers
         public String DeclineStatus()
         {
             return "Declined";
+        }
+
+        public IActionResult EditTour(uint? id)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ViewUsers");
+            }
+
+            SetViewData();
+            /*TourViewModel tourViewModel = new TourViewModel();
+            tourViewModel.tourDetails
+            Tour _tour = db.tblTour.Find(id);*/
+
+            return View();
         }
 
         public IActionResult Home()

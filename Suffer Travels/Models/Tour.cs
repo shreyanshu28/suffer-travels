@@ -22,6 +22,15 @@ namespace Suffer_Travels.Models
         [RegularExpression("^[0-9]+", ErrorMessage = "Invalid price")]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; } = 0;
+
+        [RegularExpression("^[0-9]+", ErrorMessage = "Invalid price")]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal PriceInfant { get; set; } = 0;
+
+        [RegularExpression("^[0-9]+", ErrorMessage = "Invalid price")]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal PriceChildren { get; set; } = 0;
+
         [ForeignKey("TourType")]
         public UInt32 TourTypeId { get; set; } = 1;
 
