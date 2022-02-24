@@ -1,25 +1,135 @@
 ﻿@using Suffer_Travels.ViewModel
-@model TourViewModel
+@model OrderViewModel
 @{
     Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Tour Details</h1>
-<div class="d-flex justify-content-center">
-    <div class="card me-3" style="width: 18rem;">
-        @{
-            //uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == Model.TId).PhotoId;
-        }
-        <img src="/photos/tour/@Model.photo.ImagePath" class="card-img-top" alt="@Model.photo.Description">
+<h1 style="text-align: center">Tour Details</h1>
+<div class="container d-flex justify-content-center">
+    <div class="card" style="width: 30%;">
         <div class="card-body">
             <h5 class="card-title">@Model.tourDetail.TourName</h5>
-            <p class="card-text">@Model.tourDetail.Description</p>
             <p class="card-text">@Model.tourTypeDetails.TtName</p>
-            <p class="card-text">From Date: @Model.tourDate.Date.ToLongDateString() Time: @Model.tourDate.Time.ToLongTimeString() <br /> for @Model.tourDetail.NoOfDays days Till date: @Model.tourDate.Date.AddDays(Model.tourDetail.NoOfDays).ToLongDateString() </p>
+            <p class="card-text">@Model.tourDetail.Description</p>
+            <p class="card-text">From: <br /> @Model.tourDate.Date.ToLongDateString() <br /> @Model.tourDate.Time.ToShortTimeString() <br /> for @Model.tourDetail.NoOfDays days <br /> To: <br /> @Model.tourDate.Date.AddDays(Model.tourDetail.NoOfDays).ToLongDateString() </p>
+            <div class="calendar-container">
+                
+                <!-- Modal trigger button -->
+                <button type="button" class="btn btn-outline-primary" id="open-calendar" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Set dates
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="height: 100vh; width: 100vw">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+                    <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
+                    <label style="display: block">
+                        Adults
+                        <label class="form-text">Age 18 and above</label>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
+                        <button type="button" id="addAdults" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </button>
+                        <button type="button" id="subtractAdults" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-minus"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
+                    <label>
+                        Children
+                        <label class="form-text">Age 6 - 17</label>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="1" disabled />
+                        <button type="button" id="addChildrens" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </button>
+                        <button type="button" id="subtractChildrens" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-minus"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
+                </div>
+            </div>
             <div class="d-flex justify-content-between ">
-                <h6>@Model.tourDetail.Price</h6>
+                <h6>₹@Model.tourDetail.Price</h6>
                 <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.tourDetail.TId">Order this tour</a>
             </div>
         </div>
     </div>
+    <div id="carouselExampleIndicators" class="carousel slide" style="width: 70%; height: 37rem" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.photo.Description" />
+            </div>
+            <div class="carousel-item">
+                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.photo.Description" />
+            </div>
+            <div class="carousel-item">
+                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.photo.Description" />
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 </div>
+
+@section Scripts{
+    <script>
+        const noOfAdults = document.getElementById("noOfAdults");
+        const addPeople = document.getElementById("addAdults");
+        const subtractPeople = document.getElementById("subtractAdults");
+
+        addPeople.addEventListener("click", (event) => {
+            noOfAdults.value = getNoOfPeoples(++noOfAdults.value);
+        });
+
+        subtractPeople.addEventListener("click", (event) => {
+            noOfAdults.value = getNoOfPeoples(--noOfAdults.value);
+        });
+
+        let getNoOfPeoples = (peoples) => {
+            if(peoples <= 0){
+                return 1;
+            }
+            return peoples;
+        };
+    </script>
+}

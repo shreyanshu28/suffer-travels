@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Suffer_Travels.ViewModel
 {
-    public class TourViewModel
+    public class OrderViewModel
     {
         public Tour tourDetail { get; set; }
         public TourType tourTypeDetails { get; set; }
@@ -16,7 +16,7 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<TourType> tourTypes { get; set; }
 
         //For recurrence
-        public string recurrence { get; set; } 
+        public string recurrence { get; set; }
         public UInt32 repeatsEvery { get; set; }
         public IEnumerable<TourDates> tourDates { get; set; }
 
@@ -24,6 +24,10 @@ namespace Suffer_Travels.ViewModel
 
         public IEnumerable<Photo> photos { get; set; }
 
-    }
+        //public TourViewModel TourView { get; set; }
 
+        //public TourViewModel tourView = new TourViewModel();
+
+        public Order order { get; set; }
+    }
 }
