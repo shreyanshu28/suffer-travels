@@ -1,46 +1,65 @@
-﻿@using Suffer_Travels.ViewModel
+﻿@using Newtonsoft.Json
+@using Suffer_Travels.ViewModel
+@using System.Collections
 @model OrderViewModel
 @{
     Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    IEnumerable<TourDates> dates = Model.TourView.tourDates;
 }
+@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css">*@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
+<style>
+    .fc-header-title h2{
+        font-size: 20px;
+    }
+    
+    .fc-state-highlight{
+        background-color: cornflowerblue;
+    }
 
-<h1 style="text-align: center">Tour Details</h1>
+    .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+        min-height: 1.7rem;
+    }
+
+    
+</style>
+
+
+<h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
 <div class="container d-flex justify-content-center">
-    <div class="card" style="width: 30%;">
+    <div class="card" style="width: 40%;">
         <div class="card-body">
-            <h5 class="card-title">@Model.tourDetail.TourName</h5>
-            <p class="card-text">@Model.tourTypeDetails.TtName</p>
-            <p class="card-text">@Model.tourDetail.Description</p>
-            <p class="card-text">From: <br /> @Model.tourDate.Date.ToLongDateString() <br /> @Model.tourDate.Time.ToShortTimeString() <br /> for @Model.tourDetail.NoOfDays days <br /> To: <br /> @Model.tourDate.Date.AddDays(Model.tourDetail.NoOfDays).ToLongDateString() </p>
-            <div class="calendar-container">
-                
-                <!-- Modal trigger button -->
-                <button type="button" class="btn btn-outline-primary" id="open-calendar" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Set dates
-                </button>
+            <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
+            <p class="card-text">@Model.TourView.tourDetail.Description</p>
+            <p class="card-text">
+                @*From: <br />
+                @Model.TourView.tourDate.Date.ToLongDateString() <br />
+                @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
+                for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
+                @*To: <br /> 
+                @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
+            </p>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-fullscreen">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body" style="height: 100vh; width: 100vw">
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    Close
-                                </button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Calendar -->
+            <div class="container bg-body p-3">
+                <div class="input-group mb-3">
+                    <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
+                    <span class="ms-3 me-3"> to </span>
+                    <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
                 </div>
-                <div>
-                    <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+                <span asp-validation-for="order.Date"></span>
+                <div id="calendar" class="bg-body"></div>
+            </div>
+
+            <!-- Storing tourdates in hidden field for javascript Calendar events -->
+            @foreach(var date in Model.TourView.tourDates)
+            {
+                <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
+            }
+
+            <div class="">
+                <div class="mb-3">
+                    <!-- No of people -->
                     <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
                     <label style="display: block">
                         Adults
@@ -48,10 +67,10 @@
                     </label>
                     <div class="input-group">
                         <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
-                        <button type="button" id="addAdults" class="btn btn-outline-light" >
+                        <button type="button" id="addAdult" class="btn btn-outline-light" >
                             <i class="fa-solid fa-circle-plus"></i>
                         </button>
-                        <button type="button" id="subtractAdults" class="btn btn-outline-light" >
+                        <button type="button" id="subtractAdult" class="btn btn-outline-light" >
                             <i class="fa-solid fa-circle-minus"></i>
                         </button>
                     </div>
@@ -61,24 +80,41 @@
                         <label class="form-text">Age 6 - 17</label>
                     </label>
                     <div class="input-group">
-                        <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="1" disabled />
-                        <button type="button" id="addChildrens" class="btn btn-outline-light" >
+                        <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="0" disabled />
+                        <button type="button" id="addChildren" class="btn btn-outline-light" >
                             <i class="fa-solid fa-circle-plus"></i>
                         </button>
-                        <button type="button" id="subtractChildrens" class="btn btn-outline-light" >
+                        <button type="button" id="subtractChildren" class="btn btn-outline-light" >
                             <i class="fa-solid fa-circle-minus"></i>
                         </button>
                     </div>
                     <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
+                    <label>
+                        Infants
+                        <label class="form-text">Age below 6</label>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="order.TotalInfants" type="number" id="noOfInfants" class="form-control" value="0" disabled />
+                        <button type="button" id="addInfant" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </button>
+                        <button type="button" id="subtractInfant" class="btn btn-outline-light" >
+                            <i class="fa-solid fa-circle-minus"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
                 </div>
             </div>
+            <!-- Price -->
             <div class="d-flex justify-content-between ">
-                <h6>₹@Model.tourDetail.Price</h6>
-                <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.tourDetail.TId">Order this tour</a>
+                <h6>₹@Model.TourView.tourDetail.Price</h6>
+                <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.TourView.tourDetail.TId">Order this tour</a>
             </div>
         </div>
     </div>
-    <div id="carouselExampleIndicators" class="carousel slide" style="width: 70%; height: 37rem" data-bs-ride="carousel">
+
+    <!-- Bootstrap Carousel -->
+    <div id="carouselExampleIndicators" class="carousel slide" style="width: 80%; height: 37rem" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
                 aria-current="true" aria-label="Slide 1"></button>
@@ -89,13 +125,13 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.photo.Description" />
+                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
             </div>
             <div class="carousel-item">
-                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.photo.Description" />
+                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
             </div>
             <div class="carousel-item">
-                <img src="/Photos/tour/@Model.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.photo.Description" />
+                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.TourView.photo.Description" />
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
@@ -112,22 +148,173 @@
 </div>
 
 @section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
     <script>
+        const orderDates = document.querySelectorAll("#orderDates");
+        
+        const newDate = (date, interval) => {
+            let dd = Number(date.getDate());
+            let mm = String(date.getMonth()).padStart(2, '0');
+            let yy = String(date.getFullYear());
+
+            dd = dd + interval - 1;
+
+            let newDate = new Date(yy, mm, dd).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            newDate = new Date(newDate);
+
+            dd = String(newDate.getDate()).padStart(2, '0');
+            mm = String(newDate.getMonth() + 1).padStart(2, '0');
+            yy = String(newDate.getFullYear());
+
+            newDate = yy + "-" + mm + "-" + dd;
+            
+            return newDate;
+        }
+
+        const localDateFormat = (date) => {
+
+            let dd = String(date.getDate()).padStart(2, '0');
+            let mm = String(date.getMonth() + 1).padStart(2, '0');
+            let yy = String(date.getFullYear());
+
+            let newDate = yy + "-" + mm + "-" + dd;
+
+            return newDate;
+        }
+
+        // Trying to get tour dates in JSON
+        //$(document).ready(function () {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: @*@Url.Action("GetTourDates", "Order")*@,
+        //        data: {
+        //            TourId: '@*@Model.TourView.tourDetail.TId'*@,
+        //        },
+        //        error: function () {
+        //            console.log("Get tours dates has errors");
+        //        },
+        //        success: function (dates) {
+        //            console.log(dates);
+        //        },
+        //    });
+
+            let date = new Date();
+            let d = date.getDate();
+            let m = date.getMonth();
+            let y = date.getFullYear();
+            let myEvents = [];
+
+            orderDates.forEach((dates) => {
+                console.log(`Date: ${localDateFormat(new Date(dates.value))}`);
+
+                myEvents.push({
+                    start: localDateFormat(new Date(dates.value)),
+                    display: 'background',
+                    overlap: false,
+                    interval: Number($("#noOfDays").text()),
+                });
+            });
+
+        // FullCalendar v5 latest
+        document.addEventListener("DOMContentLoaded", function() {
+            let calendarEl = document.getElementById("calendar");
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                selectable: true,
+                contentHeight: 350,
+                height: 400,
+                aspectRatio: 1,
+                handleWindowResize: true,
+                showNonCurrentDates: false,
+                fixedWeekCount: false,
+                dayHeaders: true,
+                navLinks: false,
+                initialDate: new Date(myEvents[3].start),
+                dateClick: (date) => {
+                    // every == foreach (both true and false must be used once to be working)
+                    // false == break and true == continue
+                    myEvents.every((event) => {
+                        if(event.start == date.dateStr){
+                            console.log(`OrderStartDate: ${event.start}`);
+                            $("#orderStartDate").val(event.start);
+                            console.log(event.interval);
+                            console.log(Number(event.interval));
+                            $("#orderEndDate").val(newDate(new Date(event.start), Number(event.interval)));
+                            return false;
+                        }
+                        $("#orderStartDate").val("Invalid date");
+                        $("#orderEndDate").val("");
+                        return true;
+                    })
+                },
+                events: myEvents,
+            });
+            calendar.render();
+        });
+
         const noOfAdults = document.getElementById("noOfAdults");
-        const addPeople = document.getElementById("addAdults");
-        const subtractPeople = document.getElementById("subtractAdults");
+        const addAdult = document.getElementById("addAdult");
+        const subtractAdult = document.getElementById("subtractAdult");
 
-        addPeople.addEventListener("click", (event) => {
-            noOfAdults.value = getNoOfPeoples(++noOfAdults.value);
+        const noOfChildrens = document.getElementById("noOfChildrens");
+        const addChildren = document.getElementById("addChildren");
+        const subtractChildren = document.getElementById("subtractChildren");
+        
+        const noOfInfants = document.getElementById("noOfInfants");
+        const addInfant = document.getElementById("addInfant");
+        const subtractInfant = document.getElementById("subtractInfant");
+
+        addAdult.addEventListener("click", (event) => {
+            noOfAdults.value = getNoOfAdults(++noOfAdults.value);
         });
 
-        subtractPeople.addEventListener("click", (event) => {
-            noOfAdults.value = getNoOfPeoples(--noOfAdults.value);
+        subtractAdult.addEventListener("click", (event) => {
+            noOfAdults.value = getNoOfAdults(--noOfAdults.value);
         });
 
-        let getNoOfPeoples = (peoples) => {
+        let getNoOfAdults = (peoples) => {
             if(peoples <= 0){
                 return 1;
+            }
+            return peoples;
+        };
+
+        addChildren.addEventListener("click", (event) => {
+            noOfChildrens.value = getNoOfChildrens(++noOfChildrens.value);
+        });
+
+        subtractChildren.addEventListener("click", (event) => {
+            noOfChildrens.value = getNoOfChildrens(--noOfChildrens.value);
+        });
+
+        let getNoOfChildrens = (peoples) => {
+            if(peoples <= 0){
+                return 0;
+            }
+            return peoples;
+        };
+        
+        addInfant.addEventListener("click", (event) => {
+            noOfInfants.value = getNoOfInfants(++noOfInfants.value);
+        });
+
+        subtractInfant.addEventListener("click", (event) => {
+            noOfInfants.value = getNoOfInfants(--noOfInfants.value);
+        });
+
+        let getNoOfInfants = (peoples) => {
+            if(peoples <= 0){
+                return 0;
             }
             return peoples;
         };

@@ -181,6 +181,9 @@ namespace Suffer_Travels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("OId"), 1L, 1);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Payment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -189,7 +192,10 @@ namespace Suffer_Travels.Migrations
                         .HasColumnType("Int");
 
                     b.Property<int>("TotalChildrens")
-                        .HasColumnType("int");
+                        .HasColumnType("Int");
+
+                    b.Property<int>("TotalInfants")
+                        .HasColumnType("Int");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
@@ -405,6 +411,12 @@ namespace Suffer_Travels.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("PriceChildren")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("PriceInfant")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("TotalSeats")

@@ -36,16 +36,33 @@ namespace Suffer_Travels.Controllers
             }
 
             OrderViewModel orderViewModel = new OrderViewModel();
+            TourViewModel tourViewModel = new TourViewModel();
 
-            orderViewModel.tourDetail = db.tblTour.FirstOrDefault(tour => tour.TId == id);
-            orderViewModel.tourTypeDetails = db.tblTourType.FirstOrDefault(tourType => tourType.TtId == orderViewModel.tourDetail.TourTypeId);
+            tourViewModel.tourDetail = db.tblTour.FirstOrDefault(tour => tour.TId == id);
+            tourViewModel.tourTypeDetails = db.tblTourType.FirstOrDefault(tourType => tourType.TtId == tourViewModel.tourDetail.TourTypeId);
 
-            orderViewModel.tourDate = db.tblTourDates.FirstOrDefault(tourDate => tourDate.TourId == id);
+            tourViewModel.tourDate = db.tblTourDates.FirstOrDefault(tourDate => tourDate.TourId == id);
+            tourViewModel.tourDates = db.tblTourDates.Where(tourDate => tourDate.TourId == id);
 
-            orderViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
-            orderViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == orderViewModel.tourPhoto.PhotoId);
+            tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
+            tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
+
+            orderViewModel.TourView = tourViewModel;
 
             return View(orderViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GetTourDates(int TourId)
+        {
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.tourDates = db.tblTourDates.Where(tourDate => tourDate.TourId == TourId);
+
+            return Json(new {
+                data = tourViewModel.tourDates
+            });
         }
     }
 }
