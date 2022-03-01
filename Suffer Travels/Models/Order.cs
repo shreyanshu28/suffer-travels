@@ -8,7 +8,12 @@ namespace Suffer_Travels.Models
         [Key]
         public uint OId { get; set; }
         [Column(TypeName = "Int")]
-        public int TotalPeople { get; set; }
+        public int TotalAdults { get; set; }
+        [Column(TypeName = "Int")]
+        public int TotalChildrens { get; set; }
+        [Column(TypeName = "Int")]
+        public int TotalInfants { get; set; }
+        public DateTime Date { get; set; }
         public string Payment { get; set; } = "Pending";
         public uint UserId { get; set; }
     }

@@ -15,7 +15,6 @@ namespace Suffer_Travels.ViewModel
 
         public IEnumerable<TourType> tourTypes { get; set; }
 
-
         //For recurrence
         public string recurrence { get; set; } 
         public UInt32 repeatsEvery { get; set; }

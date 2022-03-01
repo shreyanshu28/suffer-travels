@@ -4,32 +4,33 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<div style="background-image: url('../photos/pexels-evgeny-tchebotarev-4101555.jpg'); background-size: cover">
+    <div class="text-center">
+        <h1 class="display-4">Welcome to suffer travels</h1>
+        <h2>Get the relief from the suffer <br /> with our tours</h2>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to suffer travels</h1>
-    <h2>Get the relief from the suffer <br /> with our tours</h2>
-</div>
-
-<div class="d-flex flex-wrap justify-content-center">
-    @foreach(var item in Model.tourDetails)
-    {
-        if (item.IsActive)
+    <div class="d-flex flex-wrap justify-content-center align-items-baseline">
+        @foreach(var item in Model.tourDetails)
         {
-            <div class="card me-3" style="width: 18rem;">
-                @{
-                    uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
-                }
-                <img src="/photos/tour/@Model.photos.FirstOrDefault(photo => photo.PId == photoId).ImagePath" class="card-img-top" alt="@Model.photos.FirstOrDefault(photo => photo.PId == photoId).Description">
-            <div class="card-body">
-                <h5 class="card-title">@item.TourName</h5>
-                <p class="card-text">@item.Description</p>
-                <p class="card-text">@Model.tourTypes.FirstOrDefault(type => type.TtId == item.TourTypeId).TtName</p>
-                <div class="d-flex justify-content-between ">
-                    <h6>@item.Price</h6>
-                    <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@item.TId">Order this tour</a>
+            if (item.IsActive)
+            {
+                <div class="card me-3" style="width: 18rem;">
+                    @{
+                        uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
+                    }
+                    <img src="/photos/tour/@Model.photos.FirstOrDefault(photo => photo.PId == photoId).ImagePath" class="card-img-top" style="object-fit: cover; height: 25rem; width: 100%" alt="@Model.photos.FirstOrDefault(photo => photo.PId == photoId).Description">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.TourName</h5>
+                        <p class="card-text">@Model.tourTypes.FirstOrDefault(type => type.TtId == item.TourTypeId).TtName</p>
+                        <div class="card-text" style="">@item.Description</div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <h6>₹@item.Price</h6>
+                            <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@item.TId">Order this tour</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            }
         }
-    }
+    </div>
 </div>

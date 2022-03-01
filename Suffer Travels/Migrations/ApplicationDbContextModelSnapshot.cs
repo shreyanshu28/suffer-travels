@@ -198,11 +198,20 @@ namespace Suffer_Travels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("OId"), 1L, 1);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Payment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TotalPeople")
+                    b.Property<int>("TotalAdults")
+                        .HasColumnType("Int");
+
+                    b.Property<int>("TotalChildrens")
+                        .HasColumnType("Int");
+
+                    b.Property<int>("TotalInfants")
                         .HasColumnType("Int");
 
                     b.Property<long>("UserId")

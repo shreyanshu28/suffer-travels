@@ -35,17 +35,34 @@ namespace Suffer_Travels.Controllers
                 ViewData["IsLoggedin"] = "LoggedIn";
             }
 
+            OrderViewModel orderViewModel = new OrderViewModel();
             TourViewModel tourViewModel = new TourViewModel();
-            
+
             tourViewModel.tourDetail = db.tblTour.FirstOrDefault(tour => tour.TId == id);
             tourViewModel.tourTypeDetails = db.tblTourType.FirstOrDefault(tourType => tourType.TtId == tourViewModel.tourDetail.TourTypeId);
 
             tourViewModel.tourDate = db.tblTourDates.FirstOrDefault(tourDate => tourDate.TourId == id);
+            tourViewModel.tourDates = db.tblTourDates.Where(tourDate => tourDate.TourId == id);
 
             tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
             tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
 
-            return View(tourViewModel);
+            orderViewModel.TourView = tourViewModel;
+
+            return View(orderViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GetTourDates(int TourId)
+        {
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.tourDates = db.tblTourDates.Where(tourDate => tourDate.TourId == TourId);
+
+            return Json(new {
+                data = tourViewModel.tourDates
+            });
         }
     }
 }
