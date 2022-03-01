@@ -130,6 +130,25 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("ManageTours");
         }
 
+        public IActionResult AddTourItineary(uint? id)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            if (id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("ViewUsers");
+            }
+            
+
+
+            return View();
+        }
+
         public IActionResult ApproveRole(uint? id)
         {
             if (id == null || id == 0)

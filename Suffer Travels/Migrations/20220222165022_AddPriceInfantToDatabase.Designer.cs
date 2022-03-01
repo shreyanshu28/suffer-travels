@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Suffer_Travels.Data;
 
@@ -11,9 +12,10 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220222165022_AddPriceInfantToDatabase")]
+    partial class AddPriceInfantToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,23 +173,6 @@ namespace Suffer_Travels.Migrations
                     b.HasKey("HrId");
 
                     b.ToTable("tblHotelRooms");
-                });
-
-            modelBuilder.Entity("Suffer_Travels.Models.MealCombo", b =>
-                {
-                    b.Property<long>("McId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("McId"), 1L, 1);
-
-                    b.Property<string>("MealType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("McId");
-
-                    b.ToTable("tblMealCombo");
                 });
 
             modelBuilder.Entity("Suffer_Travels.Models.Order", b =>
