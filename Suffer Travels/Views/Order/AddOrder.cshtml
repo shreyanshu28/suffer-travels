@@ -28,97 +28,94 @@
         opacity: 0.5;
     }
 </style>
+<h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
+<div class="container d-flex justify-content-center">
+    <form method="post" asp-route-id="@Model.TourView.tourDetail.TId" class="card" style="width: 40%;">
+        
+            <div class="card-body">
+                <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
+                <p class="card-text">@Model.TourView.tourDetail.Description</p>
+                <p class="card-text">
+                    @*From: <br />
+                    @Model.TourView.tourDate.Date.ToLongDateString() <br />
+                    @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
+                    for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
+                    @*To: <br /> 
+                    @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
+                </p>
 
-    <form method="post" asp-route-id="@Model.TourView.tourDetail.TId">
-    <h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
-        <div class="container d-flex justify-content-center">
-            <div class="card" style="width: 40%;">
-                <div class="card-body">
-                    <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
-                    <p class="card-text">@Model.TourView.tourDetail.Description</p>
-                    <p class="card-text">
-                        @*From: <br />
-                        @Model.TourView.tourDate.Date.ToLongDateString() <br />
-                        @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
-                        for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
-                        @*To: <br /> 
-                        @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
-                    </p>
-
-                    <!-- Calendar container -->
-                    <div class="container bg-body p-3">
-                        <div class="input-group mb-3">
-                            <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
-                            <span class="ms-3 me-3"> to </span>
-                            <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
-                        </div>
-                        <span asp-validation-for="order.Date"></span>
-                        <!-- Calendar div -->
-                        <div id="calendar" class="bg-light"></div>
+                <!-- Calendar container -->
+                <div class="container bg-body p-3">
+                    <div class="input-group mb-3">
+                        <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
+                        <span class="ms-3 me-3"> to </span>
+                        <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
                     </div>
+                    <span asp-validation-for="order.Date"></span>
+                    <!-- Calendar div -->
+                    <div id="calendar" class="bg-light"></div>
+                </div>
 
-                    <!-- Storing tourdates in hidden field for javascript Calendar events -->
-                    @foreach(var date in Model.TourView.tourDates)
-                    {
-                        <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
-                    }
+                <!-- Storing tourdates in hidden field for javascript Calendar events -->
+                @foreach(var date in Model.TourView.tourDates)
+                {
+                    <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
+                }
 
-                    <div class="">
-                        <div class="mb-3">
-                            <!-- No of people -->
-                            <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
-                            <label style="display: block">
-                                ₹<span id="adultAmount">@Model.TourView.tourDetail.Price</span> / Adult
-                                <label class="form-text">Age 18 and above</label>
-                            </label>
-                            <div class="input-group">
-                                <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
-                                <button type="button" id="addAdult" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                </button>
-                                <button type="button" id="subtractAdult" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                </button>
-                            </div>
-                            <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
-                            <label>
-                                ₹<span id="childAmount">@Model.TourView.tourDetail.PriceChildren</span> / Children
-                                <label class="form-text">Age 6 - 17</label>
-                            </label>
-                            <div class="input-group">
-                                <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="0" disabled />
-                                <button type="button" id="addChildren" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                </button>
-                                <button type="button" id="subtractChildren" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                </button>
-                            </div>
-                            <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
-                            <label>
-                                ₹<span id="infantAmount">@Model.TourView.tourDetail.PriceInfant</span> / Infant
-                                <label class="form-text">Age below 6</label>
-                            </label>
-                            <div class="input-group">
-                                <input asp-for="order.TotalInfants" type="number" id="noOfInfants" class="form-control" value="0" disabled />
-                                <button type="button" id="addInfant" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                </button>
-                                <button type="button" id="subtractInfant" class="btn btn-outline-light" >
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                </button>
-                            </div>
-                            <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
+                <div class="">
+                    <div class="mb-3">
+                        <!-- No of people -->
+                        <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
+                        <label style="display: block">
+                            ₹<span id="adultAmount">@Model.TourView.tourDetail.Price</span> / Adult
+                            <label class="form-text">Age 18 and above</label>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
+                            <button type="button" id="addAdult" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-plus"></i>
+                            </button>
+                            <button type="button" id="subtractAdult" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-minus"></i>
+                            </button>
                         </div>
-                    </div>
-                    <!-- Price -->
-                    <div class="d-flex justify-content-between ">
-                        <h6>₹<span id="totalOrderAmount">@Model.TourView.tourDetail.Price</span></h6>
-                        <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.TourView.tourDetail.TId">Chech availability</a>
+                        <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
+                        <label>
+                            ₹<span id="childAmount">@Model.TourView.tourDetail.PriceChildren</span> / Children
+                            <label class="form-text">Age 6 - 17</label>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="0" disabled />
+                            <button type="button" id="addChildren" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-plus"></i>
+                            </button>
+                            <button type="button" id="subtractChildren" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-minus"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
+                        <label>
+                            ₹<span id="infantAmount">@Model.TourView.tourDetail.PriceInfant</span> / Infant
+                            <label class="form-text">Age below 6</label>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="order.TotalInfants" type="number" id="noOfInfants" class="form-control" value="0" disabled />
+                            <button type="button" id="addInfant" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-plus"></i>
+                            </button>
+                            <button type="button" id="subtractInfant" class="btn btn-outline-light" >
+                                <i class="fa-solid fa-circle-minus"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
                     </div>
                 </div>
+                <!-- Price -->
+                <div class="d-flex justify-content-between ">
+                    <h6>₹<span id="totalOrderAmount">@Model.TourView.tourDetail.Price</span></h6>
+                    <button type="submit" class="btn btn-primary">Check availability</button>
+                </div>
             </div>
-        </div>
     </form>
 
     <!-- Bootstrap Carousel -->

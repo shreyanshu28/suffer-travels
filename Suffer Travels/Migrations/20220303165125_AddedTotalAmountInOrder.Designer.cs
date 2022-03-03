@@ -12,8 +12,8 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220222165022_AddPriceInfantToDatabase")]
-    partial class AddPriceInfantToDatabase
+    [Migration("20220303165125_AddedTotalAmountInOrder")]
+    partial class AddedTotalAmountInOrder
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -105,7 +105,7 @@ namespace Suffer_Travels.Migrations
                     b.Property<long>("ContactNo")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Hname")
+                    b.Property<string>("HName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -117,7 +117,7 @@ namespace Suffer_Travels.Migrations
                     b.ToTable("tblHotelMaster");
                 });
 
-            modelBuilder.Entity("Suffer_Travels.Models.HotelPhotos", b =>
+            modelBuilder.Entity("Suffer_Travels.Models.HotelAddress", b =>
                 {
                     b.Property<long>("HaId")
                         .ValueGeneratedOnAdd()
@@ -133,13 +133,29 @@ namespace Suffer_Travels.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Aid")
+                    b.Property<long>("AreaId")
                         .HasColumnType("bigint");
+
+                    b.HasKey("HaId");
+
+                    b.ToTable("tblHotelAddress");
+                });
+
+            modelBuilder.Entity("Suffer_Travels.Models.HotelPhotos", b =>
+                {
+                    b.Property<long>("HpId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("HpId"), 1L, 1);
 
                     b.Property<long>("HId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("HaId");
+                    b.Property<long>("PID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("HpId");
 
                     b.ToTable("tblHotelPhotos");
                 });
@@ -152,14 +168,8 @@ namespace Suffer_Travels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("HrId"), 1L, 1);
 
-                    b.Property<long>("AreaId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("Int");
-
-                    b.Property<long>("ContactNo")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("HId")
                         .HasColumnType("bigint");
@@ -175,6 +185,23 @@ namespace Suffer_Travels.Migrations
                     b.ToTable("tblHotelRooms");
                 });
 
+            modelBuilder.Entity("Suffer_Travels.Models.MealCombo", b =>
+                {
+                    b.Property<long>("McId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("McId"), 1L, 1);
+
+                    b.Property<string>("MealType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("McId");
+
+                    b.ToTable("tblMealCombo");
+                });
+
             modelBuilder.Entity("Suffer_Travels.Models.Order", b =>
                 {
                     b.Property<long>("OId")
@@ -183,11 +210,23 @@ namespace Suffer_Travels.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("OId"), 1L, 1);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Payment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TotalPeople")
+                    b.Property<int>("TotalAdults")
+                        .HasColumnType("Int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("Decimal(10,2)");
+
+                    b.Property<int>("TotalChildrens")
+                        .HasColumnType("Int");
+
+                    b.Property<int>("TotalInfants")
                         .HasColumnType("Int");
 
                     b.Property<long>("UserId")

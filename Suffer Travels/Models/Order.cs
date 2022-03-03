@@ -13,6 +13,8 @@ namespace Suffer_Travels.Models
         public int TotalChildrens { get; set; }
         [Column(TypeName = "Int")]
         public int TotalInfants { get; set; }
+        [Column(TypeName = "Decimal(10, 2)")]
+        public int TotalAmount { get; set; }
         public DateTime Date { get; set; }
         public string Payment { get; set; } = "Pending";
         public uint UserId { get; set; }

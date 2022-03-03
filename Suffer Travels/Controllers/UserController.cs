@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
+using Suffer_Travels.ViewModel;
 using System.Collections;
 using System.Dynamic;
 using System.Net;
@@ -47,9 +48,18 @@ namespace Suffer_Travels.Controllers
 
             if (GetRole() == 2)
             {
+                TourViewModel tourViewModel = new TourViewModel();
+                
                 ViewData["Fname"] = HttpContext.Session.GetString("Fname");
                 ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-                return View();
+
+                tourViewModel.tourDetails = db.tblTour;
+                tourViewModel.tourTypes = db.tblTourType;
+                tourViewModel.tourDates = db.tblTourDates;
+                tourViewModel.tourPhotos = db.tblTourPhotos;
+                tourViewModel.photos = db.tblPhotos;
+
+                return View(tourViewModel);
             }
 
             return ShowCustomHomePage(GetRole());
