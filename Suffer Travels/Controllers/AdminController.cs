@@ -247,7 +247,30 @@ namespace Suffer_Travels.Controllers
             tourViewModel.tourDetails
             Tour _tour = db.tblTour.Find(id);*/
 
-            return View();
+            TourViewModel tourViewModel = new TourViewModel();
+            tourViewModel.tourDetail = db.tblTour.Find(id);
+            tourViewModel.tourTypes = db.tblTourType;
+
+            return View(tourViewModel);
+        }
+
+        public IActionResult EditTourDetails(TourViewModel tourViewModel)
+        {
+            var tourDetails = db.tblTour.Find(tourViewModel.tourDetail.TId);
+            //var tourDetails = db.tblTour.Find(tourViewModel.tourDetail.TId);
+            tourDetails.TourName = tourViewModel.tourDetail.TourName;
+            tourDetails.TotalSeats = tourViewModel.tourDetail.TotalSeats;
+            tourDetails.Description = tourViewModel.tourDetail.Description;
+            tourDetails.NoOfDays = tourViewModel.tourDetail.NoOfDays;
+            tourDetails.Price = tourViewModel.tourDetail.Price;
+            tourDetails.PriceChildren = tourViewModel.tourDetail.PriceChildren;
+            tourDetails.PriceInfant = tourViewModel.tourDetail.PriceInfant;
+            db.tblTour.Update(tourDetails);
+            db.SaveChanges();
+
+            TempData["Success"] = "Tour succesfully edited!";
+
+            return RedirectToAction("ManageTours");
         }
 
         public IActionResult Home()
@@ -266,6 +289,7 @@ namespace Suffer_Travels.Controllers
         {
             return HttpContext.Session.GetInt32("RoleId") == 1;
         }
+
         public IActionResult ManageTours()
         {
             if (UserLoggedOut())
@@ -343,8 +367,7 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult ViewUsers()
         {
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+            SetViewData();
 
             if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
