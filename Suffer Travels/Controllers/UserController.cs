@@ -202,7 +202,7 @@ namespace Suffer_Travels.Controllers
             // From registration
             else if (passFlag == 3)
             {
-                if(db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
+                if(db.tblUser.Any(user => user.Email == register.Email))
                 {
                     ModelState.AddModelError("Emai", "User associated with this email address alreasy exists");
                 }
@@ -244,16 +244,21 @@ namespace Suffer_Travels.Controllers
                 }
             }
 
-
             return View();
         }
 
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
-            if(register.Email == null)
+            string message = "Otp is successfully sent";
+            if (db.tblUser.Any(user => user.Email == register.Email))
             {
-                ModelState.AddModelError("Email", "Please enter the email");
+                message = "The email address you entered already exists";
+                otp = 0;
+            }
+            else if (register.Email == null)
+            {
+                message = "Please enter a email address";
                 otp = 0;
             }
             else
@@ -261,8 +266,16 @@ namespace Suffer_Travels.Controllers
                 sendOtp(register.Email, register.Email);
             }
             if (otp != 0)
-                return Json(new { sendOtp = otp, status = 1 });
-            return Json(new { sendOtp = otp, status = 0 });
+                return Json(new { 
+                    sendOtp = otp, 
+                    status = 1, 
+                    message = message 
+                });
+            return Json(new { 
+                sendOtp = otp, 
+                status = 0, 
+                message = message 
+            });
         }
 
         public IActionResult EditProfile()
