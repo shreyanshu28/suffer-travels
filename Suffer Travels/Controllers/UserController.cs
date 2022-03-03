@@ -138,7 +138,10 @@ namespace Suffer_Travels.Controllers
                 TempData.Add("Gender", user.Gender.ToString().Trim());
                 TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
 
-                return RedirectToAction("AddPassword");
+                return RedirectToAction("AddPassword", new
+                {
+                    id = 3,
+                });
             }
 
             return View();
@@ -196,10 +199,17 @@ namespace Suffer_Travels.Controllers
             {
                 ModelState.Remove("Email");
             }
-            // From nowhere
-            else if (passFlag == 0)
+            // From registration
+            else if (passFlag == 3)
             {
-                return RedirectToAction("Register");
+                if(db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
+                {
+                    ModelState.AddModelError("Emai", "User associated with this email address alreasy exists");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Registration");
             }
 
             if (Convert.ToInt32(register.Otp) == otp)
@@ -241,7 +251,15 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
-            sendOtp(register.Email, register.Email);
+            if(register.Email == null)
+            {
+                ModelState.AddModelError("Email", "Please enter the email");
+                otp = 0;
+            }
+            else
+            {
+                sendOtp(register.Email, register.Email);
+            }
             if (otp != 0)
                 return Json(new { sendOtp = otp, status = 1 });
             return Json(new { sendOtp = otp, status = 0 });
