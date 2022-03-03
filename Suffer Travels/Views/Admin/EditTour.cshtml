@@ -5,11 +5,12 @@
     Layout = "~/Views/Shared/User/_Admin.cshtml";
 }
 
- <form method="post" asp-action="AddTourDetails" enctype="multipart/form-data" class="d-flex justify-content-center container main-body" >
+ <form method="post" asp-action="EditTourDetails" enctype="multipart/form-data" class="d-flex justify-content-center container main-body" >
         <div class="card card-style modal-body">
           <div class="card-body d-flex flex-wrap flex-column justify-content-between">
             <div>
               <div class="mb-3">
+                  <input type="hidden" asp-for="tourDetail.TId" />
                 <label class="form-label" asp-for="tourDetail.TourName">Tour name</label>
                 <input type="text" class="form-control" asp-for="tourDetail.TourName" id="" placeholder="Tour name" />
                 <span asp-validation-for="tourDetail.TourName" class="text-danger" ></span>
@@ -79,11 +80,6 @@
              </div>
             </div>*@
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
-              Close
-            </button>
-            <button type="submit" class="btn btn-primary">Add Details</button>
-          </div>
+            <button type="submit" class="btn btn-primary">Add Details</button
         </div>
       </form>

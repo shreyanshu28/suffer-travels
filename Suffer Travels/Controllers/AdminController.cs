@@ -251,13 +251,24 @@ namespace Suffer_Travels.Controllers
             tourViewModel.tourDetail = db.tblTour.Find(id);
             tourViewModel.tourTypes = db.tblTourType;
 
-
             return View(tourViewModel);
         }
 
         public IActionResult EditTourDetails(TourViewModel tourViewModel)
         {
+            var tourDetails = db.tblTour.Find(tourViewModel.tourDetail.TId);
+            //var tourDetails = db.tblTour.Find(tourViewModel.tourDetail.TId);
+            tourDetails.TourName = tourViewModel.tourDetail.TourName;
+            tourDetails.TotalSeats = tourViewModel.tourDetail.TotalSeats;
+            tourDetails.Description = tourViewModel.tourDetail.Description;
+            tourDetails.NoOfDays = tourViewModel.tourDetail.NoOfDays;
+            tourDetails.Price = tourViewModel.tourDetail.Price;
+            tourDetails.PriceChildren = tourViewModel.tourDetail.PriceChildren;
+            tourDetails.PriceInfant = tourViewModel.tourDetail.PriceInfant;
+            db.tblTour.Update(tourDetails);
+            db.SaveChanges();
 
+            TempData["Success"] = "Tour succesfully edited!";
 
             return RedirectToAction("ManageTours");
         }
