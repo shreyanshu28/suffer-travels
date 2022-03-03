@@ -53,6 +53,16 @@ namespace Suffer_Travels.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddOrder(int? id, OrderViewModel orderViewModel)
+        {
+            
+
+
+            return View(orderViewModel);
+        }
+
+        [HttpPost]
         public JsonResult GetTourDates(int TourId)
         {
             TourViewModel tourViewModel = new TourViewModel();
