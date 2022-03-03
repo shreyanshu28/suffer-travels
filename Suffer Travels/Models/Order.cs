@@ -83,4 +83,5 @@ namespace Suffer_Travels.Models
         [ForeignKey("Order")]
         public uint OrderId { get; set; }
     }
+
 }

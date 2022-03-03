@@ -37,6 +37,7 @@ namespace Suffer_Travels.Data
         public DbSet<Hotel> tblHotelMaster { get; set; }
         public DbSet<HotelRooms> tblHotelRooms { get; set; }
         public DbSet<HotelPhotos> tblHotelPhotos { get; set; }
+        public DbSet<HotelAddress> tblHotelAddress { get; set; }
 
         //ORDER
         public DbSet<Order> tblOrderMaster { get; set; }
