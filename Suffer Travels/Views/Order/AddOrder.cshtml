@@ -6,7 +6,6 @@
     Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
     IEnumerable<TourDates> dates = Model.TourView.tourDates;
 }
-@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.css">*@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
 <style>
     .fc-header-title h2{
@@ -21,7 +20,13 @@
         min-height: 1.7rem;
     }
 
+    .fc-daygrid-day-number, .fc-col-header-cell-cushion, .fc-toolbar-title {
+        color: #2C3E50;
+    }
     
+    .fc .fc-bg-event{
+        opacity: 0.5;
+    }
 </style>
 
 
@@ -40,7 +45,7 @@
                 @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
             </p>
 
-            <!-- Calendar -->
+            <!-- Calendar container -->
             <div class="container bg-body p-3">
                 <div class="input-group mb-3">
                     <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
@@ -48,7 +53,8 @@
                     <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
                 </div>
                 <span asp-validation-for="order.Date"></span>
-                <div id="calendar" class="bg-body"></div>
+                <!-- Calendar div -->
+                <div id="calendar" class="bg-light"></div>
             </div>
 
             <!-- Storing tourdates in hidden field for javascript Calendar events -->
@@ -173,7 +179,6 @@
             yy = String(newDate.getFullYear());
 
             newDate = yy + "-" + mm + "-" + dd;
-            
             return newDate;
         }
 
@@ -184,47 +189,82 @@
             let yy = String(date.getFullYear());
 
             let newDate = yy + "-" + mm + "-" + dd;
-
             return newDate;
         }
 
-        // Trying to get tour dates in JSON
-        //$(document).ready(function () {
-        //    $.ajax({
+        let date = new Date();
+        let d = date.getDate();
+        let m = date.getMonth();
+        let y = date.getFullYear();
+        let myEvents = [];
+
+        //async function assignEvents (dates) {
+
+        //    await dates.forEach(async (dates) => {
+        //        console.log(`Date here: ${localDateFormat(new Date(dates.date))}`);
+        //        console.log(`Date: ${localDateFormat(new Date(dates))}`);
+
+        //        await myEvents.push({
+        //            start: localDateFormat(new Date(dates.date)),
+        //            end: localDateFormat(new Date(dates.value)),
+        //            end: newDate(new Date(dates.date), Number($("#noOfDays").text()) + 1),
+        //            display: 'background',
+        //            overlap: false,
+        //            interval: Number($("#noOfDays").text()),
+        //        });
+        //    });
+        //}
+
+        //function assignEvents (dates) {
+        //    dates.forEach((dates) => {
+        //        console.log(`Date here: ${localDateFormat(new Date(dates.date))}`);
+
+        //        myEvents.push({
+        //            start: localDateFormat(new Date(dates.date)),
+        //            end: localDateFormat(new Date(dates.value)),
+        //            end: newDate(new Date(dates.date), Number($("#noOfDays").text()) + 1),
+        //            display: 'background',
+        //            overlap: false,
+        //            interval: Number($("#noOfDays").text()),
+        //        });
+        //    });
+        //}
+
+        orderDates.forEach((dates) => {
+            console.log(`Date here: ${localDateFormat(new Date(dates.value))}`);
+
+            myEvents.push({
+                start: localDateFormat(new Date(dates.value)),
+                display: 'background',
+                overlap: false,
+                interval: Number($("#noOfDays").text()),
+            });
+        });
+
+        // Get tour dates in JSON 
+        // In Progress
+        //async function fetchEvents(){
+        //    await $.ajax({
         //        type: "POST",
-        //        url: @*@Url.Action("GetTourDates", "Order")*@,
+        //        url: '@Url.Action("GetTourDates", "Order")',
         //        data: {
-        //            TourId: '@*@Model.TourView.tourDetail.TId'*@,
+        //            TourId: '@Model.TourView.tourDetail.TId',
         //        },
         //        error: function () {
         //            console.log("Get tours dates has errors");
         //        },
-        //        success: function (dates) {
-        //            console.log(dates);
+        //        success: async function (orderDates) {
+        //            console.log(`Order Dates from json`);
+        //            console.log(orderDates);
+        //            await assignEvents(orderDates.data);
         //        },
         //    });
-
-            let date = new Date();
-            let d = date.getDate();
-            let m = date.getMonth();
-            let y = date.getFullYear();
-            let myEvents = [];
-
-            orderDates.forEach((dates) => {
-                console.log(`Date: ${localDateFormat(new Date(dates.value))}`);
-
-                myEvents.push({
-                    start: localDateFormat(new Date(dates.value)),
-                    display: 'background',
-                    overlap: false,
-                    interval: Number($("#noOfDays").text()),
-                });
-            });
+        //}
 
         // FullCalendar v5 latest
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", async function() {
             let calendarEl = document.getElementById("calendar");
-            let calendar = new FullCalendar.Calendar(calendarEl, {
+            let calendar = await new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
                     left: 'prev',
                     center: 'title',
@@ -239,7 +279,26 @@
                 fixedWeekCount: false,
                 dayHeaders: true,
                 navLinks: false,
-                initialDate: new Date(myEvents[3].start),
+                validRange: (event) => {
+                    let startMonth = 0,
+                        currMonth = Number(new Date().getMonth()),
+                        endDate = myEvents[myEvents.length - 1].start,
+                        startDate = new Date();
+                    
+                    myEvents.every((event) => {
+                        startMonth = Number(new Date(event.start).getMonth());
+
+                        if(startMonth >= currMonth){
+                            startDate = localDateFormat(new Date(event.start));
+                            return false
+                        }
+                        return true;
+                    });
+                    return {
+                        start: startDate,
+                        end: endDate,
+                    };
+                },
                 dateClick: (date) => {
                     // every == foreach (both true and false must be used once to be working)
                     // false == break and true == continue
@@ -247,8 +306,6 @@
                         if(event.start == date.dateStr){
                             console.log(`OrderStartDate: ${event.start}`);
                             $("#orderStartDate").val(event.start);
-                            console.log(event.interval);
-                            console.log(Number(event.interval));
                             $("#orderEndDate").val(newDate(new Date(event.start), Number(event.interval)));
                             return false;
                         }
@@ -258,9 +315,39 @@
                     })
                 },
                 events: myEvents,
+                //events: function (){
+                //            $.ajax({
+                //                type: "POST",
+                //                url: '@Url.Action("GetTourDates", "Order")',
+                //                data: {
+                //                    TourId: '@Model.TourView.tourDetail.TId',
+                //                },
+                //                error: function () {
+                //                    console.log("Get tours dates has errors");
+                //                },
+                //                success: function (orderDates) {
+                //                    assignEvents(orderDates.data);
+                //                },
+                //            });
+                //            return myEvents;
+                //        },
             });
             calendar.render();
+
+                //function makeSelection(selection){
+                //    calendar.select({
+                //        start: localDateFormat(new Date(selection.date)),
+                //        end: newDate(new Date(selection.date), selection.interval),
+                //    });
+                //}
+                //calendar.select({
+                //    new Date("2022", "03", "03"),
+                //    new Date("2022", "03", "04")
+                //});
+
         });
+            
+            
 
         const noOfAdults = document.getElementById("noOfAdults");
         const addAdult = document.getElementById("addAdult");

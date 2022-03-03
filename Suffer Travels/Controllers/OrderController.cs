@@ -53,7 +53,6 @@ namespace Suffer_Travels.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult GetTourDates(int TourId)
         {
             TourViewModel tourViewModel = new TourViewModel();
