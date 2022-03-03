@@ -29,95 +29,97 @@
     }
 </style>
 
+    <form method="post" asp-route-id="@Model.TourView.tourDetail.TId">
+    <h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
+        <div class="container d-flex justify-content-center">
+            <div class="card" style="width: 40%;">
+                <div class="card-body">
+                    <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
+                    <p class="card-text">@Model.TourView.tourDetail.Description</p>
+                    <p class="card-text">
+                        @*From: <br />
+                        @Model.TourView.tourDate.Date.ToLongDateString() <br />
+                        @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
+                        for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
+                        @*To: <br /> 
+                        @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
+                    </p>
 
-<h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
-<div class="container d-flex justify-content-center">
-    <div class="card" style="width: 40%;">
-        <div class="card-body">
-            <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
-            <p class="card-text">@Model.TourView.tourDetail.Description</p>
-            <p class="card-text">
-                @*From: <br />
-                @Model.TourView.tourDate.Date.ToLongDateString() <br />
-                @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
-                for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
-                @*To: <br /> 
-                @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
-            </p>
+                    <!-- Calendar container -->
+                    <div class="container bg-body p-3">
+                        <div class="input-group mb-3">
+                            <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
+                            <span class="ms-3 me-3"> to </span>
+                            <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
+                        </div>
+                        <span asp-validation-for="order.Date"></span>
+                        <!-- Calendar div -->
+                        <div id="calendar" class="bg-light"></div>
+                    </div>
 
-            <!-- Calendar container -->
-            <div class="container bg-body p-3">
-                <div class="input-group mb-3">
-                    <input asp-for="order.Date" type="text" id="orderStartDate" placeholder="Select start date" class="form-control" disabled />
-                    <span class="ms-3 me-3"> to </span>
-                    <input type="text" id="orderEndDate" placeholder="End date" class="form-control" disabled />
+                    <!-- Storing tourdates in hidden field for javascript Calendar events -->
+                    @foreach(var date in Model.TourView.tourDates)
+                    {
+                        <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
+                    }
+
+                    <div class="">
+                        <div class="mb-3">
+                            <!-- No of people -->
+                            <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
+                            <label style="display: block">
+                                ₹<span id="adultAmount">@Model.TourView.tourDetail.Price</span> / Adult
+                                <label class="form-text">Age 18 and above</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
+                                <button type="button" id="addAdult" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractAdult" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
+                            <label>
+                                ₹<span id="childAmount">@Model.TourView.tourDetail.PriceChildren</span> / Children
+                                <label class="form-text">Age 6 - 17</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="0" disabled />
+                                <button type="button" id="addChildren" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractChildren" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
+                            <label>
+                                ₹<span id="infantAmount">@Model.TourView.tourDetail.PriceInfant</span> / Infant
+                                <label class="form-text">Age below 6</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalInfants" type="number" id="noOfInfants" class="form-control" value="0" disabled />
+                                <button type="button" id="addInfant" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractInfant" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
+                        </div>
+                    </div>
+                    <!-- Price -->
+                    <div class="d-flex justify-content-between ">
+                        <h6>₹<span id="totalOrderAmount">@Model.TourView.tourDetail.Price</span></h6>
+                        <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.TourView.tourDetail.TId">Chech availability</a>
+                    </div>
                 </div>
-                <span asp-validation-for="order.Date"></span>
-                <!-- Calendar div -->
-                <div id="calendar" class="bg-light"></div>
-            </div>
-
-            <!-- Storing tourdates in hidden field for javascript Calendar events -->
-            @foreach(var date in Model.TourView.tourDates)
-            {
-                <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
-            }
-
-            <div class="">
-                <div class="mb-3">
-                    <!-- No of people -->
-                    <label asp-for="order.TotalAdults" style="display: block" >No of people</label>
-                    <label style="display: block">
-                        Adults
-                        <label class="form-text">Age 18 and above</label>
-                    </label>
-                    <div class="input-group">
-                        <input asp-for="order.TotalAdults" type="number" id="noOfAdults" class="form-control" value="1" disabled />
-                        <button type="button" id="addAdult" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-plus"></i>
-                        </button>
-                        <button type="button" id="subtractAdult" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-minus"></i>
-                        </button>
-                    </div>
-                    <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
-                    <label>
-                        Children
-                        <label class="form-text">Age 6 - 17</label>
-                    </label>
-                    <div class="input-group">
-                        <input asp-for="order.TotalChildrens" type="number" id="noOfChildrens" class="form-control" value="0" disabled />
-                        <button type="button" id="addChildren" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-plus"></i>
-                        </button>
-                        <button type="button" id="subtractChildren" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-minus"></i>
-                        </button>
-                    </div>
-                    <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
-                    <label>
-                        Infants
-                        <label class="form-text">Age below 6</label>
-                    </label>
-                    <div class="input-group">
-                        <input asp-for="order.TotalInfants" type="number" id="noOfInfants" class="form-control" value="0" disabled />
-                        <button type="button" id="addInfant" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-plus"></i>
-                        </button>
-                        <button type="button" id="subtractInfant" class="btn btn-outline-light" >
-                            <i class="fa-solid fa-circle-minus"></i>
-                        </button>
-                    </div>
-                    <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
-                </div>
-            </div>
-            <!-- Price -->
-            <div class="d-flex justify-content-between ">
-                <h6>₹@Model.TourView.tourDetail.Price</h6>
-                <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@Model.TourView.tourDetail.TId">Chech availability</a>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Bootstrap Carousel -->
     <div id="carouselExampleIndicators" class="carousel slide" style="width: 80%; height: 37rem" data-bs-ride="carousel">
@@ -347,8 +349,6 @@
 
         });
             
-            
-
         const noOfAdults = document.getElementById("noOfAdults");
         const addAdult = document.getElementById("addAdult");
         const subtractAdult = document.getElementById("subtractAdult");
@@ -361,12 +361,31 @@
         const addInfant = document.getElementById("addInfant");
         const subtractInfant = document.getElementById("subtractInfant");
 
+        const totalOrderAmount = document.getElementById("totalOrderAmount");
+        let adultAmount = parseFloat(@Model.TourView.tourDetail.Price);
+        let childAmount = parseFloat(@Model.TourView.tourDetail.PriceChildren);
+        let infantAmount = parseFloat(@Model.TourView.tourDetail.PriceInfant);
+        console.log(adultAmount, childAmount, infantAmount);
+        let totalAmount = 0;
+
         addAdult.addEventListener("click", (event) => {
-            noOfAdults.value = getNoOfAdults(++noOfAdults.value);
+            if(++noOfAdults.value <= 0){
+                noOfAdults.value = 1;
+            }else{
+                let no = noOfAdults.value;
+                noOfAdults.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) + adultAmount;
+            }
         });
 
         subtractAdult.addEventListener("click", (event) => {
-            noOfAdults.value = getNoOfAdults(--noOfAdults.value);
+            if(--noOfAdults.value <= 0){
+                noOfAdults.value = 1;
+            }else{
+                let no = noOfAdults.value;
+                noOfAdults.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) - adultAmount;
+            }
         });
 
         let getNoOfAdults = (peoples) => {
@@ -377,11 +396,23 @@
         };
 
         addChildren.addEventListener("click", (event) => {
-            noOfChildrens.value = getNoOfChildrens(++noOfChildrens.value);
+            if(++noOfChildrens.value <= 0){
+                noOfChildrens.value = 0;
+            }else{
+                let no = noOfChildrens.value;
+                noOfChildrens.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) + childAmount;
+            }
         });
 
         subtractChildren.addEventListener("click", (event) => {
-            noOfChildrens.value = getNoOfChildrens(--noOfChildrens.value);
+            if(noOfChildrens.value <= 0){
+                noOfChildrens.value = 0;
+            }else{
+                let no = --noOfChildrens.value;
+                noOfChildrens.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) - childAmount;
+            }
         });
 
         let getNoOfChildrens = (peoples) => {
@@ -392,11 +423,23 @@
         };
         
         addInfant.addEventListener("click", (event) => {
-            noOfInfants.value = getNoOfInfants(++noOfInfants.value);
+            if(++noOfInfants.value <= 0){
+                noOfInfants.value = 0;
+            }else{
+                let no = noOfInfants.value;
+                noOfInfants.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) + infantAmount;
+            }
         });
 
         subtractInfant.addEventListener("click", (event) => {
-            noOfInfants.value = getNoOfInfants(--noOfInfants.value);
+            if(noOfInfants.value <= 0){
+                noOfInfants.value = 0;
+            }else{
+                let no = --noOfInfants.value;
+                noOfInfants.value = no;
+                totalOrderAmount.innerText = parseFloat(totalOrderAmount.innerText) - infantAmount;
+            }
         });
 
         let getNoOfInfants = (peoples) => {
