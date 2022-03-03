@@ -1,4 +1,5 @@
-﻿using Suffer_Travels.Models;
+﻿using Microsoft.Extensions.Primitives;
+using Suffer_Travels.Models;
 using System.Collections.Generic;
 
 namespace Suffer_Travels.ViewModel
@@ -24,6 +25,10 @@ namespace Suffer_Travels.ViewModel
 
         public IEnumerable<Photo> photos { get; set; }
 
+        public static explicit operator TourViewModel(StringValues v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

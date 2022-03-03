@@ -3,7 +3,9 @@
 @using System.Collections
 @model OrderViewModel
 @{
-    Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    ViewData["title"] = "AddOrder";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
+    //Layout = ViewData["IsLoggedIn"].ToString() == "LoggedIn" ? "~/Views/Shared/User/Customer.cshtml" : "~/Views/Shared/_Layout.cshtml";
     IEnumerable<TourDates> dates = Model.TourView.tourDates;
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
@@ -30,10 +32,12 @@
 </style>
 <h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
 <div class="container d-flex justify-content-center">
-    <form method="post" asp-route-id="@Model.TourView.tourDetail.TId" class="card" style="width: 40%;">
-        
+    @*<form method="post" class="card" style="width: 40%;">*@
+        <div class="card" style="width: 40%;">
+            <input asp-for="order" type="hidden" />
+            <input asp-for="TourView" type="hidden" />
             <div class="card-body">
-                <p class="card-text">@Model.TourView.tourTypeDetails.TtName</p>
+                <p class="card-text" name="name">@Model.TourView.tourTypeDetails.TtName</p>
                 <p class="card-text">@Model.TourView.tourDetail.Description</p>
                 <p class="card-text">
                     @*From: <br />
@@ -113,10 +117,12 @@
                 <!-- Price -->
                 <div class="d-flex justify-content-between ">
                     <h6>₹<span id="totalOrderAmount">@Model.TourView.tourDetail.Price</span></h6>
-                    <button type="submit" class="btn btn-primary">Check availability</button>
+                    @*<input type="submit" class="btn btn-primary" id="" text="Check availability" />*@
+                    <input type="submit" class="btn btn-primary" id="btnSubmit" text="Check availability" />
                 </div>
             </div>
-    </form>
+        </div>
+    @*</form>*@
 
     <!-- Bootstrap Carousel -->
     <div id="carouselExampleIndicators" class="carousel slide" style="width: 80%; height: 37rem" data-bs-ride="carousel">
@@ -157,6 +163,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
     <script>
+        $("#btnSubmit").click(function (){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetOrderDetails", "Order")',
+                data: {
+                    OrderViewModel: {
+                        TourView: {
+                            tourDetail: {
+                                TId: '@Model.TourView.tourDetail.TId',
+                            }
+                        },
+                        Order: {
+                            Date: $("#orderStartDate").val(),
+                            TotalAdults: $("#noOfAdults").val(),
+                            TotalChildrens: $("#noOfChildrens").val(),
+                            TotalInfants: $("#noOfInfants").val(),
+                            TotalAmount: $("#totalOrderAmount").text(),
+                        },
+                    },
+                },
+                error: function (order) {
+                    window.location.replace('@Url.Action("GetOrderDetails", "Order")')
+                },
+                success: function (order) {
+                    window.location.replace('@Url.Action("GetOrderDetails", "Order")')
+                }
+            });
+        });
         const orderDates = document.querySelectorAll("#orderDates");
         
         const newDate = (date, interval) => {
@@ -245,9 +279,9 @@
         //async function fetchEvents(){
         //    await $.ajax({
         //        type: "POST",
-        //        url: '@Url.Action("GetTourDates", "Order")',
+        //        url: '@*@Url.Action("GetTourDates", "Order")*@',
         //        data: {
-        //            TourId: '@Model.TourView.tourDetail.TId',
+        //            TourId: '@*@Model.TourView.tourDetail.TId*@',
         //        },
         //        error: function () {
         //            console.log("Get tours dates has errors");
