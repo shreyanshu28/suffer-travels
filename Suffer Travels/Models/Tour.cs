@@ -106,6 +106,9 @@ namespace Suffer_Travels.Models
         /*[ForeignKey("Landmark")]
         public UInt32 LandmarkId { get; set; }*/
 
+        [ForeignKey("City")]
+        public UInt32 CityId { get; set; }
+
         public string Description { get; set; } = "Enjoy";
     }
 }
