@@ -20,6 +20,7 @@ namespace Suffer_Travels.Data
         public DbSet<Country> tblCountry { get; set; }
         public DbSet<State> tblState { get; set; }
         public DbSet<Area> tblArea { get; set; }
+        public DbSet<Landmark> tblLandMark { get; set; }
 
         //PHOTOS
         public DbSet<Photo> tblPhotos { get; set; }

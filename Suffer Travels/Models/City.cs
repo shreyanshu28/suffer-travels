@@ -57,5 +57,8 @@ namespace Suffer_Travels.Models
         public string Lname { get; set; }
 
         public UInt32 CityId { get; set; }
+
+        [ForeignKey("Photo")]
+        public UInt32 PhotoId { get; set; }
     }
 }

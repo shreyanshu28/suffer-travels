@@ -97,10 +97,12 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 TiId { get; set; }
+
         [ForeignKey("Tour")]
         public UInt32 TourId { get; set; }
 
         public UInt32 Day { get; set; } = 1;
+
         [ForeignKey("Landmark")]
         public UInt32 LandmarkId { get; set; }
     }

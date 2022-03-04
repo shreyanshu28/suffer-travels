@@ -148,6 +148,11 @@ namespace Suffer_Travels.Controllers
             tourViewModel.NoOfDays = Convert.ToInt32(db.tblTour.FirstOrDefault(t => t.TId == id).NoOfDays);
             tourViewModel.TourId = id;
 
+            tourViewModel.cities = db.tblCity;
+            tourViewModel.countries = db.tblCountry;
+            tourViewModel.states = db.tblState;
+            tourViewModel.landmarks = db.tblLandMark;
+
             //tourViewModel.tourDetail = db.tblTour.Find(id);
 
             return View(tourViewModel);
