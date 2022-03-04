@@ -17,9 +17,57 @@ namespace Suffer_Travels.Controllers
             env = _env;
         }
 
-        private void addDataToTourDates()
+        public IActionResult AddCities()
         {
-            int a = 10;
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.cities = db.tblCity;
+            tourViewModel.states = db.tblState;
+            tourViewModel.countries = db.tblCountry;
+
+            SetViewData();
+
+            return View(tourViewModel);
+        }
+
+        public IActionResult AddCityDetails(TourViewModel tourViewModel)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            if(tourViewModel.city.StateId == 0)
+            {
+                if(tourViewModel.country.CId == 0)
+                {
+                    //db.tblTourType.FirstOrDefault(t => t.TtName == tourViewModel.tourTypeDetails.TtName).TtId;
+                    db.tblCountry.Add(tourViewModel.country);
+                    db.SaveChanges();
+                    tourViewModel.state.CountryId = db.tblCountry.FirstOrDefault(c => c.Cname == tourViewModel.country.Cname).CId;
+                }
+
+                else
+                {
+                    db.tblState.Add(tourViewModel.state);
+                    db.SaveChanges();
+                    tourViewModel.city.StateId = db.tblState.FirstOrDefault(s => s.Sname == tourViewModel.state.Sname).SId;
+                }
+            }
+
+            db.tblCity.Add(tourViewModel.city);
+            db.SaveChanges();
+
+            TempData["success"] = "Cities Added Successfully";
+
+            return RedirectToAction("AddCities");
         }
 
         [HttpPost]

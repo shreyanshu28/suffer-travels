@@ -1,0 +1,117 @@
+﻿@using Suffer_Travels.ViewModel
+@model TourViewModel;
+@{
+    ViewData["title"] = "Manage Tour";
+    Layout = "~/Views/Shared/User/_Admin.cshtml";
+}
+
+<main class="container p-3">
+    <div class="nav-container" style="position:relative">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="User" asp-action="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-controller="User" asp-action="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item active mr-auto">Manage Cities</li>
+        </ol>
+        <button type="button" class="btn btn-primary" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);" data-bs-toggle="modal" data-bs-target="#CityDetailsModal">Add new City</button>
+        <partial name="CityDetailsPartial.cshtml" />
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.cities)
+                {
+                    <tr>
+                        <td>
+                            @item.Cname
+                        </td>
+                        <td>
+                            @Model.states.First(state => state.SId == item.StateId).Sname
+                        </td>
+                        <td>
+                            @Model.countries.First(country => country.CId == Model.states.First(state => state.SId == item.StateId).CountryId).Cname
+                        </td>
+                        <td colspan="2">
+                            <a class="btn btn-success mx-2 mb-2" asp-controller="Admin" asp-action="EditCity" asp-route-id=@item.CId >Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    const stateid = dcoument.getElementById("stateid");
+    const countryid = document.getElementById("countryid");
+
+    const stateSelector = document.getElementById("state");
+    const countrySelector = document.getElementById("country");
+
+    let statecnt = 0;
+    let countrycnt = 0;
+
+    stateid.addEventListener("change", function(event){
+        // to add new types input if not already
+        if (stateid.value === "0" && statecnt === 0) {
+            stateSelector.type = "text";
+            statecnt = 1;
+        }
+        else{
+            if (statecnt != 0)
+            {
+                //remove when type already exists
+                stateSelector.type = "hidden";
+            }
+            statecnt = 0;
+        }
+
+    });
+    
+    countryid.addEventListener("change", function(event){
+        // to add new types input if not already
+        if (countryid.value === "0" && countrycnt === 0) {
+            countrySelector.type = "text";
+            countrycnt = 1;
+        }
+        else{
+            if (countrycnt != 0)
+            {
+
+                //remove when type already exists
+                countrySelector.type = "hidden";
+
+            }
+
+            countrycnt = 0;
+        }
+
+    });
+
+</script>
+
+@section scripts { 
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    } 
+}

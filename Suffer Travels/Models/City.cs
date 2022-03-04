@@ -10,7 +10,7 @@ namespace Suffer_Travels.Models
 
         public string Cname { get; set; }
 
-        public Int32 STDcode { get; set; }
+        public Int32 STDcode { get; set; } = 91;
     }
 
     public class State

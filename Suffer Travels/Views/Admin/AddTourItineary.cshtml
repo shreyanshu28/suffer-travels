@@ -19,17 +19,16 @@
             <span asp-validation-for="tourItinerary.Day" class="text-danger" ></span>
         </div>
         <div class="mb-3">
+            <label class="form-label" asp-for="tourCity.CityId">City</label>
             <select asp-for="tourCity.CityId" class="form-select" aria-label="Default select example" id="tourCity">
                             @foreach(var city in Model.cities)
                             {
                                 <option value=@city.CId>@city.Cname</option>
                             }
             </select>
+            <input type="hidden" asp-for="city.Cname" id="city" />
+            <span asp-validation-for="city.Cname" class="text-danger"></span>
         </div>
-        <div class="mb-3" id="landmark">
-            
-        </div>
-        
     }
             </div>
         </div>
@@ -37,12 +36,12 @@
 </form>
 
 <script>
-    $(document).ready(function() {
+/*    $(document).ready(function() {
         $('#tourCity').change(function(){
             let city = $('#tourCity').val();
             let landmarkLists = document.createElement("[input:checkbox]");
             let lists = @Model.landmarks.Where(l => l.CityId == Model.tourCity.CityId);
             console.log(lists);
         }) 
-    }) 
+    }) */
 </script>
