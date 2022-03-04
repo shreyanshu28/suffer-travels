@@ -1,4 +1,5 @@
-﻿using Suffer_Travels.Models;
+﻿using Microsoft.Extensions.Primitives;
+using Suffer_Travels.Models;
 using System.Collections.Generic;
 
 namespace Suffer_Travels.ViewModel

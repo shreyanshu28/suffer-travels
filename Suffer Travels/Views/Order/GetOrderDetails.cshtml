@@ -1,0 +1,75 @@
+﻿@using Suffer_Travels.ViewModel
+@model Order
+@{
+    ViewData["title"] = "AddOrder";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
+}
+<div style="
+    /*background-image: url('../photos/maps-dark.jpg');*/
+    background-size: cover;
+  ">
+    <main class="container p-3">
+        @*<form asp-action="SetOrderDetails">*@
+            <input type="hidden" id="tid" />
+            <h2>Enter guests details</h2>
+            @for(var i = 1; i <= Model.TotalAdults; ++i)
+            {
+                <h5>Adult @i</h5>
+                <input type="text" class="form-control" id="afname" placeholder="First name" />
+                <input type="text" class="form-control" id="alname" placeholder="Last name" />
+                <input type="text" class="form-control" id="aproof" placeholder="Proof" />
+                <input type="text" class="form-control" id="aproofid" placeholder="Proof ID" />
+            }
+
+            @*@for(var i = 1; i <= Model.TotalChildrens; ++i)
+            {
+                <h5>Child @i</h5>
+                <input type="text" class="form-control" id="cfname" placeholder="First name" />
+                <input type="text" class="form-control" id="clname" placeholder="Last name" />
+                <input type="text" class="form-control" id="cproof" placeholder="Proof" />
+                <input type="text" class="form-control" id="cproofid" placeholder="Proof ID" />
+            }*@
+
+            @*<button type="submit" class="btn btn-primary">Make payment</button>*@
+            <button id="btnSubmit" class="btn btn-primary">Make payment</button>
+        @*</form>*@
+    </main>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready((event) => {
+            $("#btnSubmit").click((event) => {
+                const afname = document.querySelectorAll("#afname");
+                const alname = document.querySelectorAll("#alname");
+                const aproof = document.querySelectorAll("#aproof");
+                const aproofid = document.querySelectorAll("#aproofid");
+
+                let details = [];
+                let fname = [], lname = [], proof = [], proofid = [];
+                for(var i = 0; i < afname.length; ++i){
+                    details.push({
+                        Fname: afname[i].value,
+                        Lname: alname[i].value,
+                        Proof: aproof[i].value,
+                        ProofId: aproofid[i].value,
+                    })
+                }
+
+                $.ajax({
+                    type: "POST",
+                url: '@Url.Action("SaveGuestsDetails", "Order")',
+                data: {
+                    peoples: JSON.stringify(details)
+                },
+                //data: details,
+                error: function (order) {
+                    window.location.replace('@Url.Action("SetOrderDetails", "Order")')
+                },
+                success: function (order) {
+                    window.location.replace('@Url.Action("SetOrderDetails", "Order")')
+                }
+                })
+            });
+        });
+    </script>
+}
