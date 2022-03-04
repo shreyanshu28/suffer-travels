@@ -72,6 +72,7 @@
                         </td>
                         <td colspan="2">
                             <a class="btn btn-success mx-2 mb-2" asp-controller="Admin" asp-action="EditTour" asp-route-id=@item.TId >Edit</a>
+                            <a class="btn btn-success mx-2 mb-2" asp-controller="Admin" asp-action="AddTourItineary" asp-route-id=@item.TId >Add Tour Itineary</a>
                             @if(@item.IsActive){
                                 <a class="btn btn-danger mx-2" asp-controller="Admin" asp-action="DeactivateTour" asp-route-id="@item.TId" >Deactivate</a>
                             }

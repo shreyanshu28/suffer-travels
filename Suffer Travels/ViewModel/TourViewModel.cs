@@ -11,6 +11,8 @@ namespace Suffer_Travels.ViewModel
         public TourPhotos tourPhoto { get; set; }
         public Photo photo { get; set; }
 
+        public TourItinerary tourItinerary { get; set; }
+
         public IEnumerable<Tour> tourDetails { get; set; }
 
         public IEnumerable<TourType> tourTypes { get; set; }
@@ -18,11 +20,19 @@ namespace Suffer_Travels.ViewModel
         //For recurrence
         public string recurrence { get; set; } 
         public UInt32 repeatsEvery { get; set; }
+
+        public Int32 NoOfDays { get; set; }
+
+        public UInt32? TourId { get; set; }
+
+        //Enumerables
         public IEnumerable<TourDates> tourDates { get; set; }
 
         public IEnumerable<TourPhotos> tourPhotos { get; set; }
 
         public IEnumerable<Photo> photos { get; set; }
+
+        public IEnumerable<TourItinerary> tourItineraries { get; set; }
 
     }
 

@@ -103,7 +103,5 @@ namespace Suffer_Travels.Models
         public UInt32 Day { get; set; } = 1;
         [ForeignKey("Landmark")]
         public UInt32 LandmarkId { get; set; }
-        [ForeignKey("MealCombo")]
-        public UInt32 MealComboId { get; set; }
     }
 }

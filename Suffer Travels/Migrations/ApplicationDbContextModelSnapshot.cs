@@ -218,6 +218,9 @@ namespace Suffer_Travels.Migrations
                     b.Property<int>("TotalAdults")
                         .HasColumnType("Int");
 
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("Decimal(10,2)");
+
                     b.Property<int>("TotalChildrens")
                         .HasColumnType("Int");
 
@@ -514,9 +517,6 @@ namespace Suffer_Travels.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("LandmarkId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("MealComboId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("TourId")

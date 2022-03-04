@@ -143,10 +143,14 @@ namespace Suffer_Travels.Controllers
                 TempData["Error"] = "No matching results found";
                 return RedirectToAction("ViewUsers");
             }
-            
 
+            TourViewModel tourViewModel = new TourViewModel();
+            tourViewModel.NoOfDays = Convert.ToInt32(db.tblTour.FirstOrDefault(t => t.TId == id).NoOfDays);
+            tourViewModel.TourId = id;
 
-            return View();
+            //tourViewModel.tourDetail = db.tblTour.Find(id);
+
+            return View(tourViewModel);
         }
 
         public IActionResult ApproveRole(uint? id)
