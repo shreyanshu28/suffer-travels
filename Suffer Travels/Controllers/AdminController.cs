@@ -381,10 +381,10 @@ namespace Suffer_Travels.Controllers
             {
                 tourItineraries.Add(new TourItinerary
                 {
-                    Day = Convert.ToUInt32(item["Day"]),
+                    Day = item["Day"],
                     Description = item["Description"],
-                    CityId = Convert.ToUInt32(item["City"]),
-                    TourId = Convert.ToUInt32(item["TourId"]),
+                    CityId = item["CityId"],
+                    TourId = item["TourId"],
                 });
             }
             db.tblTourItinerary.AddRange(TourItineary);
