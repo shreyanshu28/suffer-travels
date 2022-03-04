@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
 using Suffer_Travels.ViewModel;
@@ -17,9 +18,57 @@ namespace Suffer_Travels.Controllers
             env = _env;
         }
 
-        private void addDataToTourDates()
+        public IActionResult AddCities()
         {
-            int a = 10;
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.cities = db.tblCity;
+            tourViewModel.states = db.tblState;
+            tourViewModel.countries = db.tblCountry;
+
+            SetViewData();
+
+            return View(tourViewModel);
+        }
+
+        public IActionResult AddCityDetails(TourViewModel tourViewModel)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            if(tourViewModel.city.StateId == 0)
+            {
+                if(tourViewModel.country.CId == 0)
+                {
+                    //db.tblTourType.FirstOrDefault(t => t.TtName == tourViewModel.tourTypeDetails.TtName).TtId;
+                    db.tblCountry.Add(tourViewModel.country);
+                    db.SaveChanges();
+                    tourViewModel.state.CountryId = db.tblCountry.FirstOrDefault(c => c.Cname == tourViewModel.country.Cname).CId;
+                }
+
+                else
+                {
+                    db.tblState.Add(tourViewModel.state);
+                    db.SaveChanges();
+                    tourViewModel.city.StateId = db.tblState.FirstOrDefault(s => s.Sname == tourViewModel.state.Sname).SId;
+                }
+            }
+
+            db.tblCity.Add(tourViewModel.city);
+            db.SaveChanges();
+
+            TempData["success"] = "Cities Added Successfully";
+
+            return RedirectToAction("AddCities");
         }
 
         [HttpPost]
@@ -147,6 +196,11 @@ namespace Suffer_Travels.Controllers
             TourViewModel tourViewModel = new TourViewModel();
             tourViewModel.NoOfDays = Convert.ToInt32(db.tblTour.FirstOrDefault(t => t.TId == id).NoOfDays);
             tourViewModel.TourId = id;
+
+            tourViewModel.cities = db.tblCity;
+            tourViewModel.countries = db.tblCountry;
+            tourViewModel.states = db.tblState;
+            tourViewModel.landmarks = db.tblLandMark;
 
             //tourViewModel.tourDetail = db.tblTour.Find(id);
 
@@ -309,6 +363,37 @@ namespace Suffer_Travels.Controllers
             SetViewData();
             return View(tourViewModel);
         }
+
+        [HttpPost]
+        public IActionResult SaveIteneraryDetails(string TourItineary)
+        {
+            HttpContext.Session.SetString("TourItineary", TourItineary);
+            return View();
+        }
+
+        
+        public IActionResult SetIteneraryDetails()
+        {
+            TourItinerary tourItinerary = new TourItinerary();
+            List<TourItinerary> tourItineraries = new List<TourItinerary>();
+            dynamic TourItineary = JsonConvert.DeserializeObject(HttpContext.Session.GetString("TourItineary"));
+            foreach ( var item in TourItineary)
+            {
+                tourItineraries.Add(new TourItinerary
+                {
+                    Day = item["Day"],
+                    Description = item["Description"],
+                    CityId = item["CityId"],
+                    TourId = item["TourId"],
+                });
+            }
+            db.tblTourItinerary.AddRange(TourItineary);
+            db.SaveChanges();
+
+            TempData["Success"] = "Itenerary Added Successfully";
+            return RedirectToAction("ManageTours");
+        }
+
         public void SetViewData()
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");

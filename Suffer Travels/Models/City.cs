@@ -10,7 +10,7 @@ namespace Suffer_Travels.Models
 
         public string Cname { get; set; }
 
-        public Int32 STDcode { get; set; }
+        public Int32 STDcode { get; set; } = 91;
     }
 
     public class State
@@ -57,5 +57,8 @@ namespace Suffer_Travels.Models
         public string Lname { get; set; }
 
         public UInt32 CityId { get; set; }
+
+        [ForeignKey("Photo")]
+        public UInt32 PhotoId { get; set; }
     }
 }

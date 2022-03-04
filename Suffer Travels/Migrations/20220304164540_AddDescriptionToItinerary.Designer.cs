@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Suffer_Travels.Data;
 
@@ -11,9 +12,10 @@ using Suffer_Travels.Data;
 namespace Suffer_Travels.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220304164540_AddDescriptionToItinerary")]
+    partial class AddDescriptionToItinerary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,9 +537,6 @@ namespace Suffer_Travels.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("TiId"), 1L, 1);
-
-                    b.Property<long>("CityId")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("Day")
                         .HasColumnType("bigint");
