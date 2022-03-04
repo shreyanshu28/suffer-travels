@@ -1,5 +1,4 @@
 ﻿using Suffer_Travels.Models;
-using System.Collections.Generic;
 
 namespace Suffer_Travels.ViewModel
 {

@@ -179,7 +179,7 @@
                             TotalAdults: $("#noOfAdults").val(),
                             TotalChildrens: $("#noOfChildrens").val(),
                             TotalInfants: $("#noOfInfants").val(),
-                            TotalAmount: $("#totalOrderAmount").text(),
+                            Total: $("#totalOrderAmount").text(),
                         },
                     },
                 },
@@ -296,6 +296,7 @@
 
         // FullCalendar v5 latest
         document.addEventListener("DOMContentLoaded", async function() {
+
             let calendarEl = document.getElementById("calendar");
             let calendar = await new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
@@ -393,6 +394,8 @@
         const subtractInfant = document.getElementById("subtractInfant");
 
         const totalOrderAmount = document.getElementById("totalOrderAmount");
+        totalOrderAmount.innerText = Number(totalOrderAmount.innerText);
+        console.log(totalOrderAmount.value);
         let adultAmount = parseFloat(@Model.TourView.tourDetail.Price);
         let childAmount = parseFloat(@Model.TourView.tourDetail.PriceChildren);
         let infantAmount = parseFloat(@Model.TourView.tourDetail.PriceInfant);

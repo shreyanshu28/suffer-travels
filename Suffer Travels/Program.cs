@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Suffer_Travels.Data;
+using Suffer_Travels.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>

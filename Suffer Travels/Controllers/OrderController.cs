@@ -109,14 +109,15 @@ namespace Suffer_Travels.Controllers
         {
             Order order = new Order();
             order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
-            order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetInt32("TotalChildren"));
-            order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetInt32("TotalInfants"));
+            order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetString("TotalChildren"));
+            order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetString("TotalInfants"));
+            order.Total = Convert.ToDecimal(HttpContext.Session.GetString("TotalAmount"));
             order.Date = Convert.ToDateTime(HttpContext.Session.GetString("Date"));
             order.UserId = Convert.ToUInt32(db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
 
             db.tblOrderMaster.Add(order);
             db.SaveChanges();
-            order = db.tblOrderMaster.FirstOrDefault(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
+            order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
 
             OrderTour orderTour = new OrderTour();
             orderTour.OrderId = order.OId;
@@ -139,36 +140,14 @@ namespace Suffer_Travels.Controllers
             }
             db.tblOrderPeople.AddRange(op);
             db.SaveChanges();
-            return View();
+            return RedirectToAction("Index", "Payment");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SetOrderDetails(Order _order)
+        public IActionResult Payment()
         {
-            Order order = new Order();
-            order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
-            order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetInt32("TotalChildren"));
-            order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetInt32("TotalInfants"));
-            order.Total = Convert.ToInt32(HttpContext.Session.GetInt32("TotalAmount"));
-            order.UserId = Convert.ToUInt32(db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
-
-            db.tblOrderMaster.Add(order);
-            order = db.tblOrderMaster.FirstOrDefault(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
-
-            OrderPeople orderPeople = new OrderPeople();
-            foreach (dynamic item in HttpContext.Session.GetString("OrderPeoples"))
-            {
-                orderPeople.Fname = item["Fname"];
-                orderPeople.Lname = item["Lname"];
-                orderPeople.Proof = item["Proof"];
-                orderPeople.ProofId = item["ProofId"];
-                orderPeople.OrderId = order.OId;
-                db.tblOrderPeople.Add(orderPeople);
-            }
+            ViewData["Amount"] = HttpContext.Session.GetString("TotalAmount");
             return View();
         }
-        
 
         [HttpPost]
         public JsonResult GetTourDates(int TourId)
