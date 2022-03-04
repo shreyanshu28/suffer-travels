@@ -61,7 +61,18 @@
     </div>
 </main>
 
-<script>
+
+@section scripts { 
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready( function () {
+            $('#myTable').DataTable();
+        } );
+    </script>
+
+    <script>
     const stateid = dcoument.getElementById("stateid");
     const countryid = document.getElementById("countryid");
 
@@ -110,8 +121,4 @@
 
 </script>
 
-@section scripts { 
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    } 
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Suffer_Travels.Data;
 using Suffer_Travels.Models;
 using Suffer_Travels.ViewModel;
@@ -362,6 +363,37 @@ namespace Suffer_Travels.Controllers
             SetViewData();
             return View(tourViewModel);
         }
+
+        [HttpPost]
+        public IActionResult SaveIteneraryDetails(string TourItineary)
+        {
+            HttpContext.Session.SetString("TourItineary", TourItineary);
+            return View();
+        }
+
+        
+        public IActionResult SetIteneraryDetails()
+        {
+            TourItinerary tourItinerary = new TourItinerary();
+            List<TourItinerary> tourItineraries = new List<TourItinerary>();
+            dynamic TourItineary = JsonConvert.DeserializeObject(HttpContext.Session.GetString("TourItineary"));
+            foreach ( var item in TourItineary)
+            {
+                tourItineraries.Add(new TourItinerary
+                {
+                    Day = Convert.ToUInt32(item["Day"]),
+                    Description = item["Description"],
+                    CityId = Convert.ToUInt32(item["City"]),
+                    TourId = Convert.ToUInt32(item["TourId"]),
+                });
+            }
+            db.tblTourItinerary.AddRange(TourItineary);
+            db.SaveChanges();
+
+            TempData["Success"] = "Itenerary Added Successfully";
+            return RedirectToAction("ManageTours");
+        }
+
         public void SetViewData()
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
