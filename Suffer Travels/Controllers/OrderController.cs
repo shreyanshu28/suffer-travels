@@ -68,7 +68,7 @@ namespace Suffer_Travels.Controllers
             order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
             order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetString("TotalChildren"));
             order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetString("TotalInfants"));
-            order.TotalAmount = Convert.ToInt32(HttpContext.Session.GetString("TotalAmount"));
+            order.Total = Convert.ToInt32(HttpContext.Session.GetString("TotalAmount"));
             return View(order);
         }
 
@@ -82,7 +82,7 @@ namespace Suffer_Travels.Controllers
             order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("adults"));
             order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetString("childs"));
             order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetString("infants"));
-            order.TotalAmount = Convert.ToInt32(HttpContext.Session.GetString("total"));
+            order.Total = Convert.ToInt32(HttpContext.Session.GetString("total"));
             return View(order);
         }*/
 
@@ -100,7 +100,7 @@ namespace Suffer_Travels.Controllers
             HttpContext.Session.SetString("TotalAdults", orderViewModel.order.TotalAdults.ToString());
             HttpContext.Session.SetString("TotalChildren", orderViewModel.order.TotalChildrens.ToString());
             HttpContext.Session.SetString("TotalInfants", orderViewModel.order.TotalInfants.ToString());
-            HttpContext.Session.SetString("TotalAmount", orderViewModel.order.TotalAmount.ToString());
+            HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
             HttpContext.Session.SetString("Date", orderViewModel.order.Date.ToString());
             return View(orderViewModel);
         }
@@ -111,7 +111,6 @@ namespace Suffer_Travels.Controllers
             order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
             order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetInt32("TotalChildren"));
             order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetInt32("TotalInfants"));
-            order.TotalAmount = Convert.ToDecimal(HttpContext.Session.GetString("TotalAmount"));
             order.Date = Convert.ToDateTime(HttpContext.Session.GetString("Date"));
             order.UserId = Convert.ToUInt32(db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
 
@@ -151,7 +150,7 @@ namespace Suffer_Travels.Controllers
             order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
             order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetInt32("TotalChildren"));
             order.TotalInfants = Convert.ToInt32(HttpContext.Session.GetInt32("TotalInfants"));
-            order.TotalAmount = Convert.ToInt32(HttpContext.Session.GetInt32("TotalAmount"));
+            order.Total = Convert.ToInt32(HttpContext.Session.GetInt32("TotalAmount"));
             order.UserId = Convert.ToUInt32(db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
 
             db.tblOrderMaster.Add(order);
