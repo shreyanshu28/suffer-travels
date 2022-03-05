@@ -367,6 +367,7 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public IActionResult SaveIteneraryDetails(string TourItineary)
         {
+            //HttpContext.Session.SetString("TourItineary", TourItineary);
             HttpContext.Session.SetString("TourItineary", TourItineary);
             return View();
         }
@@ -376,18 +377,21 @@ namespace Suffer_Travels.Controllers
         {
             TourItinerary tourItinerary = new TourItinerary();
             List<TourItinerary> tourItineraries = new List<TourItinerary>();
+            //dynamic TourItineary = JsonConvert.DeserializeObject(HttpContext.Session.GetString("TourItineary"));
             dynamic TourItineary = JsonConvert.DeserializeObject(HttpContext.Session.GetString("TourItineary"));
+            //int tiid = 1; 
             foreach ( var item in TourItineary)
             {
                 tourItineraries.Add(new TourItinerary
                 {
-                    Day = item["Day"],
+                    TourId = (UInt32)item["TourId"],
+                    Day = (UInt32)item["Day"],
                     Description = item["Description"],
-                    CityId = item["CityId"],
-                    TourId = item["TourId"],
+                    CityId = (UInt32) item["CityId"],
                 });
             }
-            db.tblTourItinerary.AddRange(TourItineary);
+            //db.tblTourItinerary.AddRange(TourItineary);
+            db.tblTourItinerary.Add(TourItineary);
             db.SaveChanges();
 
             TempData["Success"] = "Itenerary Added Successfully";
