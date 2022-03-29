@@ -17,20 +17,22 @@ namespace Suffer_Travels.Controllers
             db = _db;
         }
 
-        public string UserCookieSet()
+        public string? SetUserCookie()
         {
             if (HttpContext.Request.Cookies.Any(ck => ck.Key == "Email"))
             {
                 return HttpContext.Request.Cookies.FirstOrDefault(ck => ck.Key == "Email").Value.ToString();
             }
             return null;
-
         }
 
         public IActionResult Index()
         {
-            string email;
-            if ((email = UserCookieSet()) != null)
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Home", "User");
+
+            string? email;
+            if ((email = SetUserCookie()) != null)
             {
                 HttpContext.Session.SetString("Email", email);
                 return RedirectToAction("Home", "User");

@@ -29,10 +29,27 @@ namespace Suffer_Travels.Controllers
             }
             return View();
         }
-        
+
+        public void SetSessionValues(string _email)
+        {
+            User user;
+            int roleId;
+            string email = _email, fname, profilePhoto;
+
+            user = db.tblUser.First(user => user.Email == email);
+
+            roleId = Convert.ToInt32(user.RoleId);
+            fname = user.Fname;
+            profilePhoto = user.ProfilePhoto;
+
+            HttpContext.Session.SetInt32("RoleId", roleId);
+            HttpContext.Session.SetString("Email", email);
+            HttpContext.Session.SetString("Fname", fname);
+            HttpContext.Session.SetString("ProfilePhoto", profilePhoto);
+        }
+
         public bool UserLoggedOut()
         {
-
             return string.IsNullOrEmpty(HttpContext.Session.GetString("Email"));
         }
 
@@ -43,10 +60,8 @@ namespace Suffer_Travels.Controllers
 
         public Int32? GetRole()
         {
-            string email = HttpContext.Session.GetString("Email").ToString();
-            int roleId = Convert.ToInt32(db.tblUser.First(user => user.Email == email).RoleId);
-            HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(roleId));
-            return roleId;
+            return Convert.ToBoolean(HttpContext.Session.GetInt32("RoleId")) ? 
+                HttpContext.Session.GetInt32("RoleId") : 0;
         }
 
         public string UserCookieSet()
@@ -63,6 +78,8 @@ namespace Suffer_Travels.Controllers
         {
             if (UserLoggedOut())
                 return RedirectToAction("Login");
+
+            SetSessionValues(HttpContext.Session.GetString("Email").ToString());
 
             if (GetRole() == 2)
             {
@@ -85,7 +102,8 @@ namespace Suffer_Travels.Controllers
         
         public IActionResult Login()
         {
-            HttpContext.Session.Clear();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Home");
             return View();
         }
 
@@ -96,7 +114,7 @@ namespace Suffer_Travels.Controllers
             IEnumerable<User> _user = db.tblUser;
 
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
-                return RedirectToAction("Homepage");
+                return RedirectToAction("Home");
 
             if (_user.Any(u => u.Email == register.Email && u.Password == register.Password))
             {
@@ -104,10 +122,13 @@ namespace Suffer_Travels.Controllers
 
                 if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 {
-                    HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
-                    HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
-                    HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
-                    HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
+                    // Setting Sessions
+                    SetSessionValues(register.Email.ToString().Trim());
+
+                    //HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(user.RoleId));
+                    //HttpContext.Session.SetString("Email", register.Email.ToString().Trim());
+                    //HttpContext.Session.SetString("Fname", user.Fname.ToString().Trim());
+                    //HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
                 }
 
                 if (register.RememberMe)
@@ -123,7 +144,6 @@ namespace Suffer_Travels.Controllers
 
                 return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
             }
-               
 
             return View(register);
         }
@@ -152,7 +172,8 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Register()
         {
-            HttpContext.Session.Clear();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Home");
             return View();
         }
                 
@@ -160,6 +181,9 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(User user)
         {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+                return RedirectToAction("Home");
+
             IEnumerable<User> _user = db.tblUser;
             if (_user.Any(u => u.ContactNo == user.ContactNo))
                 ModelState.AddModelError("ContactNo", "Contact Number is already taken");
@@ -183,7 +207,7 @@ namespace Suffer_Travels.Controllers
                 });
             }
 
-            return View();
+            return View(user);
         }
 
         public IActionResult Logout()
