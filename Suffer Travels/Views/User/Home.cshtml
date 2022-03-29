@@ -1,22 +1,22 @@
 ﻿@using Suffer_Travels.ViewModel
 @model TourViewModel
 @{
-    ViewData["title"] = "Home - Suffer Travels";
+    ViewData["title"] = "Home";
     Layout = "~/Views/Shared/User/Customer.cshtml";
 }
 
 <div style="background-image: url('../photos/pexels-evgeny-tchebotarev-4101555.jpg'); background-size: cover">
     <div class="text-center">
-        <h1 class="display-4">Welcome @ViewData["Fname"] to suffer travels</h1>
-        <h2>Get the relief from the suffer <br /> with our tours</h2>
+        <h1 class="display-4">Welcome @ViewData["Fname"] to safar travels</h1>
+        <h2>Get the relief from the safar <br /> with our tours</h2>
     </div>
 
-    <div class="d-flex flex-wrap justify-content-center align-items-baseline">
+    <div class="d-flex flex-wrap justify-content-center">
         @foreach(var item in Model.tourDetails)
         {
             if (item.IsActive)
             {
-                <div class="card me-3" style="width: 18rem;">
+                <div class="card me-3 mb-3" style="width: 18rem;">
                     @{
                         uint photoId = Model.tourPhotos.FirstOrDefault(tPhoto => tPhoto.TourId == item.TId).PhotoId;
                     }
@@ -29,7 +29,7 @@
                             <h6>₹@item.Price</h6>
                             @if(ViewData["Fname"] != null)
                             {
-                                <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-id="@item.TId">Order this tour</a>
+                                <a class="btn btn-primary" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.TId">Order this tour</a>
                             }
                             else
                             {

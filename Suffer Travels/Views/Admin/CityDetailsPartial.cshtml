@@ -23,7 +23,6 @@
                                 <label class="form-label" asp-for="city.StateId">State</label>
                                 <select asp-for="city.StateId" class="form-select" aria-label="Default select example" id="stateid">
                                   <option value="-1">Select from the list</option>
-                                  <option value="0">Add New</option>
                                     @foreach (var item in Model.states) 
                                     {
                                         <option value="@item.SId">@item.Sname</option>
@@ -36,7 +35,6 @@
                                 <label class="form-label" asp-for="country.CId">Country</label>
                                 <select asp-for="country.CId" class="form-select" aria-label="Country" id="countryid">
                                     <option value="-1">Select from the list</option>
-                                    <option value="0">Add New</option>
                                     @foreach (var item in Model.countries)
                                     {
                                         <option value="@item.CId">@item.Cname</option>

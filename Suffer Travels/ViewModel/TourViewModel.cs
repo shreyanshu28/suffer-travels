@@ -27,6 +27,7 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<Country> countries { get; set; }
         public IEnumerable<Landmark> landmarks { get; set; }
         public IEnumerable<TourItinerary> tourItineraries { get; set; }
+        public TourItinerary[] tiList { get; set; }
         public IEnumerable<TourCities> tourCities { get; set; }
 
         //Variables

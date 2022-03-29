@@ -17,8 +17,25 @@ namespace Suffer_Travels.Controllers
             db = _db;
         }
 
+        public string UserCookieSet()
+        {
+            if (HttpContext.Request.Cookies.Any(ck => ck.Key == "Email"))
+            {
+                return HttpContext.Request.Cookies.FirstOrDefault(ck => ck.Key == "Email").Value.ToString();
+            }
+            return null;
+
+        }
+
         public IActionResult Index()
         {
+            string email;
+            if ((email = UserCookieSet()) != null)
+            {
+                HttpContext.Session.SetString("Email", email);
+                return RedirectToAction("Home", "User");
+            }
+
             TourViewModel tourViewModel = new TourViewModel();
 
             tourViewModel.tourDetails = db.tblTour;

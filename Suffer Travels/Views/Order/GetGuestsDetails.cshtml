@@ -1,0 +1,178 @@
+﻿@using Suffer_Travels.ViewModel
+@model OrderViewModel
+@{
+    ViewData["title"] = "AddOrder";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
+    int TId = Convert.ToInt32(Model.TourView.tourDetail.TId);
+}
+
+<style>
+    div .form-control.text-form-control{
+        border: none; 
+        color: white; 
+        width: fit-content;
+        max-width: fit-content;
+        background: transparent !important;
+        display: inline;
+    }
+</style>
+
+<div style="
+    /*background-image: url('../photos/maps-dark.jpg');*/
+    background-size: cover;
+  ">
+    <main class="container p-3">
+        <div class="d-flex justify-content-center align-items-center">
+            <form method="POST" asp-action="SetOrderDetails" style="width: 100%">
+                <div style="width: 50%">
+                    <h2>Enter guests details</h2>
+                    <h5>Your dates: </h5>
+                    <div class="input-group">
+                        <div>
+                            <input asp-for="order.Date" type="text" class="form-control text-form-control" readonly />
+                            <span asp-validation-for="order.Date" class="text-danger"></span>
+                        </div>
+                        <span class="input-group-text">to</span>
+                        <div>
+                            <input asp-for="order.EndDate" type="text" class="form-control text-form-control" readonly />
+                            <span asp-validation-for="order.EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- More details -->
+                    <div>
+                        <div>
+                            <label asp-for="order.TotalChildrens">Children: </label>
+                            <input asp-for="order.TotalChildrens" type="text" class="form-control text-form-control" readonly />
+                            <span asp-validation-for="order.TotalChildrens" class="text-alert"></span>
+                        </div>
+                        <div>
+                            <label asp-for="order.TotalInfants">Infants: </label>
+                            <input asp-for="order.TotalInfants" type="text" class="form-control text-form-control" readonly />
+                            <span asp-validation-for="order.TotalInfants" class="text-alert"></span>
+                        </div>
+                        <div>
+                            <label asp-for="order.Total">Total Amount: </label>
+                            <input asp-for="order.Total" type="text" class="form-control text-form-control" readonly />
+                            <span asp-validation-for="order.Total" class="text-alert"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="order.TotalAdults">Adults: </label>
+                        <input asp-for="order.TotalAdults" type="text" class="form-control text-form-control" readonly />
+                        <span asp-validation-for="order.Total" class="text-alert"></span>
+                    </div>
+                    <!-- Generate dynamic adults fields -->
+                    @for(int i = 0; i < Model.order.TotalAdults; ++i)
+                    {
+                        <h5 class="mt-3">Adult @(i+1)</h5>
+                        <input asp-for="orderPeoples[i].Fname" class="form-control" id="afname" placeholder="First name" />
+                        <span asp-validation-for="orderPeoples[i].Fname" id="valFname" class="text-alert" style="color: red" ></span>
+                        <input asp-for="orderPeoples[i].Lname" type="text" class="form-control" id="alname" placeholder="Last name" />
+                        <span asp-validation-for="orderPeoples[i].Lname" id="valLname" class="text-alert" style="color: red" ></span>
+                        <select asp-for="orderPeoples[i].Proof" class="" id="aproof">
+                            <option value="">Select proof from the dropdown</option>
+                            <option value="AdharCard">Adhar card</option>
+                            <option value="DrivingLicense">Driving License</option>
+                        </select>
+                        <span asp-validation-for="orderPeoples[i].Proof" id="valProof" class="text-alert" style="color: red" ></span>
+                        <input asp-for="orderPeoples[i].ProofId" type="text" class="form-control mb-3" id="aproofid" placeholder="Proof ID" />
+                        <span asp-validation-for="orderPeoples[i].ProofId" id="valProofId" class="text-alert" style="color: red" ></span>
+                    }
+                </div>
+                <div>
+                    <button id="btnSubmit" class="btn btn-primary me-3">Next step</button>
+                    <a asp-route-id=@(TId) asp-controller="Order" asp-action="OrderDetail" >Back</a>
+                    <input asp-for="TourView.tourDetail.TId" type="hidden" value="@(TId)" />
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    @*
+    <script>
+        $(document).ready((event) => {
+            const afname = document.querySelectorAll("#afname");
+            const alname = document.querySelectorAll("#alname");
+            const aproof = document.querySelectorAll("#aproof");
+            const aproofid = document.querySelectorAll("#aproofid");
+
+            const valFname = document.querySelectorAll("#valFname");
+            const valLname = document.querySelectorAll("#valLname");
+            const valProof = document.querySelectorAll("#valProof");
+            const valProofId = document.querySelectorAll("#valProofId");
+
+            const nameRegex = /^[a-zA-Z]+$/;
+            const numRegex = /^[0-9]+$/;
+
+            for(let i = 0; i < afname.length; ++i){
+                afname[i].addEventListener("keyup", function(event){
+                    if(nameRegex.test(afname[i].value)){
+                        valFname[i].innerText = "";
+                    }else{
+                        valFname[i].innerText = "First name is not valid";
+                    }
+                });
+                alname[i].addEventListener("keyup", function(event){
+                    if(nameRegex.test(alname[i].value)){
+                        valLname[i].innerText = "";
+                    }else{
+                        valLname[i].innerText = "Last name is not valid";
+                    }
+                });
+                aproof[i].addEventListener("change", function(event){
+                    if(nameRegex.test(aproof[i].value)){
+                        valProof[i].innerText = "";
+                    }else{
+                        valProof[i].innerText = "Proof is not valid";
+                    }
+                });
+                aproofid[i].addEventListener("keyup", function(event){
+                    if(numRegex.test(aproofid[i].value)){
+                        valProofId[i].innerText = "";
+                    }else{
+                        valProofId[i].innerText = "Proof id is not valid";
+                    }
+                });
+
+            }
+            
+            $("#btnSubmit").click((event) => {
+
+                console.log(nameRegex.test([0].value)
+
+                let details = [];
+                let fname = [], lname = [], proof = [], proofid = [];
+                for(var i = 0; i < afname.length; ++i){
+                    
+                    details.push({
+                        Fname: afname[i].value,
+                        Lname: alname[i].value,
+                        Proof: aproof[i].value,
+                        ProofId: aproofid[i].value,
+                    })
+                }
+
+                $.ajax({
+                    type: "POST",
+                url: '@Url.Action("SaveGuestsDetails", "Order")',
+                data: {
+                    peoples: JSON.stringify(details)
+                },
+                data: details,
+                error: function (order) {
+                    window.location.replace('@Url.Action("SetOrderDetails", "Order")')
+                },
+                success: function (order) {
+                    window.location.replace('@Url.Action("SetOrderDetails", "Order")')
+                }
+                })
+            });
+        });
+    </script>
+    *@
+}

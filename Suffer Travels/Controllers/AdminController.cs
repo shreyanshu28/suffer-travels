@@ -390,8 +390,8 @@ namespace Suffer_Travels.Controllers
                     CityId = (UInt32) item["CityId"],
                 });
             }
-            //db.tblTourItinerary.AddRange(TourItineary);
-            db.tblTourItinerary.Add(TourItineary);
+            db.tblTourItinerary.AddRange(TourItineary);
+            //db.tblTourItinerary.Add(TourItineary);
             db.SaveChanges();
 
             TempData["Success"] = "Itenerary Added Successfully";

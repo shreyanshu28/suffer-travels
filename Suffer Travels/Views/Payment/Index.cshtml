@@ -5,13 +5,15 @@
 }
 <form class="well form-horizontal" asp-action="ProcessRequestOrder" method="post" id="contact_form">
 
-    <center><h2><b>Razorpay Payment Gateway Integration</b></h2></center>
+    <center>
+        <h2><b>Enter your details for payment</b></h2>
+    </center>
     <div class="form-group">
         <label class="col-md-4 control-label">Customer Name</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-user"></i></span>
                 <input placeholder="Name" class="form-control" type="text" asp-for="Name" autocomplete="off" required>
+                <span asp-validation-for="Name" class="input-group-addon"></span>
             </div>
         </div>
     </div>
@@ -19,8 +21,8 @@
         <label class="col-md-4 control-label">E-Mail</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-envelope" style="font-size:11px"></i></span>
                 <input placeholder="E-Mail Address" class="form-control" type="text" asp-for="Email" autocomplete="off" required>
+                <span asp-validation-for="Email" class="input-group-addon"></span>
             </div>
         </div>
     </div>
@@ -28,8 +30,8 @@
         <label class="col-md-4 control-label">Phone Number</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                 <input placeholder="Phone" class="form-control" type="text" asp-for="PhoneNumber" autocomplete="off" required>
+                <span asp-validation-for="PhoneNumber" class="input-group-addon"></span>
             </div>
         </div>
     </div>
@@ -37,17 +39,17 @@
         <label class="col-md-4 control-label">Address</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-address-book-o" style="font-size:11px"></i></span>
                 <input placeholder="Address" class="form-control" type="text" asp-for="Address" autocomplete="off" required>
+                <span asp-validation-for="Address" class="input-group-addon"></span>
             </div>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-4 control-label">Amount (INR)</label>
+        <label class="col-md-4 control-label">Amount (₹)</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-inr" style="font-size:19px"></i></span>
-                <input placeholder="Amount (INR)" class="form-control" id="amount" type="text" asp-for="Amount" autocomplete="off" value="@ViewData["TotalAmount"]" >
+                <input placeholder="Amount (₹)" class="form-control" id="amount" type="text" asp-for="Amount" autocomplete="off" value="@ViewData["TotalAmount"]" disabled>
+                <span asp-validation-for="Amount" class="input-group-addon"></span>
             </div>
         </div>
     </div>
@@ -58,8 +60,13 @@
         </div>
     </div>
 </form>
-<script>
-    const amount = document.getElementById("amount");
-    amount.value = String(Number(amount.value))
-    console.log(amount.value);
-</script>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        const amount = document.getElementById("amount");
+        amount.value = String(Number(amount.value))
+        console.log(amount.value);
+    </script>
+}

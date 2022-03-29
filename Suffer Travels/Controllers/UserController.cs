@@ -22,9 +22,14 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Index()
         {
+            string email;
+            if ((email = UserCookieSet()) != null)
+            {
+                HttpContext.Session.SetString("Email", email);
+            }
             return View();
         }
-
+        
         public bool UserLoggedOut()
         {
 
@@ -38,7 +43,20 @@ namespace Suffer_Travels.Controllers
 
         public Int32? GetRole()
         {
-            return HttpContext.Session.GetInt32("RoleId");
+            string email = HttpContext.Session.GetString("Email").ToString();
+            int roleId = Convert.ToInt32(db.tblUser.First(user => user.Email == email).RoleId);
+            HttpContext.Session.SetInt32("RoleId", Convert.ToInt32(roleId));
+            return roleId;
+        }
+
+        public string UserCookieSet()
+        {
+            if(HttpContext.Request.Cookies.Any(ck => ck.Key == "Email"))
+            {
+                return HttpContext.Request.Cookies.FirstOrDefault(ck => ck.Key == "Email").Value.ToString();
+            }
+            return null;
+
         }
 
         public IActionResult Home()
@@ -92,11 +110,22 @@ namespace Suffer_Travels.Controllers
                     HttpContext.Session.SetString("ProfilePhoto", user.ProfilePhoto.ToString().Trim());
                 }
 
+                if (register.RememberMe)
+                {
+                    CookieOptions cookieOption = new CookieOptions();
+                    cookieOption.Expires = new DateTimeOffset(DateTime.Now.AddDays(2));
+                    HttpContext.Response.Cookies.Append(
+                        "Email",
+                        register.Email.ToString(),
+                        cookieOption
+                    );
+                }
+
                 return ShowCustomHomePage(HttpContext.Session.GetInt32("RoleId"));
             }
                
 
-            return View();
+            return View(register);
         }
 
         public IActionResult ShowCustomHomePage(int? RoleId)
@@ -159,6 +188,7 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Logout()
         {
+            HttpContext.Response.Cookies.Delete("Email");
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
@@ -168,22 +198,23 @@ namespace Suffer_Travels.Controllers
             // From forgot password
             if (id == 1)
             {
-                TempData["AddPasswordFlag"] = id;
+                HttpContext.Session.SetString("AddPasswordFlag", "1");
             }
             // From change password
             else if (id == 2)
             {
-                TempData["AddPasswordFlag"] = 2;
+                HttpContext.Session.SetString("AddPasswordFlag", "2");
+
             }
             // From registration form
             else if (id == 3)
             {
-                TempData["AddPasswordFlag"] = 3;
+                HttpContext.Session.SetString("AddPasswordFlag", "3");
             }
             // From nowhere
             else
             {
-                TempData["AddPasswordFlag"] = 0;
+                HttpContext.Session.SetString("AddPasswordFlag", "0");
                 return RedirectToAction("Register");
             }
 
@@ -195,11 +226,11 @@ namespace Suffer_Travels.Controllers
         public IActionResult AddPassword(Register register)
         {
             User user;
-            int passFlag = Convert.ToInt32(TempData["AddPasswordFlag"].ToString());
+            int passFlag = Convert.ToInt32(HttpContext.Session.GetString("AddPasswordFlag"));
             // From forgot password
             if(passFlag == 1)
             {
-                if (!db.tblUser.Any(user => user.Email == HttpContext.Session.Get("Email").ToString()))
+                if (!db.tblUser.Any(user => user.Email == HttpContext.Session.GetString("Email")))
                 {
                     ModelState.AddModelError("Email", "The user associated with this email address doesn't exists");
                 }
@@ -261,7 +292,14 @@ namespace Suffer_Travels.Controllers
         public ActionResult SendOtp(Register register)
         {
             string message = "Otp is successfully sent";
-            if (db.tblUser.Any(user => user.Email == register.Email))
+            if(HttpContext.Session.GetString("AddPasswordFlag") == "1")
+            {
+                if (db.tblUser.Any(user => user.Email == register.Email))
+                    sendOtp(register.Email, register.Email);
+                else
+                    message = "The email address you entered does not exists";
+            }
+            else if (db.tblUser.Any(user => user.Email == register.Email))
             {
                 message = "The email address you entered already exists";
                 otp = 0;
@@ -275,12 +313,15 @@ namespace Suffer_Travels.Controllers
             {
                 sendOtp(register.Email, register.Email);
             }
+
             if (otp != 0)
-                return Json(new { 
-                    sendOtp = otp, 
-                    status = 1, 
-                    message = message 
+                return Json(new
+                {
+                    sendOtp = otp,
+                    status = 1,
+                    message = message
                 });
+            
             return Json(new { 
                 sendOtp = otp, 
                 status = 0, 

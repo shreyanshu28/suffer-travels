@@ -17,5 +17,6 @@ namespace Suffer_Travels.Models
         
         [Required(ErrorMessage = "Re-type password cannot be empty")]
         public string RePassword { get; set; }
+        public Boolean RememberMe { get; set; } = false;
     }
 }
