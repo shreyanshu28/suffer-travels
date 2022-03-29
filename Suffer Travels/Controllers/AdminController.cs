@@ -181,11 +181,14 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult AddTourItineary(uint? id)
         {
+            TourViewModel tourViewModel;
             if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
 
             if (!IsAdminUser())
                 return RedirectToAction("Home", "User");
+
+            SetViewData();
 
             if (id == null || id == 0)
             {
@@ -193,8 +196,9 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("ViewUsers");
             }
 
-            TourViewModel tourViewModel = new TourViewModel();
-            tourViewModel.NoOfDays = Convert.ToInt32(db.tblTour.FirstOrDefault(t => t.TId == id).NoOfDays);
+            tourViewModel = new TourViewModel();
+            tourViewModel.tourDetail = db.tblTour.First(t => t.TId == id);
+            tourViewModel.NoOfDays = Convert.ToInt32(tourViewModel.tourDetail.NoOfDays);
             tourViewModel.TourId = id;
 
             tourViewModel.cities = db.tblCity;
@@ -205,6 +209,36 @@ namespace Suffer_Travels.Controllers
             //tourViewModel.tourDetail = db.tblTour.Find(id);
 
             return View(tourViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddTourItineary([FromRoute]uint? id, TourViewModel tourViewModel)
+        {
+            List<TourItinerary> tiList = new List<TourItinerary>();
+            IEnumerable<TourItinerary> tourItineraries = tourViewModel.tiList;
+            
+            if(id == null || id == 0)
+            {
+                TempData["Error"] = "No matching results found";
+                return RedirectToAction("AddTourItineary");
+            }
+
+            foreach(var item in tourItineraries)
+            {
+                tiList.Add(new TourItinerary
+                {
+                    TourId = Convert.ToUInt32(id),
+                    Day = item.Day,
+                    CityId = Convert.ToUInt32(item.CityId),
+                    Description = item.Description
+                });
+            }
+
+            db.tblTourItinerary.AddRange(tiList);
+            db.SaveChanges();
+
+            return RedirectToAction("ManageTours");
         }
 
         public IActionResult ApproveRole(uint? id)

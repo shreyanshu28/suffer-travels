@@ -148,35 +148,44 @@ namespace Suffer_Travels.Controllers
             //order.Date = Convert.ToDateTime(HttpContext.Session.GetString("Date"));
             orderViewModel.order.UserId = Convert.ToUInt32(db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId);
             var dbTrans = db.Database.BeginTransaction();
-            db.tblOrderMaster.Add(orderViewModel.order);
-            db.SaveChanges();
-            Order order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
-
-            OrderTour orderTour = new OrderTour();
-            orderTour.OrderId = order.OId;
-            orderTour.TourId = orderViewModel.TourView.tourDetail.TId;
-            //orderTour.Price = Convert.ToDecimal(HttpContext.Session.GetString("TotalAmount"));
-            orderTour.Price = orderViewModel.order.Total;
-            db.tblOrderTour.Add(orderTour);
-            db.SaveChanges();
-
-            OrderPeople orderPeople = new OrderPeople();
-            List<OrderPeople> op = new List<OrderPeople>();
-            IEnumerable<OrderPeople> peoples = orderViewModel.orderPeoples;
-            foreach (var item in peoples)
+            try
             {
-                op.Add(new OrderPeople { 
-                    Fname = item.Fname,
-                    Lname = item.Lname,
-                    Proof = item.Proof,
-                    ProofId = item.ProofId,
-                    OrderId = order.OId,
-                });
+                db.tblOrderMaster.Add(orderViewModel.order);
+                db.SaveChanges();
+                Order order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
+
+                OrderTour orderTour = new OrderTour();
+                orderTour.OrderId = order.OId;
+                orderTour.TourId = orderViewModel.TourView.tourDetail.TId;
+                //orderTour.Price = Convert.ToDecimal(HttpContext.Session.GetString("TotalAmount"));
+                orderTour.Price = orderViewModel.order.Total;
+                db.tblOrderTour.Add(orderTour);
+                db.SaveChanges();
+
+                OrderPeople orderPeople = new OrderPeople();
+                List<OrderPeople> op = new List<OrderPeople>();
+                IEnumerable<OrderPeople> peoples = orderViewModel.orderPeoples;
+                foreach (var item in peoples)
+                {
+                    op.Add(new OrderPeople { 
+                        Fname = item.Fname,
+                        Lname = item.Lname,
+                        Proof = item.Proof,
+                        ProofId = item.ProofId,
+                        OrderId = order.OId,
+                    });
+                }
+                db.tblOrderPeople.AddRange(op);
+                db.SaveChanges();
+                dbTrans.Commit();
+                HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
+                return RedirectToAction("Index", "Payment");
             }
-            db.tblOrderPeople.AddRange(op);
-            db.SaveChanges();
-            HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
-            return RedirectToAction("Index", "Payment");
+            catch (Exception ex)
+            {
+                dbTrans.Rollback();
+            }
+            return View(orderViewModel);
         }
 
         public IActionResult Payment()
