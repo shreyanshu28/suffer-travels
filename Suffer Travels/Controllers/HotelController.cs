@@ -66,10 +66,7 @@ namespace Suffer_Travels.Controllers
             HotelAddress hotelAddress = new HotelAddress();
             hotelAddress.AddressLine1 = hotelViewModel.hotelAddress.AddressLine1;
             hotelAddress.AddressLine2 = hotelViewModel.hotelAddress.AddressLine2;
-            hotelAddress.CityId = hotelViewModel.hotelAddress.CityId;
-            //return RedirectToAction("Home", "User");
-
-            
+            hotelAddress.CityId = hotelViewModel.hotelAddress.CityId;            
 
             var dbTrans = db.Database.BeginTransaction();
             try
@@ -107,24 +104,17 @@ namespace Suffer_Travels.Controllers
                                 photo.Description = hotel.HName;
                                 filen = fileName;
                                 db.tblPhotos.Add(photo);
-                                //POTENTIAL ERROR AREA
                                 db.SaveChanges();
-                                //db.AddRange(photo);
-                                //dbTrans.Commit();
-                                
+
                             }
                         }
                     }
                 }
 
-                //hotelViewModel.hotelPhoto.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
-
-                //ERROR HERE
                 HotelPhotos hotelPhotos = new HotelPhotos();
                 hotelPhotos.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
                 hotelPhotos.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
                 db.tblHotelPhotos.Add(hotelPhotos);
-                //hotelViewModel.hotelPhoto.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
                 db.SaveChanges();
 
                 HotelRooms hotelRooms = new HotelRooms();
@@ -143,12 +133,8 @@ namespace Suffer_Travels.Controllers
             {
                 dbTrans.Rollback();
                 TempData["Error"] = "Error";
-                //return View(hotelViewModel);
                 return RedirectToAction("Home");
-
             }
-            //TempData["success"] = "Details added successfully";
-            //return RedirectToAction("Home");
 
         }
 
