@@ -10,6 +10,7 @@ namespace Suffer_Travels.Models
 
         public string HName { get; set; }
 
+        //HOTELADDRESS NU PRIMARY KEY AREAID MA SAVE KARVANU
         public UInt32 AreaId { get; set; }
 
         public long ContactNo { get; set; }
@@ -32,7 +33,7 @@ namespace Suffer_Travels.Models
 
         //PRICE PER ROOM
         [Column(TypeName = "decimal(10, 2)")]
-        public UInt32 Price { get; set; }
+        public UInt32 Price { get; set; } = 500;
 
         public UInt32 HId { get; set; }
     }
