@@ -127,12 +127,10 @@ namespace Suffer_Travels.Controllers
                 //hotelViewModel.hotelPhoto.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
                 db.SaveChanges();
 
-                db.tblHotelPhotos.Add(hotelPhotos);
-
                 HotelRooms hotelRooms = new HotelRooms();
                 hotelRooms.TotalRooms = 100;
                 hotelRooms.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
-                hotelRooms.Price = 500;
+                //hotelRooms.Price = (uint)Convert.ToDecimal(500);
                 hotelRooms.Capacity = 5;
                 db.tblHotelRooms.Add(hotelRooms);
                 db.SaveChanges();
@@ -144,7 +142,7 @@ namespace Suffer_Travels.Controllers
             catch (Exception ex)
             {
                 dbTrans.Rollback();
-                TempData["Error"] = ex.InnerException;
+                TempData["Error"] = "Error";
                 //return View(hotelViewModel);
                 return RedirectToAction("Home");
 
