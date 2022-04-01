@@ -7,7 +7,8 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 CId { get; set; }
-
+        [Required(ErrorMessage = "City name is required!")]
+        [RegularExpression("[a-zA-Z]+", ErrorMessage = "City name should only contain alphabets!")]
         public string Cname { get; set; }
 
         public Int32 STDcode { get; set; } = 91;

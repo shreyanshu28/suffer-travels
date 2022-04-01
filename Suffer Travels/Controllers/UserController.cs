@@ -365,7 +365,8 @@ namespace Suffer_Travels.Controllers
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
-            int? roleId = HttpContext.Session.GetInt32("Role");
+            int? roleId = HttpContext.Session.GetInt32("RoleId");
+            ViewData["Role"] = roleId;
             User user = u.First();
             return View(user);
         }

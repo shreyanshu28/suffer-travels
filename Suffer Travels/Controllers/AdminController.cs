@@ -259,6 +259,7 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("ViewUsers");
         }
 
+        [NonAction]
         public String ApproveStatus()
         {
             return "Approved";
@@ -315,7 +316,8 @@ namespace Suffer_Travels.Controllers
             SendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), DeclineStatus());
             return RedirectToAction("ViewUsers");
         }
-
+        
+        [NonAction]
         public String DeclineStatus()
         {
             return "Declined";
@@ -445,7 +447,7 @@ namespace Suffer_Travels.Controllers
             string approval_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been approved </span>";
             string decline_message = @"<span style='font-weight: bold; font-size: 25px; '>  Your request has been declined. You can try again. </span>";
 
-            MailAddress from = new MailAddress(email, "Suffer Travels");
+            MailAddress from = new MailAddress(email, "Safar Travels");
             MailAddress to = new MailAddress(toEmail, "shreyanshu vyas");
             MailMessage message = new MailMessage(from, to);
 
