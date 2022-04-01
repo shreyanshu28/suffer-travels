@@ -429,60 +429,73 @@ namespace Suffer_Travels.Controllers
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
         }
 
-        public IActionResult Orders()
+        public IActionResult Orders(int? id)
         {
             if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
 
             UserOrderVM userOrderVM = new UserOrderVM();
-
+            
             SetViewData();
-
-            int id = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            int userId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            userOrderVM.orders = db.tblOrderMaster.Where(order => order.UserId == userId);
             
-            userOrderVM.orders = db.tblOrderMaster.Where(order => order.UserId == id);
-            userOrderVM.orderTours = db.tblOrderTour.Where(oTour => userOrderVM.orders.Any(order => order.OId == oTour.OrderId));
-
-            // Two methods for join query
-            // 1.
-            // userOrderVM.tours = db.tblTour.Where(tour => userOrderVM.orderTours.Any(oTour => oTour.TourId == tour.TId));
-            // 2.
-            userOrderVM.tours = db.tblTour.Join(
-                userOrderVM.orderTours, 
-                t => t.TId, 
-                ot => ot.TourId,
-                (t, ot) => t
-            );
+            if(id == 1)
+            {
+                userOrderVM.orderTours = db.tblOrderTour.Where(oTour => userOrderVM.orders.Any(order => order.OId == oTour.OrderId));
+                // Two methods for join query
+                // 1.
+                // userOrderVM.tours = db.tblTour.Where(tour => userOrderVM.orderTours.Any(oTour => oTour.TourId == tour.TId));
+                // 2.
+                userOrderVM.tours = db.tblTour.Join(
+                    userOrderVM.orderTours, 
+                    t => t.TId, 
+                    ot => ot.TourId,
+                    (t, ot) => t
+                );
             
-            userOrderVM.tourPhotos = db.tblTourPhotos.Join(
-                userOrderVM.tours,
-                tp => tp.TourId,
-                t => t.TId,
-                (tp, t) => tp
-            );
+                userOrderVM.tourPhotos = db.tblTourPhotos.Join(
+                    userOrderVM.tours,
+                    tp => tp.TourId,
+                    t => t.TId,
+                    (tp, t) => tp
+                );
 
-            userOrderVM.photos = db.tblPhotos.Join(
-                userOrderVM.tourPhotos,
-                p => p.PId,
-                tp => tp.PhotoId,
-                (p, tp) => p
-            );
+                userOrderVM.photos = db.tblPhotos.Join(
+                    userOrderVM.tourPhotos,
+                    p => p.PId,
+                    tp => tp.PhotoId,
+                    (p, tp) => p
+                );
 
-            userOrderVM.tourTypes = db.tblTourType.Join(
-                userOrderVM.tours,
-                tt => tt.TtId,
-                t => t.TourTypeId,
-                (tt, t) => tt
-            );
+                userOrderVM.tourTypes = db.tblTourType.Join(
+                    userOrderVM.tours,
+                    tt => tt.TtId,
+                    t => t.TourTypeId,
+                    (tt, t) => tt
+                );
+            }
+            else
+            {
+                userOrderVM.orderHotels = db.tblOrderHotel.Where(oHotel => userOrderVM.orders.Any(order => order.OId == oHotel.OrderId));
+                userOrderVM.hotels = db.tblHotelMaster.Join(
+                    userOrderVM.orderHotels,
+                    h => h.HId,
+                    oh => oh.HrId,
+                    (h, oh) => h
+                );
+            }
 
             return View(userOrderVM);
         }
 
-        public IActionResult Payment()
+        public IActionResult Payment(int? id)
         {
-            
+            Order order = db.tblOrderMaster.First(order => order.OId == id);
+            HttpContext.Session.SetString("OrderPaymentId", order.OId.ToString());
+            HttpContext.Session.SetString("TotalAmount", order.Total.ToString());
             return RedirectToAction("Index", "Payment");
-            return RedirectToAction("Orders");
+            //return RedirectToAction("Orders");
         }
 
         public IActionResult RegisterPartner()

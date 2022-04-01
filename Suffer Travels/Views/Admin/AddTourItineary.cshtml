@@ -53,7 +53,7 @@
                 {
                     <div class="mb-3">
                         <label class="form-label" asp-for="tiList[i].Day">Day</label>
-                        <input type="text" class="form-control" asp-for="tiList[i].Day" id="aday" placeholder="Day" value=@(i+1) readonly disabled/>
+                        <input type="text" class="form-control" asp-for="tiList[i].Day" id="aday" placeholder="Day" value="@(i+1)" readonly disabled/>
                         <span asp-validation-for="tiList[i].Day" class="text-danger" ></span>
                     </div>
                     <div class="mb-3">
