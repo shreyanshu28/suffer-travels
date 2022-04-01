@@ -123,17 +123,19 @@ namespace Suffer_Travels.Controllers
                 HotelPhotos hotelPhotos = new HotelPhotos();
                 hotelPhotos.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
                 hotelPhotos.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
-
+                db.tblHotelPhotos.Add(hotelPhotos);
                 //hotelViewModel.hotelPhoto.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
                 db.SaveChanges();
 
-                db.tblHotelPhotos.Add(hotelViewModel.hotelPhoto);
+                db.tblHotelPhotos.Add(hotelPhotos);
 
                 HotelRooms hotelRooms = new HotelRooms();
                 hotelRooms.TotalRooms = 100;
                 hotelRooms.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
                 hotelRooms.Price = 500;
                 hotelRooms.Capacity = 5;
+                db.tblHotelRooms.Add(hotelRooms);
+                db.SaveChanges();
                 dbTrans.Commit();
 
                 TempData["success"] = "Details added successfully";
