@@ -1,2 +1,86 @@
-﻿@{
+﻿@using Suffer_Travels.ViewModel
+@model HotelViewModel
+
+@{
+    ViewData["title"] = "Register Hotel";
+    Layout = "~/Views/Shared/User/_Hotel.cshtml";
+}
+
+<main class="container p-3">
+    <div class="nav-container" style="position:relative">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="User" asp-action="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item active mr-auto">Register Hotel
+            </li>
+        </ol>
+    </div>
+
+    <form method="post" asp-action="RegisterHotel" class="container d-flex justify-content-center container main-body">
+        <div class="card card-style mb-3" style="margin:auto">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <h1 class="card-title card-title-style align-self-start" style="text-align: center; font-size: 4rem">Add Hotel</h1>
+                <div class="d-flex">
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotel.HName">Hotel name</label>
+                        <input type="text" class="form-control" asp-for="hotel.HName" id="" placeholder="Hotel name" />
+                        <span asp-validation-for="hotel.HName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotelAddress.AddressLine1">Address Line 1</label>
+                        <input type="text" class="form-control" asp-for="hotelAddress.AddressLine1" id="" placeholder="Address Line 1" />
+                        <span asp-validation-for="hotelAddress.AddressLine1" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotelAddress.AddressLine2">Address Line 2</label>
+                        <input type="text" class="form-control" asp-for="hotelAddress.AddressLine2" id="" placeholder="Address Line 2" />
+                        <span asp-validation-for="hotelAddress.AddressLine2" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotelAddress.CityId">City</label>
+                        <select asp-for="hotelAddress.CityId" class="form-select" aria-label="Select address" id="type">
+                            <option value="-1">Select from the list</option>
+                            @foreach (var item in Model.cities)
+                            {
+                                <option value="@item.CId">@item.Cname</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotel.ContactNo">Contact Number</label>
+                        <input type="number" class="form-control" asp-for="hotel.ContactNo" id="" placeholder="Contact Number" />
+                        <span asp-validation-for="hotel.ContactNo" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="hotel.HotelType">Hotel Type</label>
+                        <select asp-for="hotel.HotelType" class="form-select" aria-label="Select Hotel Type" id="type">
+                            <option value="0">No star</option>
+                            <option value="1">1 star</option>
+                            <option value="2">2 star</option>
+                            <option value="3">3 star</option>
+                            <option value="4">4 star</option>
+                            <option value="5">5 star</option>
+                            <option value="7">7 star</option>
+                        </select>
+                    </div>
+                     <div class="mb-3">
+                        <label class="form-label" asp-for="photo.ImagePath">Upload Photo</label>
+                        <input asp-for="photo.ImagePath"  type="file" id="upload image" placeholder="upload photo" />
+                        <span asp-validation-for="photo.ImagePath" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</main>
+
+@section scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
 }

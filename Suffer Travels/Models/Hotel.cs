@@ -10,6 +10,7 @@ namespace Suffer_Travels.Models
 
         public string HName { get; set; }
 
+        //HOTELADDRESS NU PRIMARY KEY AREAID MA SAVE KARVANU
         public UInt32 AreaId { get; set; }
 
         public long ContactNo { get; set; }

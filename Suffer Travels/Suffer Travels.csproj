@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\user\" />
+    <Folder Include="wwwroot\photos\hotel\" />
   </ItemGroup>
 
 </Project>
