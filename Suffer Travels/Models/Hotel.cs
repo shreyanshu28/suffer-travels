@@ -7,12 +7,14 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 HId { get; set; }
-
+        [Required(ErrorMessage = "First name is required!")]
+        [RegularExpression("[a-zA-Z]+", ErrorMessage = "Hotel name should only contain alphabets!")]
         public string HName { get; set; }
 
         //HOTELADDRESS NU PRIMARY KEY AREAID MA SAVE KARVANU
         public UInt32 AreaId { get; set; }
-
+        [Required(ErrorMessage = "Contact number is required!")]
+        [RegularExpression("^[6-9][0-9]{9,9}", ErrorMessage = "Please enter valid contact number")]
         public long ContactNo { get; set; }
 
         [Column(TypeName = "Int")]
@@ -52,7 +54,7 @@ namespace Suffer_Travels.Models
     {
         [Key]
         public UInt32 HaId { get; set; }
-
+        [Required(ErrorMessage = "Address Line 1 is required")]
         public string AddressLine1 { get; set; }
 
         public string AddressLine2 { get; set; }

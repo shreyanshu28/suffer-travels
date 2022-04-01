@@ -258,6 +258,7 @@ namespace Suffer_Travels.Controllers
             return RedirectToAction("ViewUsers");
         }
 
+        [NonAction]
         public String ApproveStatus()
         {
             return "Approved";
@@ -314,7 +315,8 @@ namespace Suffer_Travels.Controllers
             SendRoleNotification(_user.Email.ToString(), HttpContext.Session.GetString("Fname"), DeclineStatus());
             return RedirectToAction("ViewUsers");
         }
-
+        
+        [NonAction]
         public String DeclineStatus()
         {
             return "Declined";

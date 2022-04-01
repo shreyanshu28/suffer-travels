@@ -19,7 +19,7 @@ namespace Suffer_Travels.Controllers
         {
             String email = HttpContext.Session.GetString("Email").ToString();
             ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;
-
+            SetViewData();
             return View();
         }
 
@@ -39,7 +39,8 @@ namespace Suffer_Travels.Controllers
             {
                 HotelViewModel hotelViewModel = new HotelViewModel();
                 hotelViewModel.cities = db.tblCity;
-                return View(hotelViewModel);
+                SetViewData();
+                return View(hotelViewModel);                
             }
 
             return RedirectToAction("Home", "User");
@@ -54,6 +55,8 @@ namespace Suffer_Travels.Controllers
 
             if (!IsHotelUser())
                 return RedirectToAction("Home", "User");
+
+            SetViewData();
 
             string filen = "";
 
@@ -136,6 +139,13 @@ namespace Suffer_Travels.Controllers
                 return RedirectToAction("Home");
             }
 
+        }
+
+        [NonAction]
+        public void SetViewData()
+        {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
         }
 
         [NonAction]

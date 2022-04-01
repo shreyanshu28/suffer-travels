@@ -4,7 +4,22 @@
     ViewData["title"] = "Edit Profile";
     ViewData["Fname"] = Model.Fname;
     ViewData["ProfilePhoto"] = Model.ProfilePhoto;
-    Layout = "~/Views/Shared/User/Customer.cshtml";
+
+    switch (ViewData["Role"])
+    {
+        case 1:
+            Layout = "~/Views/Shared/User/_Admin.cshtml";
+            break;
+        case 2:
+            Layout = "~/Views/Shared/User/Customer.cshtml";
+            break;
+        case 3:
+            Layout = "~/Views/Shared/User/_Hotel.cshtml";
+            break;
+        case 4:
+            Layout = "~/Views/Shared/User/_Vehicle.cshtml";
+            break;
+    }
 }
 
 <div style="
