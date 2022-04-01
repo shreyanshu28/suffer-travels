@@ -23,7 +23,6 @@ namespace Suffer_Travels.Controllers
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["TotalAmount"] = HttpContext.Session.GetString("TotalAmount");
         }
 
@@ -56,7 +55,15 @@ namespace Suffer_Travels.Controllers
         }
         public IActionResult Success()
         {
-            Order order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
+            Order order = new Order();
+            if(HttpContext.Session.GetString("OrderPaymentId") != null)
+            {
+                order = db.tblOrderMaster.First(order => order.OId == Convert.ToInt32(HttpContext.Session.GetString("OrderPaymentId")));
+            }
+            else
+            {
+                order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
+            }
             order.Payment = "Completed";
             db.SaveChanges();
             SetViewData();

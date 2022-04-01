@@ -223,16 +223,17 @@ namespace Suffer_Travels.Controllers
                 TempData["Error"] = "No matching results found";
                 return RedirectToAction("AddTourItineary");
             }
-
+            int day = 1;
             foreach(var item in tourItineraries)
             {
                 tiList.Add(new TourItinerary
                 {
                     TourId = Convert.ToUInt32(id),
-                    Day = item.Day,
+                    Day = Convert.ToUInt32(day),
                     CityId = Convert.ToUInt32(item.CityId),
                     Description = item.Description
                 });
+                day++;
             }
 
             db.tblTourItinerary.AddRange(tiList);
