@@ -55,6 +55,8 @@ namespace Suffer_Travels.Controllers
             if (!IsHotelUser())
                 return RedirectToAction("Home", "User");
 
+            string filen = "";
+
             Hotel hotel = new Hotel();
             hotel.HName = hotelViewModel.hotel.HName;
             hotel.HotelType = hotelViewModel.hotel.HotelType;
@@ -103,21 +105,28 @@ namespace Suffer_Travels.Controllers
                                 await file.CopyToAsync(fileStream);
                                 photo.ImagePath = fileName;
                                 photo.Description = hotel.HName;
-
+                                filen = fileName;
                                 db.tblPhotos.Add(photo);
                                 //POTENTIAL ERROR AREA
                                 db.SaveChanges();
                                 //db.AddRange(photo);
-
-                                hotelViewModel.hotelPhoto.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
-
-                                hotelViewModel.hotelPhoto.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == fileName).PId;
-                                db.SaveChanges();
+                                //dbTrans.Commit();
+                                
                             }
                         }
                     }
                 }
-                
+
+                //hotelViewModel.hotelPhoto.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
+
+                //ERROR HERE
+                HotelPhotos hotelPhotos = new HotelPhotos();
+                hotelPhotos.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
+                hotelPhotos.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
+
+                //hotelViewModel.hotelPhoto.PID = db.tblPhotos.FirstOrDefault(p => p.ImagePath == filen).PId;
+                db.SaveChanges();
+
                 db.tblHotelPhotos.Add(hotelViewModel.hotelPhoto);
 
                 HotelRooms hotelRooms = new HotelRooms();
@@ -134,11 +143,13 @@ namespace Suffer_Travels.Controllers
             {
                 dbTrans.Rollback();
                 TempData["Error"] = ex.InnerException;
-                return View(hotelViewModel);
+                //return View(hotelViewModel);
+                return RedirectToAction("Home");
+
             }
             //TempData["success"] = "Details added successfully";
-           //return RedirectToAction("Home");
-            
+            //return RedirectToAction("Home");
+
         }
 
         [NonAction]
