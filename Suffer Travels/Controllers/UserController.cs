@@ -440,8 +440,8 @@ namespace Suffer_Travels.Controllers
             int userId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
             userOrderVM.orders = db.tblOrderMaster.Where(order => order.UserId == userId);
             
-            if(id == 1)
-            {
+            //if(id == 1)
+            //{
                 userOrderVM.orderTours = db.tblOrderTour.Where(oTour => userOrderVM.orders.Any(order => order.OId == oTour.OrderId));
                 // Two methods for join query
                 // 1.
@@ -474,17 +474,17 @@ namespace Suffer_Travels.Controllers
                     t => t.TourTypeId,
                     (tt, t) => tt
                 );
-            }
-            else
-            {
-                userOrderVM.orderHotels = db.tblOrderHotel.Where(oHotel => userOrderVM.orders.Any(order => order.OId == oHotel.OrderId));
-                userOrderVM.hotels = db.tblHotelMaster.Join(
-                    userOrderVM.orderHotels,
-                    h => h.HId,
-                    oh => oh.HrId,
-                    (h, oh) => h
-                );
-            }
+            //}
+            //else
+            //{
+            //    userOrderVM.orderHotels = db.tblOrderHotel.Where(oHotel => userOrderVM.orders.Any(order => order.OId == oHotel.OrderId));
+            //    userOrderVM.hotels = db.tblHotelMaster.Join(
+            //        userOrderVM.orderHotels,
+            //        h => h.HId,
+            //        oh => oh.HrId,
+            //        (h, oh) => h
+            //    );
+            //}
 
             return View(userOrderVM);
         }
