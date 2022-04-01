@@ -56,7 +56,7 @@ namespace Suffer_Travels.Models
 
         public string AddressLine2 { get; set; }
 
-        public UInt32 AreaId { get; set; }
+        public UInt32 CityId { get; set; }
 
     }
 }
