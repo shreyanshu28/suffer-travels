@@ -401,7 +401,6 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public IActionResult SaveIteneraryDetails(string TourItineary)
         {
-            //HttpContext.Session.SetString("TourItineary", TourItineary);
             HttpContext.Session.SetString("TourItineary", TourItineary);
             return View();
         }

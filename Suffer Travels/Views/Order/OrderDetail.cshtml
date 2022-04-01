@@ -36,10 +36,66 @@
         width: 50px;
         background-color: #9DCA9F;
     }
+
+    .itinerary {
+        display: flex;
+        flex-direction: column;
+        justify-content: first baseline;
+        align-items: flex-start;
+    }
+
+    .itinerary-head {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .itinerary-day {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        background-color: #375A7F;
+    }
+
+    .itinerary-city {
+        margin-left: 10px;
+    }
+
+    .itinerary-body {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-left: 24px;
+    }
+
+    .horizontal-line {
+        border: 1px solid #375A7F;
+        min-width: 0px;
+        max-width: 0px;
+        max-height: 50px;
+        min-height: 50px;
+    }
+
+    .last{
+        align-items: baseline;
+        max-height: 25px;
+        min-height: 25px;
+    }
+
+    .vertical-line {
+        border: 1px solid #375A7F;
+        min-width: 25px;
+        max-width: 25px;
+        min-height: 0px;
+        max-height: 0px;
+    }
 </style>
 <h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
 <div class="container d-flex justify-content-center">
-    <div class="card" style="width: 40%;">
+    <div class="card" style="max-width: 35%; min-width: 35%">
         <form method="post" asp-action="GetGuestsDetails" style="width: 100%">
             <div class="card-body">
                 <input asp-for="TourView.tourDetail.TId" type="hidden" />
@@ -55,7 +111,7 @@
                 </p>
 
                 <!-- Calendar container -->
-                <div class="container bg-body p-3">
+                <div class="container bg-body pt-3 pb-3">
                     <div class="mb-3">
                         <div class="d-flex justify-content-evenly align-items-center mb-3">
                             <div class="info-date"></div>
@@ -151,37 +207,125 @@
             </div>
         </form>
     </div>
+    <!-- Right -->
+    <div class="d-flex flex-column" style="max-width: 60%; min-width: 60%">
     <!-- Bootstrap Carousel -->
-    <div id="carouselExampleIndicators" class="carousel slide" style="width: 80%; height: 37rem" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                aria-label="Slide 3"></button>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" >
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner" style="">
+                <div class="carousel-item active">
+                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
+                </div>
+                <div class="carousel-item">
+                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
+                </div>
+                <div class="carousel-item">
+                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.TourView.photo.Description" />
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
-            </div>
-            <div class="carousel-item">
-                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
-            </div>
-            <div class="carousel-item">
-                <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.TourView.photo.Description" />
+
+        <!-- Itinerary -->
+        <div class="d-flex flex-column justify-content-center align-items-start mt-3 ms-3">
+            <h5>Itinerary</h5>
+            <div class="itinerary-main">
+            <!-- Start itinerary -->
+            @for(int i = 0; i < Model.TourView.tourItineraries.Count(); ++i)
+            {
+                <div class="itinerary">
+                    <div class="itinerary-head">
+                        @if(i == 0)
+                        {
+                            <div class="itinerary-day">Start</div>
+                        }
+
+                        else if(i == Model.TourView.tourItineraries.Count() - 1)
+                        {
+                            <div class="itinerary-day">End</div>
+                        }
+
+                        else
+                        {
+                            <div class="itinerary-day">Day @(i + 1)</div>   
+                        }
+                        <div class="itinerary-city">
+                            @Model.TourView.cities.First(
+                                city => city.CId == Model.TourView.tourItineraries.First(
+                                    it => it.Day == (i + 1)
+                                ).CityId
+                            ).Cname
+                        </div>
+                    </div>
+                    @if(i == Model.TourView.tourItineraries.Count() - 1)
+                    {
+                        <div class="itinerary-body last">
+                            @if(i == Model.TourView.tourItineraries.Count() - 1)
+                            {
+                                <div class="horizontal-line last"></div>
+                            }
+                            else
+                            {
+                                <div class="horizontal-line"></div>    
+                            }
+                            <div class="vertical-line"></div>
+                            <div class="itinerary-description">
+                            @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="itinerary-body">
+                            @if(i == Model.TourView.tourItineraries.Count() - 1)
+                            {
+                                <div class="horizontal-line last"></div>
+                            }
+                            else
+                            {
+                                <div class="horizontal-line"></div>    
+                            }
+                            <div class="vertical-line"></div>
+                            <div class="itinerary-description">
+                            @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            @*@foreach(var item in Model.TourView.tourItineraries)
+            {
+                <div class="itinerary">
+                    <div class="itinerary-head">
+                        <div class="itinerary-day">Day @item.Day</div>
+                        <div class="itinerary-city">
+                            @Model.TourView.cities.First(city => city.CId == item.CityId).Cname
+                        </div>
+                    </div>
+                    <div class="itinerary-body">
+                        <div class="horizontal-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="itinerary-description">
+                        @item.Description
+                        </div>
+                    </div>
+                </div>
+            }*@
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
 </div>
 
@@ -400,19 +544,59 @@
         let totalAmount = 0;
 
         noOfAdults.addEventListener("keyup", (event) => {
-            if(Number(noOfAdults.value) <= 0 || Number(noOfAdults.value) == ""){
+            if(Number(noOfAdults.value) <= 0 || noOfAdults.value == ""){
                 noOfAdults.value = 1;
+            }
+            if(Number(noOfAdults.value) >= 1){
+                let amount = 0.0;
+                if(Number(noOfChildrens.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfChildrens.value) * parseFloat(childAmount))
+                }
+                if(Number(noOfInfants.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfInfants.value) * parseFloat(infantAmount))
+                }
+                totalOrderAmount.value = amount + (adultAmount * parseFloat(noOfAdults.value));
             }
         });
         noOfChildrens.addEventListener("keyup", (event) => {
-            if(Number(noOfChildrens.value) < 0 || Number(noOfChildrens.value) == ""){
+            if(Number(noOfChildrens.value) < 0 || noOfChildrens.value == ""){
                 noOfChildrens.value = 0;
+            }
+            if(Number(noOfChildrens.value) >= 0){
+                let amount = 0.0;
+                if(Number(noOfAdults.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfAdults.value) * parseFloat(adultAmount))
+                }
+                if(Number(noOfInfants.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfInfants.value) * parseFloat(infantAmount))
+                }
+                totalOrderAmount.value = amount + (childAmount * parseFloat(noOfChildrens.value));
             }
         });
         noOfInfants.addEventListener("keyup", (event) => {
-            if(Number(noOfInfants.value) < 0 || Number(noOfInfants.value) == ""){
+            if(Number(noOfInfants.value) < 0 || noOfInfants.value == ""){
                 noOfInfants.value = 0;
             }
+            if(Number(noOfInfants.value) >= 0){
+                let amount = 0.0;
+                if(Number(noOfChildrens.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfChildrens.value) * parseFloat(childAmount))
+                }
+                if(Number(noOfAdults.value) >= 1){
+                    amount = parseFloat(amount) + (Number(noOfAdults.value) * parseFloat(adultAmount))
+                }
+                totalOrderAmount.value = amount + infantAmount * parseFloat(noOfInfants.value);
+            }
+            // else if(Number(noOfInfants.value) >= 1){
+            //    let amount = 0.0;
+            //    if(Number(noOfChildrens.value) >= 1){
+            //        amount = parseFloat(amount) + (Number(noOfChildrens.value) * parseFloat(childAmount))
+            //    }
+            //    if(Number(noOfAdults.value) >= 1){
+            //        amount = parseFloat(amount) + (Number(noOfAdults.value) * parseFloat(adultAmount))
+            //    }
+            //    totalOrderAmount.value = amount + infantAmount * parseFloat(noOfInfants.value);
+            //}
         });
 
         addAdult.addEventListener("click", (event) => {

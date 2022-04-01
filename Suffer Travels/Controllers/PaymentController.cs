@@ -18,10 +18,18 @@ namespace Suffer_Travels.Controllers
             _service = service;
             _httpContextAccessor = httpContextAccessor;
         }
-        public IActionResult Index()
+
+        private void SetViewData()
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["TotalAmount"] = HttpContext.Session.GetString("TotalAmount");
+        }
+
+        public IActionResult Index()
+        {
+            SetViewData();
             return View();
         }
         [HttpPost]
@@ -29,12 +37,14 @@ namespace Suffer_Travels.Controllers
         {
             _paymentRequest.Amount = Convert.ToDecimal(HttpContext.Session.GetString("TotalAmount").ToString());
             MerchantOrder _marchantOrder = await _service.ProcessMerchantOrder(_paymentRequest);
+            SetViewData();
             return View("Payment", _marchantOrder);
         }
         [HttpPost]
         public async Task<IActionResult> CompleteOrderProcess()
         {
             string PaymentMessage = await _service.CompleteOrderProcess(_httpContextAccessor);
+            SetViewData();
             if (PaymentMessage == "captured")
             {
                 return RedirectToAction("Success");
@@ -49,11 +59,14 @@ namespace Suffer_Travels.Controllers
             Order order = db.tblOrderMaster.Where(order => order.UserId == db.tblUser.FirstOrDefault(user => user.Email == HttpContext.Session.GetString("Email")).UId).OrderBy(or => or.OId).LastOrDefault();
             order.Payment = "Completed";
             db.SaveChanges();
-            return View();
+            SetViewData();
+            TempData["Success"] = "Payment is successful";
+            return RedirectToAction("Home", "User");
         }
 
         public IActionResult Failed()
         {
+            SetViewData();
             return View();
         }
     }
