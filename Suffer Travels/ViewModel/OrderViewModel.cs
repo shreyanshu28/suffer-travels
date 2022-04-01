@@ -6,6 +6,7 @@ namespace Suffer_Travels.ViewModel
     {
         // For tour details
         public TourViewModel TourView { get; set; }
+        public HotelViewModel hotelVM { get; set; }
 
         // For order details
         public Order order { get; set; }
@@ -22,5 +23,9 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<OrderHotel> orderHotels { get; set; }
         public IEnumerable<OrderVehicle> orderVehicles { get; set; }
         public IEnumerable<Payment> payments { get; set; }
+
+        // Lists
+        public List<OrderHotel> ohList { get; set; }
+
     }
 }

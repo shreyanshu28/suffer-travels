@@ -44,20 +44,26 @@ namespace Suffer_Travels.Controllers
 
             OrderViewModel orderViewModel = new OrderViewModel();
             TourViewModel tourViewModel = new TourViewModel();
+            HotelViewModel hotelViewModel = new HotelViewModel();
 
             tourViewModel.tourDetail = db.tblTour.FirstOrDefault(tour => tour.TId == id);
             tourViewModel.tourTypeDetails = db.tblTourType.FirstOrDefault(tourType => tourType.TtId == tourViewModel.tourDetail.TourTypeId);
-
             tourViewModel.tourDate = db.tblTourDates.FirstOrDefault(tourDate => tourDate.TourId == id);
             tourViewModel.tourDates = db.tblTourDates.Where(tourDate => tourDate.TourId == id);
-
             tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
             tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
-
             tourViewModel.tourItineraries = db.tblTourItinerary.Where(ti => ti.TourId == id);
-            tourViewModel.cities = db.tblCity;
+            tourViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
+
+            hotelViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
+            hotelViewModel.hotelAddresses = db.tblHotelAddress.Where(ha => tourViewModel.cities.Any(c => c.CId == ha.CityId));
+            hotelViewModel.hotels = db.tblHotelMaster.Where(hm => hotelViewModel.hotelAddresses.Any(ha => ha.HaId == hm.AreaId));
+            hotelViewModel.hotelRooms = db.tblHotelRooms.Where(hr => hotelViewModel.hotels.Any(h => h.HId == hr.HId));
+            hotelViewModel.hotelPhotos = db.tblHotelPhotos.Where(hp => hotelViewModel.hotels.Any(h => h.HId == hp.HId));
+            hotelViewModel.photos = db.tblPhotos.Where(p => hotelViewModel.hotelPhotos.Any(hp => hp.PID == p.PId));
 
             orderViewModel.TourView = tourViewModel;
+            orderViewModel.hotelVM = hotelViewModel;
 
             return View(orderViewModel);
         }
@@ -157,8 +163,22 @@ namespace Suffer_Travels.Controllers
                 HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
                 HttpContext.Session.SetString("Date", orderViewModel.order.Date.ToString());
                 HttpContext.Session.SetString("EndDate", orderViewModel.order.EndDate.ToString());
+
+                string hotelRoomId = "", noOfRoom = "";
+                foreach (var oh in orderViewModel.ohList)
+                {
+                    if (oh.NoOfRooms > 0)
+                    {
+                        hotelRoomId += oh.HrId + ";";
+                        noOfRoom += oh.NoOfRooms + ";";
+                    }
+                }
+                HttpContext.Session.SetString("HotelRoomId", hotelRoomId);
+                HttpContext.Session.SetString("NoOfRoom", noOfRoom);
+
                 return View("GetGuestsDetails", orderViewModel);
             }
+
             return View(orderViewModel);
         }
 
@@ -166,6 +186,7 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SetOrderDetails(OrderViewModel orderViewModel)
         {
+
             if (UserLoggedOut())
             {
                 return RedirectToAction("Login", "User");
@@ -210,8 +231,34 @@ namespace Suffer_Travels.Controllers
                 }
                 db.tblOrderPeople.AddRange(op);
                 db.SaveChanges();
-                dbTrans.Commit();
                 HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
+
+                string hotelRoomId = HttpContext.Session.GetString("HotelRoomId");
+                string noOfRoom = HttpContext.Session.GetString("NoOfRoom");
+                string[] hotelRoomIds = hotelRoomId.Split(';');
+                string[] noOfRooms = noOfRoom.Split(';');
+
+                List<OrderHotel> ohList = new List<OrderHotel>();
+                for (int i = 0; i < hotelRoomIds.Length; i++)
+                {
+                    if (hotelRoomIds[i] == "")
+                        break;
+                    int cntOfRoom = Convert.ToInt32(noOfRooms[i]);
+                    uint hrId = Convert.ToUInt32(hotelRoomIds[i]);
+                    HotelRooms hotelRoom = db.tblHotelRooms.First(hr => hr.HrId == hrId);
+                    decimal total = cntOfRoom * hotelRoom.Price;
+                    ohList.Add(new OrderHotel
+                    {
+                        HrId = hrId,
+                        NoOfRooms = cntOfRoom,
+                        OrderId = order.OId,
+                        Price = total,
+                    });
+                }
+                db.tblOrderHotel.AddRange(ohList);
+                db.SaveChanges();
+                dbTrans.Commit();
+
                 return RedirectToAction("Index", "Payment");
             }
             catch (Exception ex)

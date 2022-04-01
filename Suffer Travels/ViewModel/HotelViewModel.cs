@@ -15,7 +15,10 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<Hotel> hotels { get; set; }
         public IEnumerable<HotelRooms> hotelRooms { get; set; }
         public IEnumerable<HotelPhotos> hotelPhotos { get; set; }
+        public IEnumerable<Photo> photos { get; set; }
         public IEnumerable<HotelAddress> hotelAddresses { get; set; }
         public IEnumerable<City> cities {get; set; }
+
+        // Lists
     }
 }

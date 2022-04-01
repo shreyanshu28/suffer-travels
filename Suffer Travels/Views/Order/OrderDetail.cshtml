@@ -94,236 +94,221 @@
     }
 </style>
 <h1 style="text-align: center" class="m-3">@Model.TourView.tourDetail.TourName</h1>
-<div class="container d-flex justify-content-center">
-    <div class="card" style="max-width: 35%; min-width: 35%">
-        <form method="post" asp-action="GetGuestsDetails" style="width: 100%">
-            <div class="card-body">
-                <input asp-for="TourView.tourDetail.TId" type="hidden" />
-                <p class="card-text" name="name">@Model.TourView.tourTypeDetails.TtName</p>
-                <p class="card-text">@Model.TourView.tourDetail.Description</p>
-                <p class="card-text">
-                    @*From: <br />
-                    @Model.TourView.tourDate.Date.ToLongDateString() <br />
-                    @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
-                    for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
-                    @*To: <br /> 
-                    @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
-                </p>
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="card" style="max-width: 35%; min-width: 35%">
+            <form method="post" asp-action="GetGuestsDetails" style="width: 100%">
+                <div class="card-body">
+                    <input asp-for="TourView.tourDetail.TId" type="hidden" />
+                    <p class="card-text" name="name">@Model.TourView.tourTypeDetails.TtName</p>
+                    <p class="card-text">@Model.TourView.tourDetail.Description</p>
+                    <p class="card-text">
+                        @*From: <br />
+                        @Model.TourView.tourDate.Date.ToLongDateString() <br />
+                        @Model.TourView.tourDate.Time.ToShortTimeString() <br />*@
+                        for <span id="noOfDays">@Model.TourView.tourDetail.NoOfDays</span> days <br /> 
+                        @*To: <br /> 
+                        @Model.TourView.tourDate.Date.AddDays(Model.TourView.tourDetail.NoOfDays).ToLongDateString() *@
+                    </p>
 
-                <!-- Calendar container -->
-                <div class="container bg-body pt-3 pb-3">
+                    <!-- Calendar container -->
+                    <div class="container bg-body pt-3 pb-3">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-evenly align-items-center mb-3">
+                                <div class="info-date"></div>
+                                <span>-</span>
+                                <span style="font-size: 24px">
+                                    Available dates
+                                </span>
+                            </div>
+                            <div class="input-group">
+                                <input asp-for="order.Date" type="date" id="orderStartDate" placeholder="Select start date" class="form-control" readonly />
+                                <span class="ms-3 me-3"> to </span>
+                                <input asp-for="order.EndDate" type="date" id="orderEndDate" placeholder="End date" class="form-control" readonly />
+                            </div>
+                            <span asp-validation-for="order.Date" id="errorStartDate" class="text-danger"></span>
+                            <span asp-validation-for="order.EndDate" class="text-danger"></span>
+                        </div>
+                        <!-- Calendar div -->
+                        <div id="calendar" class="bg-light"></div>
+                    </div>
+
+                    <!-- Storing tourdates in hidden field for javascript Calendar events -->
+                    @foreach(var date in Model.TourView.tourDates)
+                    {
+                        <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
+                    }
+
                     <div class="mb-3">
-                        <div class="d-flex justify-content-evenly align-items-center mb-3">
-                            <div class="info-date"></div>
-                            <span>-</span>
-                            <span style="font-size: 24px">
-                                Available dates
-                            </span>
+                        <!-- No of people -->
+                        <label asp-for="order.TotalAdults" style="display: block" ></label>
+                        <div>
+                            <!--Adults-->
+                            <label style="display: block">
+                                ₹<span id="adultAmount">@Model.TourView.tourDetail.Price</span> / Adult
+                                <label class="form-text">Age 18 and above</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalAdults" type="text" id="noOfAdults" class="form-control" value="1" />
+                                <button type="button" id="addAdult" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractAdult" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
                         </div>
-                        <div class="input-group">
-                            <input asp-for="order.Date" type="date" id="orderStartDate" placeholder="Select start date" class="form-control" readonly />
-                            <span class="ms-3 me-3"> to </span>
-                            <input asp-for="order.EndDate" type="date" id="orderEndDate" placeholder="End date" class="form-control" readonly />
+                        <div>
+                            <!--Children-->
+                            <label>
+                                ₹<span id="childAmount">@Model.TourView.tourDetail.PriceChildren</span> / Children
+                                <label class="form-text">Age 6 - 17</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalChildrens" type="text" id="noOfChildrens" class="form-control" value="0" />
+                                <button type="button" id="addChildren" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractChildren" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
                         </div>
-                        <span asp-validation-for="order.Date" id="errorStartDate" class="text-danger"></span>
-                        <span asp-validation-for="order.EndDate" class="text-danger"></span>
+                        <div>
+                            <!--Infants-->
+                            <label>
+                                ₹<span id="infantAmount">@Model.TourView.tourDetail.PriceInfant</span> / Infant
+                                <label class="form-text">Age below 6</label>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="order.TotalInfants" type="text" id="noOfInfants" class="form-control" value="0" />
+                                <button type="button" id="addInfant" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                </button>
+                                <button type="button" id="subtractInfant" class="btn btn-outline-light" >
+                                    <i class="fa-solid fa-circle-minus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
+                        </div>
                     </div>
-                    <!-- Calendar div -->
-                    <div id="calendar" class="bg-light"></div>
-                </div>
-
-                <!-- Storing tourdates in hidden field for javascript Calendar events -->
-                @foreach(var date in Model.TourView.tourDates)
-                {
-                    <input type="hidden" id="orderDates" value="@date.Date.ToShortDateString()">
-                }
-
-                <div class="mb-3">
-                    <!-- No of people -->
-                    <label asp-for="order.TotalAdults" style="display: block" ></label>
-                    <div>
-                        <!--Adults-->
-                        <label style="display: block">
-                            ₹<span id="adultAmount">@Model.TourView.tourDetail.Price</span> / Adult
-                            <label class="form-text">Age 18 and above</label>
-                        </label>
-                        <div class="input-group">
-                            <input asp-for="order.TotalAdults" type="text" id="noOfAdults" class="form-control" value="1" />
-                            <button type="button" id="addAdult" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-plus"></i>
-                            </button>
-                            <button type="button" id="subtractAdult" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-minus"></i>
-                            </button>
-                        </div>
-                        <span asp-validation-for="order.TotalAdults" class="text-danger" ></span>
-                    </div>
-                    <div>
-                        <!--Children-->
-                        <label>
-                            ₹<span id="childAmount">@Model.TourView.tourDetail.PriceChildren</span> / Children
-                            <label class="form-text">Age 6 - 17</label>
-                        </label>
-                        <div class="input-group">
-                            <input asp-for="order.TotalChildrens" type="text" id="noOfChildrens" class="form-control" value="0" />
-                            <button type="button" id="addChildren" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-plus"></i>
-                            </button>
-                            <button type="button" id="subtractChildren" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-minus"></i>
-                            </button>
-                        </div>
-                        <span asp-validation-for="order.TotalChildrens" class="text-danger" ></span>
-                    </div>
-                    <div>
-                        <!--Infants-->
-                        <label>
-                            ₹<span id="infantAmount">@Model.TourView.tourDetail.PriceInfant</span> / Infant
-                            <label class="form-text">Age below 6</label>
-                        </label>
-                        <div class="input-group">
-                            <input asp-for="order.TotalInfants" type="text" id="noOfInfants" class="form-control" value="0" />
-                            <button type="button" id="addInfant" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-plus"></i>
-                            </button>
-                            <button type="button" id="subtractInfant" class="btn btn-outline-light" >
-                                <i class="fa-solid fa-circle-minus"></i>
-                            </button>
-                        </div>
-                        <span asp-validation-for="order.TotalInfants" class="text-danger" ></span>
+                    <!-- Price -->
+                    <div class="d-flex justify-content-between ">
+                        <h6>
+                            ₹<input 
+                                asp-for="order.Total" 
+                                id="totalOrderAmount" 
+                                style="border: none; color: white; background: transparent; display: inline;" 
+                            />
+                        </h6>
+                        <input type="submit" class="btn btn-primary" id="btnSubmit" value="Check availability" />
                     </div>
                 </div>
-                <!-- Price -->
-                <div class="d-flex justify-content-between ">
-                    <h6>
-                        ₹<input 
-                            asp-for="order.Total" 
-                            id="totalOrderAmount" 
-                            style="border: none; color: white; background: transparent; display: inline;" 
-                        />
-                    </h6>
-                    <input type="submit" class="btn btn-primary" id="btnSubmit" value="Check availability" />
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- Right -->
-    <div class="d-flex flex-column" style="max-width: 60%; min-width: 60%">
-    <!-- Bootstrap Carousel -->
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" >
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner" style="">
-                <div class="carousel-item active">
-                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
-                </div>
-                <div class="carousel-item">
-                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
-                </div>
-                <div class="carousel-item">
-                    <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.TourView.photo.Description" />
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+                <partial name="OrderHotelPartial.cshtml" />
+            </form>
         </div>
+        <!-- Right -->
+        <div class="d-flex flex-column" style="max-width: 60%; min-width: 60%">
+        <!-- Bootstrap Carousel -->
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" >
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner" style="">
+                    <div class="carousel-item active">
+                        <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem" alt="@Model.TourView.photo.Description" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/Photos/tour/@Model.TourView.photo.ImagePath" class="d-block w-100" style="object-fit: cover; max-height: 37rem"  alt="@Model.TourView.photo.Description" />
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
 
-        <!-- Itinerary -->
-        <div class="d-flex flex-column justify-content-center align-items-start mt-3 ms-3">
-            <h5>Itinerary</h5>
-            <div class="itinerary-main">
-            <!-- Start itinerary -->
-            @for(int i = 0; i < Model.TourView.tourItineraries.Count(); ++i)
-            {
-                <div class="itinerary">
-                    <div class="itinerary-head">
-                        @if(i == 0)
+            <!-- Itinerary -->
+            <div class="d-flex flex-column justify-content-center align-items-start mt-3 ms-3">
+                <h5>Itinerary</h5>
+                <div class="itinerary-main">
+                <!-- Start itinerary -->
+                @for(int i = 0; i < Model.TourView.tourItineraries.Count(); ++i)
+                {
+                    <div class="itinerary">
+                        <div class="itinerary-head">
+                            @if(i == 0)
+                            {
+                                <div class="itinerary-day">Start</div>
+                            }
+
+                            else if(i == Model.TourView.tourItineraries.Count() - 1)
+                            {
+                                <div class="itinerary-day">End</div>
+                            }
+
+                            else
+                            {
+                                <div class="itinerary-day">Day @(i + 1)</div>   
+                            }
+                            <div class="itinerary-city">
+                                @Model.TourView.cities.First(
+                                    city => city.CId == Model.TourView.tourItineraries.First(
+                                        it => it.Day == (i + 1)
+                                    ).CityId
+                                ).Cname
+                            </div>
+                        </div>
+                        @if(i == Model.TourView.tourItineraries.Count() - 1)
                         {
-                            <div class="itinerary-day">Start</div>
+                            <div class="itinerary-body last">
+                                @if(i == Model.TourView.tourItineraries.Count() - 1)
+                                {
+                                    <div class="horizontal-line last"></div>
+                                }
+                                else
+                                {
+                                    <div class="horizontal-line"></div>    
+                                }
+                                <div class="vertical-line"></div>
+                                <div class="itinerary-description">
+                                @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
+                                </div>
+                            </div>
                         }
-
-                        else if(i == Model.TourView.tourItineraries.Count() - 1)
-                        {
-                            <div class="itinerary-day">End</div>
-                        }
-
                         else
                         {
-                            <div class="itinerary-day">Day @(i + 1)</div>   
+                            <div class="itinerary-body">
+                                @if(i == Model.TourView.tourItineraries.Count() - 1)
+                                {
+                                    <div class="horizontal-line last"></div>
+                                }
+                                else
+                                {
+                                    <div class="horizontal-line"></div>    
+                                }
+                                <div class="vertical-line"></div>
+                                <div class="itinerary-description">
+                                @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
+                                </div>
+                            </div>
                         }
-                        <div class="itinerary-city">
-                            @Model.TourView.cities.First(
-                                city => city.CId == Model.TourView.tourItineraries.First(
-                                    it => it.Day == (i + 1)
-                                ).CityId
-                            ).Cname
-                        </div>
                     </div>
-                    @if(i == Model.TourView.tourItineraries.Count() - 1)
-                    {
-                        <div class="itinerary-body last">
-                            @if(i == Model.TourView.tourItineraries.Count() - 1)
-                            {
-                                <div class="horizontal-line last"></div>
-                            }
-                            else
-                            {
-                                <div class="horizontal-line"></div>    
-                            }
-                            <div class="vertical-line"></div>
-                            <div class="itinerary-description">
-                            @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="itinerary-body">
-                            @if(i == Model.TourView.tourItineraries.Count() - 1)
-                            {
-                                <div class="horizontal-line last"></div>
-                            }
-                            else
-                            {
-                                <div class="horizontal-line"></div>    
-                            }
-                            <div class="vertical-line"></div>
-                            <div class="itinerary-description">
-                            @Model.TourView.tourItineraries.First(it => it.Day == (i+1)).Description
-                            </div>
-                        </div>
-                    }
+                }
                 </div>
-            }
-            @*@foreach(var item in Model.TourView.tourItineraries)
-            {
-                <div class="itinerary">
-                    <div class="itinerary-head">
-                        <div class="itinerary-day">Day @item.Day</div>
-                        <div class="itinerary-city">
-                            @Model.TourView.cities.First(city => city.CId == item.CityId).Cname
-                        </div>
-                    </div>
-                    <div class="itinerary-body">
-                        <div class="horizontal-line"></div>
-                        <div class="vertical-line"></div>
-                        <div class="itinerary-description">
-                        @item.Description
-                        </div>
-                    </div>
-                </div>
-            }*@
             </div>
         </div>
     </div>

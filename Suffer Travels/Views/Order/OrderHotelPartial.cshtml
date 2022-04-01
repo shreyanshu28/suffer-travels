@@ -1,0 +1,62 @@
+﻿@using Suffer_Travels.ViewModel
+@model OrderViewModel
+
+<!-- Hotels -->
+<div id="hotels" class="d-flex ms-4 mt-2">
+@{
+    int cnt = 0;
+}
+@foreach(Hotel hotel in Model.hotelVM.hotels)
+{
+    HotelRooms hotelRoom = Model.hotelVM.hotelRooms.First(hr => hr.HId == hotel.HId);
+    HotelAddress hotelAddress = Model.hotelVM.hotelAddresses.First(ha => ha.HaId == hotel.AreaId);
+    City city = Model.hotelVM.cities.First(c => c.CId == hotelAddress.CityId);
+    HotelPhotos hotelPhoto = Model.hotelVM.hotelPhotos.First(hp => hp.HId == hotel.HId);
+    Photo photo = Model.hotelVM.photos.First(p => p.PId == hotelPhoto.PID);
+
+    @*<div>@hotel.HName</div>
+    <div>@hotelRoom.Capacity</div>
+    <div>@hotelAddress.AddressLine1</div>
+    <div>@hotelAddress.AddressLine2</div>
+    <div>@city.Cname</div>
+    <img src="~/photos/tour/@photo.ImagePath">*@
+
+    <div class="card ms-2" style="width: 18rem;">
+        <img src="~/photos/tour/@photo.ImagePath" style="object-fit: cover; height: 20rem; width: 100%" class="card-img-top" alt="@photo.Description">
+        <div class="card-body">
+            <h5 class="card-title">@hotel.HName</h5>
+            <p class="card-text">
+                @hotelAddress.AddressLine1, <br />
+                @hotelAddress.AddressLine2 <br />
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">City: @city.Cname</li>
+            <li class="list-group-item">Max guests: @hotelRoom.Capacity</li>
+            @*<li class="list-group-item" id="totalPrice"></li>*@
+        </ul>
+        <div class="card-body">
+            <div class="input-group">
+                number of rooms
+                <input asp-for="ohList[cnt].HrId" value="@hotelRoom.HrId" type="hidden" />
+                @*<input asp-for="ohList[cnt].Price" type="text" value="@(Model.ohList[cnt].NoOfRooms * hotelRoom.Price)" readonly />*@
+                <input asp-for="ohList[cnt].NoOfRooms" type="text" id="noOfRooms" class="form-control" value="0" />
+                <span asp-validation-for="ohList[cnt].NoOfRooms" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    cnt++;
+}
+</div>
+<script>
+    const noOfRooms = document.querySelectorAll("#noOfRooms")
+
+    noOfRooms.forEach(function(room) {
+        room.addEventListener("keyup", function(event) {
+            if(Number(room.value) <= 0 || room.value == ""){
+                room.value = 0;
+            }
+        })
+    })
+
+</script>
