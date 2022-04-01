@@ -34,15 +34,18 @@ namespace Suffer_Travels.Controllers
         {
             User user;
             int roleId;
+            uint userId;
             string email = _email, fname, profilePhoto;
 
             user = db.tblUser.First(user => user.Email == email);
 
+            userId = user.UId;
             roleId = Convert.ToInt32(user.RoleId);
             fname = user.Fname;
             profilePhoto = user.ProfilePhoto;
 
             HttpContext.Session.SetInt32("RoleId", roleId);
+            HttpContext.Session.SetString("UserId", userId.ToString());
             HttpContext.Session.SetString("Email", email);
             HttpContext.Session.SetString("Fname", fname);
             HttpContext.Session.SetString("ProfilePhoto", profilePhoto);
@@ -376,8 +379,7 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfileAsync(User user)
         {
-            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
-            ViewData["ProfiePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+            SetViewData();
 
             var _user = db.tblUser.FirstOrDefault(u => u.UId == user.UId);
 
@@ -419,6 +421,68 @@ namespace Suffer_Travels.Controllers
             db.SaveChanges();
 
             return View(_user);
+        }
+
+        private void SetViewData()
+        {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+        }
+
+        public IActionResult Orders()
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            UserOrderVM userOrderVM = new UserOrderVM();
+
+            SetViewData();
+
+            int id = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            
+            userOrderVM.orders = db.tblOrderMaster.Where(order => order.UserId == id);
+            userOrderVM.orderTours = db.tblOrderTour.Where(oTour => userOrderVM.orders.Any(order => order.OId == oTour.OrderId));
+
+            // Two methods for join query
+            // 1.
+            // userOrderVM.tours = db.tblTour.Where(tour => userOrderVM.orderTours.Any(oTour => oTour.TourId == tour.TId));
+            // 2.
+            userOrderVM.tours = db.tblTour.Join(
+                userOrderVM.orderTours, 
+                t => t.TId, 
+                ot => ot.TourId,
+                (t, ot) => t
+            );
+            
+            userOrderVM.tourPhotos = db.tblTourPhotos.Join(
+                userOrderVM.tours,
+                tp => tp.TourId,
+                t => t.TId,
+                (tp, t) => tp
+            );
+
+            userOrderVM.photos = db.tblPhotos.Join(
+                userOrderVM.tourPhotos,
+                p => p.PId,
+                tp => tp.PhotoId,
+                (p, tp) => p
+            );
+
+            userOrderVM.tourTypes = db.tblTourType.Join(
+                userOrderVM.tours,
+                tt => tt.TtId,
+                t => t.TourTypeId,
+                (tt, t) => tt
+            );
+
+            return View(userOrderVM);
+        }
+
+        public IActionResult Payment()
+        {
+            
+            return RedirectToAction("Index", "Payment");
+            return RedirectToAction("Orders");
         }
 
         public IActionResult RegisterPartner()

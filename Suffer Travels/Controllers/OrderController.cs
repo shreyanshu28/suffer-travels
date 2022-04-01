@@ -25,17 +25,22 @@ namespace Suffer_Travels.Controllers
             return View();
         }
 
+        private void SetViewData()
+        {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+        }
+        public bool UserLoggedOut()
+        {
+            return string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Email"));
+        }
+
         public IActionResult OrderDetail(int? id)
         {
-            if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Email")))
-            {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
 
-                ViewData["IsLoggedIn"] = "Not";
-            }
-            else
-            {
-                ViewData["IsLoggedin"] = "LoggedIn";
-            }
+            SetViewData();
 
             OrderViewModel orderViewModel = new OrderViewModel();
             TourViewModel tourViewModel = new TourViewModel();
@@ -49,6 +54,9 @@ namespace Suffer_Travels.Controllers
             tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == id);
             tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
 
+            tourViewModel.tourItineraries = db.tblTourItinerary.Where(ti => ti.TourId == id);
+            tourViewModel.cities = db.tblCity;
+
             orderViewModel.TourView = tourViewModel;
 
             return View(orderViewModel);
@@ -58,6 +66,13 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult OrderDetail(OrderViewModel orderViewModel)
         {
+            if (UserLoggedOut())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            SetViewData();
+
             DateTime startDate = orderViewModel.order.Date;
             int TId = Convert.ToInt32(orderViewModel.TourView.tourDetail.TId);
 
@@ -76,6 +91,9 @@ namespace Suffer_Travels.Controllers
                 tourViewModel.tourPhoto = db.tblTourPhotos.FirstOrDefault(tourPhoto => tourPhoto.TourId == TId);
                 tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
 
+                tourViewModel.tourItineraries = db.tblTourItinerary.Where(ti => ti.TourId == TId);
+                tourViewModel.cities = db.tblCity;
+
                 orderViewModel.TourView = tourViewModel;
 
                 return View(orderViewModel);
@@ -92,13 +110,21 @@ namespace Suffer_Travels.Controllers
                 HttpContext.Session.SetString("EndDate", orderViewModel.order.EndDate.ToString());
                 return View("GetGuestsDetails", orderViewModel);
             }
-            return View();
+
+            return View(orderViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult GetGuestsDetails(OrderViewModel orderViewModel)
         {
+            if (UserLoggedOut())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            SetViewData();
+
             DateTime startDate = orderViewModel.order.Date;
             int TId = Convert.ToInt32(orderViewModel.TourView.tourDetail.TId);
 
@@ -140,6 +166,13 @@ namespace Suffer_Travels.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SetOrderDetails(OrderViewModel orderViewModel)
         {
+            if (UserLoggedOut())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            SetViewData();
+
             //Order order = new Order();
             //order.TotalAdults = Convert.ToInt32(HttpContext.Session.GetString("TotalAdults"));
             //order.TotalChildrens = Convert.ToInt32(HttpContext.Session.GetString("TotalChildren"));
@@ -190,6 +223,11 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Payment()
         {
+            if (UserLoggedOut())
+            {
+                return RedirectToAction("Login", "User");
+            }
+            SetViewData();
             ViewData["Amount"] = HttpContext.Session.GetString("TotalAmount");
             return View();
         }

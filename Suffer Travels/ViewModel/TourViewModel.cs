@@ -1,4 +1,5 @@
 ﻿using Suffer_Travels.Models;
+using Suffer_Travels.Data;
 
 namespace Suffer_Travels.ViewModel
 {
@@ -35,5 +36,6 @@ namespace Suffer_Travels.ViewModel
         public UInt32 repeatsEvery { get; set; }
         public Int32 NoOfDays { get; set; }
         public UInt32? TourId { get; set; }
+        public string[] CityName { get; set; }
     }
 }
