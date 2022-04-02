@@ -22,5 +22,7 @@ namespace Suffer_Travels.ViewModel
         // Lists
         public List<HotelRooms> hrList { get; set; }
 
+        //Variable
+        public int maxCapacity { get; set; }
     }
 }

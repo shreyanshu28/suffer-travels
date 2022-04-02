@@ -17,8 +17,8 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Home()
         {
-            String email = HttpContext.Session.GetString("Email").ToString();
-            /*ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;*/
+            /*String email = HttpContext.Session.GetString("Email").ToString();
+            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;*/
             SetViewData();
             return View();
         }
@@ -159,7 +159,8 @@ namespace Suffer_Travels.Controllers
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
-            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == HttpContext.Session.GetString("email")).Status;
+            String email = HttpContext.Session.GetString("Email").ToString();
+            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;
         }
 
         [NonAction]
