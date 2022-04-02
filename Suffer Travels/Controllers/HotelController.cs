@@ -18,7 +18,7 @@ namespace Suffer_Travels.Controllers
         public IActionResult Home()
         {
             String email = HttpContext.Session.GetString("Email").ToString();
-            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;
+            /*ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == email).Status;*/
             SetViewData();
             return View();
         }
@@ -120,13 +120,26 @@ namespace Suffer_Travels.Controllers
                 db.tblHotelPhotos.Add(hotelPhotos);
                 db.SaveChanges();
 
-                HotelRooms hotelRooms = new HotelRooms();
+                /*HotelRooms hotelRooms = new HotelRooms();
                 hotelRooms.TotalRooms = 100;
-                hotelRooms.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
-                //hotelRooms.Price = (uint)Convert.ToDecimal(500);
-                hotelRooms.Capacity = 5;
-                db.tblHotelRooms.Add(hotelRooms);
-                db.SaveChanges();
+                hotelRooms.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;*/
+                for(int i=0; i<5; ++i)
+                {   
+                    if(hotelViewModel.hrList[i].TotalRooms == 0)
+                    {
+                        continue;
+                    }
+
+                    HotelRooms hotelRooms = new HotelRooms();
+                    hotelRooms.TotalRooms = hotelViewModel.hrList[i].TotalRooms;
+                    hotelRooms.HId = db.tblHotelMaster.FirstOrDefault(h => h.HName == hotelViewModel.hotel.HName).HId;
+                    hotelRooms.Price = hotelViewModel.hrList[i].Price;
+                    hotelRooms.Capacity = hotelViewModel.hrList[i].Capacity;
+                    db.tblHotelRooms.Add(hotelRooms);
+                    db.SaveChanges();
+
+                }
+                //db.SaveChanges();
                 dbTrans.Commit();
 
                 TempData["success"] = "Details added successfully";
@@ -146,6 +159,7 @@ namespace Suffer_Travels.Controllers
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+            ViewData["ApprovalFlag"] = db.tblUser.First(user => user.Email == HttpContext.Session.GetString("email")).Status;
         }
 
         [NonAction]
