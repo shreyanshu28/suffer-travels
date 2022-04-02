@@ -17,7 +17,7 @@ namespace Suffer_Travels.Service
                 options.Add("amount", payRequest.Amount * 100);
                 options.Add("receipt", transactionId);
                 options.Add("currency", "INR");
-                options.Add("payment_capture", "0"); // 1 - automatic  , 0 - manual
+                options.Add("payment_capture", "0"); // 1 - automatic, 0 - manual
                 //options.Add("Notes", "Test Payment of Merchant");
 
                 Razorpay.Api.Order orderResponse = client.Order.Create(options);

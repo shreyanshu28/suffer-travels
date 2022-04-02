@@ -37,7 +37,9 @@ namespace Suffer_Travels.Controllers
             return View(tourViewModel);
         }
 
-        public IActionResult AddCityDetails(TourViewModel tourViewModel)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCityDetailsAsync(TourViewModel tourViewModel)
         {
             if (UserLoggedOut())
                 return RedirectToAction("Login", "User");
@@ -45,21 +47,29 @@ namespace Suffer_Travels.Controllers
             if (!IsAdminUser())
                 return RedirectToAction("Home", "User");
 
-            if(tourViewModel.city.StateId == 0)
+            var files = HttpContext.Request.Form.Files;
+            foreach (var Image in files)
             {
-                if(tourViewModel.country.CId == 0)
+                string[] Images = Image.FileName.Split(".");
+                string extension = Images[Images.Length - 1].ToLower();
+                if (extension != "jpg" && extension != "png")
                 {
-                    //db.tblTourType.FirstOrDefault(t => t.TtName == tourViewModel.tourTypeDetails.TtName).TtId;
-                    db.tblCountry.Add(tourViewModel.country);
-                    db.SaveChanges();
-                    tourViewModel.state.CountryId = db.tblCountry.FirstOrDefault(c => c.Cname == tourViewModel.country.Cname).CId;
+                    TempData["Error"] = "Only jpg and png files are allowed";
+                    return RedirectToAction("AddCities");
                 }
-
-                else
+                if (Image != null && Image.Length > 0)
                 {
-                    db.tblState.Add(tourViewModel.state);
-                    db.SaveChanges();
-                    tourViewModel.city.StateId = db.tblState.FirstOrDefault(s => s.Sname == tourViewModel.state.Sname).SId;
+                    var file = Image;
+                    var uploads = Path.Combine(env.WebRootPath, "photos\\city");
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            tourViewModel.city.Photo = fileName;
+                        }
+                    }
                 }
             }
 
@@ -366,6 +376,67 @@ namespace Suffer_Travels.Controllers
             TempData["Success"] = "Tour succesfully edited!";
 
             return RedirectToAction("ManageTours");
+        }
+
+        public IActionResult EditCity(int? id)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            SetViewData();
+            CityVM cityVM = new CityVM()
+            {
+                city = db.tblCity.First(c => c.CId == id),
+                states = db.tblState
+            };
+            return View(cityVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCityAsync(CityVM cityVM)
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsAdminUser())
+                return RedirectToAction("Home", "User");
+
+            var files = HttpContext.Request.Form.Files;
+
+            foreach (var Image in files)
+            {
+                string[] Images = Image.FileName.Split(".");
+                string extension = Images[Images.Length - 1].ToLower();
+                if (extension != "jpg" && extension != "png")
+                {
+                    TempData["Error"] = "Only jpg and png files are allowed";
+                    return RedirectToAction("AddCities");
+                }
+                if (Image != null && Image.Length > 0)
+                {
+                    var file = Image;
+                    var uploads = Path.Combine(env.WebRootPath, "photos\\city");
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            cityVM.city.Photo = fileName;
+                        }
+                    }
+                }
+            }
+
+            db.tblCity.Update(cityVM.city);
+            db.SaveChanges();
+
+            SetViewData();
+            return RedirectToAction("AddCities");
         }
 
         public IActionResult Home()

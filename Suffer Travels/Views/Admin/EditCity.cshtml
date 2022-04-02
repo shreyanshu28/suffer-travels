@@ -1,0 +1,60 @@
+﻿@using Suffer_Travels.ViewModel
+@model CityVM
+@{
+    ViewData["title"] = "Edit City";
+    Layout = "~/Views/Shared/User/_Admin.cshtml";
+}
+
+<main class="container p-3">
+    <div class="nav-container" style="position:relative">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="User" asp-action="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+               <a asp-controller="Admin" asp-action="AddCities">Manage Cities</a>
+            </li>
+            <li class="breadcrumb-item active">
+               Edit City
+            </li>
+        </ol>
+    </div>
+    <form method="post" asp-action="EditCity" style="width: 40rem" enctype="multipart/form-data" class="d-flex justify-content-center container main-body" >
+        <div class="card card-style modal-body" >
+          <div class="card-body d-flex flex-wrap flex-column justify-content-between">
+            <div>
+              <div class="mb-3 d-flex justify-content-center align-items-center flex-column">
+                <div class="mb-3 align-self-center" style="">
+                    <img src="~/photos/city/@Model.city.Photo" id="CityPhoto" class="card-img-top" style="width: 180px; height: 180px; border-radius: 50%" alt="">
+                </div>
+                <div class="align-self-center" style="">
+                    <input type="file" asp-for="city.Photo" class="form-control" name="CityPhoto" id="uploadCityPhoto" placeholder="Upload profile photo" />
+                    <span asp-validation-for="city.Photo" class="text-danger"></span>
+                </div>
+                <label class="form-label" asp-for="city.Photo">Update photo</label>
+              </div>
+              <div class="mb-3">
+                <input type="hidden" asp-for="city.CId" />
+                <label class="form-label" asp-for="city.Cname">City name</label>
+                <input type="text" class="form-control" asp-for="city.Cname" id="" placeholder="Tour name" />
+                <span asp-validation-for="city.Cname" class="text-danger" ></span>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" asp-for="city.StateId">State name</label>
+                <select asp-for="city.StateId" class="form-select" aria-label="Default select example" id="stateid">
+                    <option value="">Select from the list</option>
+                    @foreach (var item in Model.states) 
+                    {
+                        <option value="@item.SId">@item.Sname</option>
+                    }
+                </select>
+                <span asp-validation-for="city.StateId" class="text-danger" ></span>
+              </div>
+              <div class="mb-3">
+                  <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+</main>

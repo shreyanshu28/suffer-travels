@@ -15,33 +15,25 @@
                     <div class="card-body d-flex flex-wrap flex-column justify-content-between">
                         <div>
                             <div class="mb-3">
-                                <label class="form-label" asp-for="city.Cname">City Name</label>
+                                <label class="form-label" asp-for="city.Cname">City name</label>
                                 <input type="text" class="form-control" asp-for="city.Cname" placeholder="City Name" />
                                 <span asp-validation-for="city.Cname" class="text-danger" ></span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" asp-for="city.StateId">State</label>
                                 <select asp-for="city.StateId" class="form-select" aria-label="Default select example" id="stateid">
-                                  <option value="-1">Select from the list</option>
+                                  <option value="">Select from the list</option>
                                     @foreach (var item in Model.states) 
                                     {
                                         <option value="@item.SId">@item.Sname</option>
                                     }
                                 </select>
-                                <input type="hidden" id="state" asp-for="state.Sname" />
                                 <span asp-validation-for="state.Sname" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" asp-for="country.CId">Country</label>
-                                <select asp-for="country.CId" class="form-select" aria-label="Country" id="countryid">
-                                    <option value="-1">Select from the list</option>
-                                    @foreach (var item in Model.countries)
-                                    {
-                                        <option value="@item.CId">@item.Cname</option>
-                                    }
-                                </select>
-                                <input type="hidden" id="country" asp-for="country.Cname" />
-                                <span asp-validation-for="country.Cname" class="text-danger"></span>
+                                <label asp-for="city.Photo">Upload photo</label>
+                                <input type="file" asp-for="city.Photo" id="cityPhoto" />
+                                <span asp-validation-for="city.Photo" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

@@ -56,14 +56,21 @@ namespace Suffer_Travels.Controllers
             tourViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
 
             hotelViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
-            hotelViewModel.hotelAddresses = db.tblHotelAddress.Where(ha => tourViewModel.cities.Any(c => c.CId == ha.CityId));
-            hotelViewModel.hotels = db.tblHotelMaster.Where(hm => hotelViewModel.hotelAddresses.Any(ha => ha.HaId == hm.AreaId));
-            hotelViewModel.hotelRooms = db.tblHotelRooms.Where(hr => hotelViewModel.hotels.Any(h => h.HId == hr.HId));
-            hotelViewModel.hotelPhotos = db.tblHotelPhotos.Where(hp => hotelViewModel.hotels.Any(h => h.HId == hp.HId));
-            hotelViewModel.photos = db.tblPhotos.Where(p => hotelViewModel.hotelPhotos.Any(hp => hp.PID == p.PId));
+            if(db.tblHotelAddress.Any(ha => tourViewModel.cities.Any(c => c.CId == ha.CityId)))
+            {
+                hotelViewModel.hotelAddresses = db.tblHotelAddress.Where(ha => tourViewModel.cities.Any(c => c.CId == ha.CityId));
+                hotelViewModel.hotels = db.tblHotelMaster.Where(hm => hotelViewModel.hotelAddresses.Any(ha => ha.HaId == hm.AreaId));
+                hotelViewModel.hotelRooms = db.tblHotelRooms.Where(hr => hotelViewModel.hotels.Any(h => h.HId == hr.HId));
+                hotelViewModel.hotelPhotos = db.tblHotelPhotos.Where(hp => hotelViewModel.hotels.Any(h => h.HId == hp.HId));
+                hotelViewModel.photos = db.tblPhotos.Where(p => hotelViewModel.hotelPhotos.Any(hp => hp.PID == p.PId));
+                orderViewModel.hotelVM = hotelViewModel;
+            }
+            else
+            {
+                orderViewModel.hotelVM = null;
+            }
 
             orderViewModel.TourView = tourViewModel;
-            orderViewModel.hotelVM = hotelViewModel;
 
             return View(orderViewModel);
         }
@@ -165,12 +172,18 @@ namespace Suffer_Travels.Controllers
                 HttpContext.Session.SetString("EndDate", orderViewModel.order.EndDate.ToString());
 
                 string hotelRoomId = "", noOfRoom = "";
-                foreach (var oh in orderViewModel.ohList)
+                if (orderViewModel.ohList != null)
                 {
-                    if (oh.NoOfRooms > 0)
+                    if (orderViewModel.ohList.Count > 0)
                     {
-                        hotelRoomId += oh.HrId + ";";
-                        noOfRoom += oh.NoOfRooms + ";";
+                        foreach (var oh in orderViewModel.ohList)
+                        {
+                            if (oh.NoOfRooms > 0)
+                            {
+                                hotelRoomId += oh.HrId + ";";
+                                noOfRoom += oh.NoOfRooms + ";";
+                            }
+                        }
                     }
                 }
                 HttpContext.Session.SetString("HotelRoomId", hotelRoomId);
@@ -231,33 +244,39 @@ namespace Suffer_Travels.Controllers
                 }
                 db.tblOrderPeople.AddRange(op);
                 db.SaveChanges();
-                HttpContext.Session.SetString("TotalAmount", orderViewModel.order.Total.ToString());
 
-                string hotelRoomId = HttpContext.Session.GetString("HotelRoomId");
-                string noOfRoom = HttpContext.Session.GetString("NoOfRoom");
-                string[] hotelRoomIds = hotelRoomId.Split(';');
-                string[] noOfRooms = noOfRoom.Split(';');
-
-                List<OrderHotel> ohList = new List<OrderHotel>();
-                for (int i = 0; i < hotelRoomIds.Length; i++)
-                {
-                    if (hotelRoomIds[i] == "")
-                        break;
-                    int cntOfRoom = Convert.ToInt32(noOfRooms[i]);
-                    uint hrId = Convert.ToUInt32(hotelRoomIds[i]);
-                    HotelRooms hotelRoom = db.tblHotelRooms.First(hr => hr.HrId == hrId);
-                    decimal total = cntOfRoom * hotelRoom.Price;
-                    ohList.Add(new OrderHotel
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("HotelRoomId"))){
+                    string hotelRoomId = HttpContext.Session.GetString("HotelRoomId");
+                    string noOfRoom = HttpContext.Session.GetString("NoOfRoom");
+                    string[] hotelRoomIds = hotelRoomId.Split(';');
+                    string[] noOfRooms = noOfRoom.Split(';');
+                    decimal hotelTotal = 0;
+                    List<OrderHotel> ohList = new List<OrderHotel>();
+                    for (int i = 0; i < hotelRoomIds.Length; i++)
                     {
-                        HrId = hrId,
-                        NoOfRooms = cntOfRoom,
-                        OrderId = order.OId,
-                        Price = total,
-                    });
+                        if (hotelRoomIds[i] == "")
+                            break;
+                        int cntOfRoom = Convert.ToInt32(noOfRooms[i]);
+                        uint hrId = Convert.ToUInt32(hotelRoomIds[i]);
+                        HotelRooms hotelRoom = db.tblHotelRooms.First(hr => hr.HrId == hrId);
+                        decimal total = cntOfRoom * hotelRoom.Price;
+                        hotelTotal += total;
+                        ohList.Add(new OrderHotel
+                        {
+                            HrId = hrId,
+                            NoOfRooms = cntOfRoom,
+                            OrderId = order.OId,
+                            Price = total,
+                        });
+                    }
+                    db.tblOrderHotel.AddRange(ohList);
+                    db.SaveChanges();
+                    orderViewModel.order.Total = orderViewModel.order.Total + hotelTotal;
+                    db.tblOrderMaster.Update(orderViewModel.order);
+                    db.SaveChanges();
+                    dbTrans.Commit();
                 }
-                db.tblOrderHotel.AddRange(ohList);
-                db.SaveChanges();
-                dbTrans.Commit();
+                HttpContext.Session.SetString("TotalAmount", (orderViewModel.order.Total).ToString());
 
                 return RedirectToAction("Index", "Payment");
             }

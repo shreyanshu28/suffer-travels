@@ -2,7 +2,7 @@
 @model OrderViewModel
 
 <!-- Hotels -->
-<div id="hotels" class="d-flex ms-4 mt-2">
+<div id="hotels" class="d-flex ms-4 mt-2" style="position: absolute; top: 140vh;">
 @{
     int cnt = 0;
 }
@@ -22,7 +22,7 @@
     <img src="~/photos/tour/@photo.ImagePath">*@
 
     <div class="card ms-2" style="width: 18rem;">
-        <img src="~/photos/tour/@photo.ImagePath" style="object-fit: cover; height: 20rem; width: 100%" class="card-img-top" alt="@photo.Description">
+        <img src="~/photos/hotel/@photo.ImagePath" style="object-fit: cover; height: 20rem; width: 100%" class="card-img-top" alt="@photo.Description">
         <div class="card-body">
             <h5 class="card-title">@hotel.HName</h5>
             <p class="card-text">
@@ -33,6 +33,7 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">City: @city.Cname</li>
             <li class="list-group-item">Max guests: @hotelRoom.Capacity</li>
+            <li class="list-group-item">Price: ₹@hotelRoom.Price</li>
             @*<li class="list-group-item" id="totalPrice"></li>*@
         </ul>
         <div class="card-body">

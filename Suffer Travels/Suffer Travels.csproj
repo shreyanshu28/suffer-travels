@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\photos\NewFolder\**" />
+    <Content Remove="wwwroot\photos\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\photos\NewFolder\**" />
+    <None Remove="wwwroot\photos\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -25,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\user\" />
-    <Folder Include="wwwroot\photos\hotel\" />
   </ItemGroup>
 
 </Project>
