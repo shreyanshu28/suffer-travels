@@ -6,9 +6,11 @@ namespace Suffer_Travels.Controllers
     public class VehicleController : Controller
     {
         private readonly ApplicationDbContext db;
-        public VehicleController(ApplicationDbContext _db)
+        private readonly IWebHostEnvironment env;
+        public VehicleController(ApplicationDbContext _db, IWebHostEnvironment _env)
         {
             db = _db;
+            env = _env;
         }
 
         public bool UserLoggedOut()
@@ -24,7 +26,20 @@ namespace Suffer_Travels.Controllers
 
         public IActionResult Home()
         {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+
+            if (!IsVehicleUser())
+                return RedirectToAction("Home", "User");
+
+            SetViewData();
             return View();
+        }
+
+        public void SetViewData()
+        {
+            ViewData["Fname"] = HttpContext.Session.GetString("Fname");
+            ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
         }
     }
 }

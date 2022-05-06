@@ -20,5 +20,9 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<City> cities {get; set; }
 
         // Lists
+        public List<HotelRooms> hrList { get; set; }
+
+        //Variable
+        public int maxCapacity { get; set; }
     }
 }
