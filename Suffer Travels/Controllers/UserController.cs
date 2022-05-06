@@ -96,6 +96,8 @@ namespace Suffer_Travels.Controllers
                 tourViewModel.tourDates = db.tblTourDates;
                 tourViewModel.tourPhotos = db.tblTourPhotos;
                 tourViewModel.photos = db.tblPhotos;
+                tourViewModel.favouriteTours = db.tblFavouriteTours;
+                ViewData["UId"] = Convert.ToUInt32(HttpContext.Session.GetString("UserId"));
 
                 return View(tourViewModel);
             }
@@ -257,7 +259,7 @@ namespace Suffer_Travels.Controllers
             // From forgot password
             if(passFlag == 1)
             {
-                if (!db.tblUser.Any(user => user.Email == HttpContext.Session.GetString("Email")))
+                if (!db.tblUser.Any(user => user.Email == register.Email))
                 {
                     ModelState.AddModelError("Email", "The user associated with this email address doesn't exists");
                 }
@@ -289,25 +291,34 @@ namespace Suffer_Travels.Controllers
 
                 if(ModelState.IsValid)
                 {
-                    UInt32 RoleId;
-                    user = new User();
+                    if(passFlag == 1)
+                    {
+                        user = db.tblUser.First(u => u.Email == register.Email);
+                        user.Password = register.Password;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        UInt32 RoleId;
+                        user = new User();
 
-                    user.Fname = TempData["Fname"].ToString();
-                    user.Mname = TempData["Mname"].ToString();
-                    user.Lname = TempData["Lname"].ToString();
-                    user.Gender = Char.Parse(TempData["Gender"].ToString());
-                    user.DateOfBirth = DateTime.Parse(TempData["Dob"].ToString());
-                    user.ContactNo = Convert.ToInt64(TempData["ContactNo"].ToString());
-                    user.Email = register.Email;
-                    user.Password = register.Password;
+                        user.Fname = TempData["Fname"].ToString();
+                        user.Mname = TempData["Mname"].ToString();
+                        user.Lname = TempData["Lname"].ToString();
+                        user.Gender = Char.Parse(TempData["Gender"].ToString());
+                        user.DateOfBirth = DateTime.Parse(TempData["Dob"].ToString());
+                        user.ContactNo = Convert.ToInt64(TempData["ContactNo"].ToString());
+                        user.Email = register.Email;
+                        user.Password = register.Password;
 
-                    RoleId = TempData.ContainsKey("RoleId") ? Convert.ToUInt32(TempData["RoleId"].ToString()) : 2;
-                    user.RoleId = RoleId;
+                        RoleId = TempData.ContainsKey("RoleId") ? Convert.ToUInt32(TempData["RoleId"].ToString()) : 2;
+                        user.RoleId = RoleId;
 
-                    user.Status = RoleId != 2 ? "" : "Approved";
+                        user.Status = RoleId != 2 ? "" : "Approved";
 
-                    db.tblUser.Add(user);
-                    db.SaveChanges();
+                        db.tblUser.Add(user);
+                        db.SaveChanges();
+                    }
                     return RedirectToAction("Login");
                 }
             }
@@ -318,10 +329,15 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
-            string message = "Otp is successfully sent";
+            string message = "OTP not sent";
             if(HttpContext.Session.GetString("AddPasswordFlag") == "1")
             {
-                if (db.tblUser.Any(user => user.Email == register.Email))
+                if (register.Email == null)
+                {
+                    otp = 0;
+                    message = "Please enter a email address";
+                }
+                else if (db.tblUser.Any(user => user.Email == register.Email))
                     sendOtp(register.Email, register.Email);
                 else
                     message = "The email address you entered does not exists";
@@ -342,14 +358,19 @@ namespace Suffer_Travels.Controllers
             }
 
             if (otp != 0)
+            {
+                TempData["errorFlag"] = "0";
                 return Json(new
                 {
                     sendOtp = otp,
                     status = 1,
                     message = message
                 });
+            }
             
-            return Json(new { 
+            TempData["errorFlag"] = "0";
+            return Json(new
+            {
                 sendOtp = otp, 
                 status = 0, 
                 message = message 
@@ -362,6 +383,8 @@ namespace Suffer_Travels.Controllers
 
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
                 return RedirectToAction("Login");
+
+            SetViewData();
 
             IEnumerable<User> u = _user.Where(u => u.Email == HttpContext.Session.GetString("Email").ToString());
             //User _user = db.tblUser.Find((uint) HttpContext.Session.GetInt32("userid"));
@@ -428,6 +451,7 @@ namespace Suffer_Travels.Controllers
         {
             ViewData["Fname"] = HttpContext.Session.GetString("Fname");
             ViewData["ProfilePhoto"] = HttpContext.Session.GetString("ProfilePhoto");
+            ViewData["Role"] = HttpContext.Session.GetInt32("RoleId");
         }
 
         public IActionResult Orders(int? id)
@@ -490,6 +514,69 @@ namespace Suffer_Travels.Controllers
             return View(userOrderVM);
         }
 
+        public IActionResult Favourites()
+        {
+            if (UserLoggedOut())
+                return RedirectToAction("Login", "User");
+            
+            SetViewData();
+
+            uint userId = Convert.ToUInt32(HttpContext.Session.GetString("UserId"));
+
+            //userOrderVM.tourTypes = db.tblTourType.Join(
+            //    userOrderVM.tours,
+            //    tt => tt.TtId,
+            //    t => t.TourTypeId,
+            //    (tt, t) => tt
+            //);
+
+            TourViewModel tourViewModel = new TourViewModel();
+
+            tourViewModel.favouriteTours = db.tblFavouriteTours.Join(
+                db.tblUser,
+                ft => ft.userId,
+                u => u.UId,
+                (ft, u) => ft
+            ).Where(ft => ft.IsFavorite);
+
+            tourViewModel.tourDetails = db.tblTour.Join(
+                tourViewModel.favouriteTours,
+                t => t.TId,
+                ft => ft.tourId,
+                (t, ft) => t
+            );
+
+            tourViewModel.tourTypes = db.tblTourType.Join(
+                tourViewModel.tourDetails,
+                tt => tt.TtId,
+                t => t.TourTypeId,
+                (tt, t) => tt
+            );
+
+            tourViewModel.tourDates = db.tblTourDates.Join(
+                tourViewModel.tourDetails,
+                td => td.TourId,
+                t => t.TId,
+                (td, t) => td
+            );
+
+            tourViewModel.tourPhotos = db.tblTourPhotos.Join(
+                tourViewModel.tourDetails,
+                tp => tp.TourId,
+                t => t.TId,
+                (tp, t) => tp
+            );
+
+            tourViewModel.photos = db.tblPhotos.Join(
+                tourViewModel.tourPhotos,
+                p => p.PId,
+                tp => tp.PhotoId,
+                (p, tp) => p
+            );
+
+            return View(tourViewModel);
+        }
+
         public IActionResult Payment(int? id)
         {
             Order order = db.tblOrderMaster.First(order => order.OId == id);
@@ -528,14 +615,15 @@ namespace Suffer_Travels.Controllers
                 TempData.Add("ContactNo", user.ContactNo.ToString().Trim());
                 TempData.Add("RoleId", user.RoleId.ToString().Trim());
 
-                return RedirectToAction("AddPassword");
+                return RedirectToAction("AddPassword", new
+                {
+                    id = 3
+                });
             }
 
             return View();
         }
         
-        
-
         public int sendOtp(string toEmail, string username)
         {
             string email = "suffertravelco@gmail.com", pass = "tavabiryani";
@@ -584,6 +672,58 @@ namespace Suffer_Travels.Controllers
                 return 0;
             }
             return otp;
+        }
+
+        public IActionResult RemoveFavouriteTour(int? id)
+        {
+            uint userId = Convert.ToUInt32(HttpContext.Session.GetString("UserId"));
+            var favouriteTour = db.tblFavouriteTours.First(ft => ft.userId == userId && ft.tourId == id);
+            if (favouriteTour.IsFavorite)
+            {
+                favouriteTour.IsFavorite = false;
+            }
+            db.SaveChanges();
+
+            TempData["success"] = "Favourite removed successfully";
+            return RedirectToAction("Favourites", "User");
+        }
+
+        [HttpPost]
+        public ActionResult AddTourFavourite(int tourId)
+        {
+            int status = 0;
+            string email = HttpContext.Session.GetString("Email");
+            uint userId = db.tblUser.FirstOrDefault(user => user.Email == email).UId;
+
+            if(!db.tblFavouriteTours.Any(ft => ft.userId == userId && ft.tourId == tourId))
+            {
+                FavouriteTours fa = new FavouriteTours();
+                fa.tourId = Convert.ToUInt32(tourId);
+                fa.userId = userId;
+                db.tblFavouriteTours.Add(fa);
+                db.SaveChanges();
+                status = 1;
+            }
+            else
+            {
+                var favouriteTour = db.tblFavouriteTours.First(ft => ft.userId == userId && ft.tourId == tourId);
+                if (favouriteTour.IsFavorite)
+                {
+                    favouriteTour.IsFavorite = false;
+                    status = 2;
+                }
+                else
+                {
+                    favouriteTour.IsFavorite = true;
+                    status = 3;
+                }
+                db.SaveChanges();
+            }
+
+            return Json(new
+            {
+                status = status,
+            });
         }
     }
 }

@@ -4,7 +4,7 @@
     ViewData["title"] = "Home";
     Layout = "~/Views/Shared/User/Customer.cshtml";
 }
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div style="background-image: url('../photos/pexels-evgeny-tchebotarev-4101555.jpg'); background-size: cover">
     <div class="text-center">
         <h1 class="display-4">Welcome @ViewData["Fname"] to safar travels</h1>
@@ -27,14 +27,18 @@
                         <div class="card-text" style="">@item.Description</div>
                         <div class="d-flex justify-content-between mt-3">
                             <h6>₹@item.Price</h6>
-                            @if(ViewData["Fname"] != null)
-                            {
+                            <div class="buttons">
+                                <input type="hidden" value="@item.TId" />
+                                @if(Model.favouriteTours.First(ft => ft.tourId == item.TId && ft.userId == Convert.ToUInt32(ViewData["UId"])).IsFavorite)
+                                {
+                                    <i class="fa-solid fa-heart" id="favourite"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa-regular fa-heart" id="favourite"></i>
+                                }
                                 <a class="btn btn-primary" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.TId">Order this tour</a>
-                            }
-                            else
-                            {
-                                <a class="btn btn-primary" asp-controller="User" asp-action="Login" asp-route-id="@item.TId">Order this tour</a>
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -42,3 +46,42 @@
         }
     </div>
 </div>
+
+@section scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        const favourites = document.querySelectorAll("#favourite");
+        favourites.forEach(function(favourite){
+            favourite.addEventListener("click", function(fav){
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AddTourFavourite", "User")',
+                    data: {
+                        TourId: fav.target.parentElement.firstElementChild.value,
+                    },
+                    error: function (result) {
+                        console.log("not added");
+                        alert("There is a Problem, Try Again!");
+                    },
+                    success: function (result) {
+                        if(result.status == 1){
+                            fav.target.parentElement.children[1].className = fav.target.parentElement.children[1].className.replace("fa-regular", "fa-solid");
+                            console.log(`Added to favourites ${result.status}`);
+                            toastr.success("Added to Favourites");
+                        }else if(result.status == 2){
+                            fav.target.parentElement.children[1].className = fav.target.parentElement.children[1].className.replace("fa-solid", "fa-regular");
+                            toastr.error("Removed from Favourites");
+                            console.log(`Removed from favourites ${result.status}`);
+                        }else if(result.status == 3){
+                            fav.target.parentElement.children[1].className = fav.target.parentElement.children[1].className.replace("fa-regular", "fa-solid");
+                            toastr.success("Added to Favourites");
+                            console.log(`Added to favourites ${result.status}`);
+                        }
+                    }
+                });
+                console.log(fav.target.parentElement.firstElementChild.value);
+            })
+        })
+    </script>
+}

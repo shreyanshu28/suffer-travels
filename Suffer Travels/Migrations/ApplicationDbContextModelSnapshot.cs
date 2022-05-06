@@ -89,6 +89,28 @@ namespace Suffer_Travels.Migrations
                     b.ToTable("tblCountry");
                 });
 
+            modelBuilder.Entity("Suffer_Travels.Models.FavouriteTours", b =>
+                {
+                    b.Property<long>("ftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ftId"), 1L, 1);
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("tourId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("userId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ftId");
+
+                    b.ToTable("tblFavouriteTours");
+                });
+
             modelBuilder.Entity("Suffer_Travels.Models.Hotel", b =>
                 {
                     b.Property<long>("HId")

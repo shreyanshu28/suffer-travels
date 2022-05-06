@@ -2,10 +2,8 @@
 
 @{
     ViewData["title"] = "Edit Profile";
-    ViewData["Fname"] = Model.Fname;
-    ViewData["ProfilePhoto"] = Model.ProfilePhoto;
 
-    switch (ViewData["Role"])
+    switch (Convert.ToInt32(ViewData["Role"]))
     {
         case 1:
             Layout = "~/Views/Shared/User/_Admin.cshtml";
@@ -86,9 +84,9 @@
                                 <span asp-validation-for="ContactNo" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-start">
                             <button type="submit" id="btnUpdate" class="btn btn-primary" >Update</button>
-                            <a asp-controller="User" asp-action="AddPassword" id="submit" class="btn btn-primary">Change Password</a>
+                            @*<a asp-controller="User" asp-action="AddPassword" id="submit" class="btn btn-primary">Change Password</a>*@
                         </div>
                     </div>
                 </div>

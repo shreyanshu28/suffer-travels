@@ -1,0 +1,57 @@
+﻿@using Suffer_Travels.ViewModel
+@model TourViewModel
+@{
+    ViewData["title"] = "Favourites";
+    Layout = "~/Views/Shared/User/Customer.cshtml";
+}
+<main class="container p-3">
+    <div class="nav-container" style="position:relative">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="User" asp-action="Home">Home</a>
+            </li>
+            <li class="breadcrumb-item active mr-auto">
+                Favourites
+            </li>
+        </ol>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Tour Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Tour Type
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.tourDetails)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.TId">@item.TourName</a>
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @Model.tourTypes.First(tourType => tourType.TtId == item.TourTypeId).TtName
+                        </td>
+                        <td>
+                            <a class="btn btn-danger mx-2" asp-controller="User" asp-action="RemoveFavouriteTour" asp-route-id="@item.TId" >Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>

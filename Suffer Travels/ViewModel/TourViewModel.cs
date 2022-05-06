@@ -16,6 +16,7 @@ namespace Suffer_Travels.ViewModel
         public Landmark landmark { get; set; }
         public TourItinerary tourItinerary { get; set; }
         public TourCities tourCity { get; set; }
+        public FavouriteTours favouriteTour { get; set; } 
 
         //Enumerables
         public IEnumerable<Tour> tourDetails { get; set; }
@@ -30,6 +31,7 @@ namespace Suffer_Travels.ViewModel
         public IEnumerable<TourItinerary> tourItineraries { get; set; }
         public TourItinerary[] tiList { get; set; }
         public IEnumerable<TourCities> tourCities { get; set; }
+        public IEnumerable<FavouriteTours> favouriteTours { get; set; }
 
         //Variables
         public string recurrence { get; set; }

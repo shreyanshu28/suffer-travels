@@ -33,6 +33,7 @@ namespace Suffer_Travels.Data
         public DbSet<TourPhotos> tblTourPhotos { get; set; }
         public DbSet<TourType> tblTourType { get; set; }
         public DbSet<MealCombo> tblMealCombo { get; set; }
+        public DbSet<FavouriteTours> tblFavouriteTours { get; set; }
  
         //HOTEL
         public DbSet<Hotel> tblHotelMaster { get; set; }

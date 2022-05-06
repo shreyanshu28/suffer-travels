@@ -113,4 +113,15 @@ namespace Suffer_Travels.Models
 
         public string Description { get; set; } = "Enjoy";
     }
+
+    public class FavouriteTours
+    {
+        [Key]
+        public UInt32 ftId  { get; set; }
+        [ForeignKey("User")]
+        public UInt32 userId { get; set; }
+        [ForeignKey("Tour")]
+        public UInt32 tourId { get; set; }
+        public bool IsFavorite { get; set; } = true;
+    }
 }
