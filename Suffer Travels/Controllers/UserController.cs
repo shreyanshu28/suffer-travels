@@ -329,7 +329,7 @@ namespace Suffer_Travels.Controllers
         [HttpPost]
         public ActionResult SendOtp(Register register)
         {
-            string message = "OTP not sent";
+            string message = "";
             if(HttpContext.Session.GetString("AddPasswordFlag") == "1")
             {
                 if (register.Email == null)
@@ -338,23 +338,30 @@ namespace Suffer_Travels.Controllers
                     message = "Please enter a email address";
                 }
                 else if (db.tblUser.Any(user => user.Email == register.Email))
+                {
+
                     sendOtp(register.Email, register.Email);
+                    message = "OTP sent successfully!";
+                }
                 else
-                    message = "The email address you entered does not exists";
+                {
+                    message = "The email address you entered does not exist";
+                }
             }
             else if (db.tblUser.Any(user => user.Email == register.Email))
             {
-                message = "The email address you entered already exists";
                 otp = 0;
+                message = "The email address you entered already exists";
             }
             else if (register.Email == null)
             {
-                message = "Please enter a email address";
                 otp = 0;
+                message = "Please enter a email address";
             }
             else
             {
                 sendOtp(register.Email, register.Email);
+                message = "OTP sent successfully!";
             }
 
             if (otp != 0)
