@@ -42,6 +42,8 @@ namespace Suffer_Travels.Controllers
 
             SetViewData();
 
+            uint userId = Convert.ToUInt32(HttpContext.Session.GetString("UserId"));
+
             OrderViewModel orderViewModel = new OrderViewModel();
             TourViewModel tourViewModel = new TourViewModel();
             HotelViewModel hotelViewModel = new HotelViewModel();
@@ -54,6 +56,7 @@ namespace Suffer_Travels.Controllers
             tourViewModel.photo = db.tblPhotos.FirstOrDefault(photo => photo.PId == tourViewModel.tourPhoto.PhotoId);
             tourViewModel.tourItineraries = db.tblTourItinerary.Where(ti => ti.TourId == id);
             tourViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
+            tourViewModel.favouriteTour = db.tblFavouriteTours.First(ft => ft.userId == userId && ft.tourId == id);
 
             hotelViewModel.cities = db.tblCity.Where(city => tourViewModel.tourItineraries.Any(ti => ti.CityId == city.CId));
             if(db.tblHotelAddress.Any(ha => tourViewModel.cities.Any(c => c.CId == ha.CityId)))

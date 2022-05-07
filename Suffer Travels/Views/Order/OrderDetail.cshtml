@@ -99,8 +99,22 @@
         <div class="card" style="max-width: 35%; min-width: 35%">
             <form method="post" asp-action="GetGuestsDetails" style="width: 100%">
                 <div class="card-body">
-                    <input asp-for="TourView.tourDetail.TId" type="hidden" />
-                    <p class="card-text" name="name">@Model.TourView.tourTypeDetails.TtName</p>
+                    <input asp-for="TourView.tourDetail.TId" id="TourId" type="hidden" />
+                    <div class="card-text d-flex justify-content-between" name="name">
+                        <div>
+                            @Model.TourView.tourTypeDetails.TtName
+                        </div>
+                        <div>
+                            @if(Model.TourView.favouriteTour.IsFavorite)
+                            {
+                                <i class="fa-solid fa-heart" id="favourite"></i>
+                            }
+                            else
+                            {
+                                <i class="fa-regular fa-heart" id="favourite"></i>
+                            }
+                        </div>
+                    </div>
                     <p class="card-text">@Model.TourView.tourDetail.Description</p>
                     <p class="card-text">
                         @*From: <br />
@@ -673,5 +687,40 @@
             }
             return peoples;
         };
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        const favourites = document.getElementById("favourite");
+        const TourId = document.getElementById("TourId");
+
+        favourites.addEventListener("click", function(favourite){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddTourFavourite", "User")',
+                data: {
+                    TourId: Number(TourId.value),
+                },
+                error: function (result) {
+                    console.log("not added");
+                    alert("There is a Problem, Try Again!");
+                },
+                success: function (result) {
+                    if(result.status == 1){
+                        favourites.className = favourites.className.replace("fa-regular", "fa-solid");
+                        console.log(`Added to favourites ${result.status}`);
+                        toastr.success("Added to Favourites");
+                    }else if(result.status == 2){
+                        favourites.className = favourites.className.replace("fa-solid", "fa-regular");
+                        toastr.error("Removed from Favourites");
+                        console.log(`Removed from favourites ${result.status}`);
+                    }else if(result.status == 3){
+                        favourites.className = favourites.className.replace("fa-regular", "fa-solid");
+                        toastr.success("Added to Favourites");
+                        console.log(`Added to favourites ${result.status}`);
+                    }
+                }
+            })
+        })
     </script>
 }
